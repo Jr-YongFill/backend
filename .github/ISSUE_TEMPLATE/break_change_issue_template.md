@@ -2,7 +2,7 @@
 name: BREAKING CHANGE
 about: 큰 변화가 일어나면 작성하기 위한 이슈입니다.
 title: ''
-labels: BREAKING CHANGE
+labels: BREAKING-CHANGE
 assignees: ''
 
 ---
