@@ -111,7 +111,7 @@ GPT AI 기반 면접을 도와주는 서비스입니다.
 - [ ] Community API
 - [ ] Answer API
 
-See the [project issues](https://github.com/SIAT-Python-Project/SIATwiki-backend/issues) for a full list of proposed features(and known issues).
+See the [project issues](https://github.com/Jr-YongFill/backend/issues) for a full list of proposed features(and known issues).
 
 
 <p align="right">(<a href="#용기가-필요한-아이들[가명]-yellow_heart">back to top</a>)</p>
