@@ -2,7 +2,7 @@
 name: 기능 개발
 about: 기능 개발을 위한 이슈입니다.
 title: ''
-labels: enhancement
+labels: feat
 assignees: ''
 
 ---
