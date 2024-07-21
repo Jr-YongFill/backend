@@ -1,6 +1,6 @@
-package global.exception;
+package com.yongfill.server.global.exception;
 
-import global.common.response.error.ErrorCode;
+import com.yongfill.server.global.common.response.error.ErrorCode;
 import lombok.Getter;
 
 @Getter

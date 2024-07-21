@@ -1,4 +1,4 @@
-package global.exception;
+package com.yongfill.server.global.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

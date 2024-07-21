@@ -1,9 +1,9 @@
-package global.exception;
+package com.yongfill.server.global.exception;
 
 import org.springframework.http.ResponseEntity;
 
 
-import global.common.response.error.ErrorCode;
+import com.yongfill.server.global.common.response.error.ErrorCode;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 

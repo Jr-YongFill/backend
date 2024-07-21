@@ -1,4 +1,4 @@
-package global.common.response.error;
+package com.yongfill.server.global.common.response.error;
 
 
 import lombok.AllArgsConstructor;
