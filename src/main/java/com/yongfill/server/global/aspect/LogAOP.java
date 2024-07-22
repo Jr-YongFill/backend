@@ -26,7 +26,7 @@ public class LogAOP {
 
         //메서드 정보 받기
         Method method = getMethod(joinPoint);
-        log.info("============== method name : {} ==============");
+        log.info("======= method {} start ========", method.getName());
 
         //파라미터 받아오기
         Object[] args = joinPoint.getArgs();
@@ -40,7 +40,7 @@ public class LogAOP {
     public void afterReturnLog(JoinPoint joinPoint, Object returnObj) {
         // 메서드 정보 받아오기
         Method method = getMethod(joinPoint);
-        log.info("======= method name = {} =======", method.getName());
+        log.info("======= method {} ends =======", method.getName());
 
         log.info("return type = {}", returnObj.getClass().getSimpleName());
         log.info("return value = {}", returnObj);
