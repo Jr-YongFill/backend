@@ -24,33 +24,33 @@ public class Post {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "title", length = 200)
+    @Column(name = "title", length = 200, nullable = false)
     private String title;
 
-    @Column(name = "content", columnDefinition="longtext")
+    @Column(name = "content", columnDefinition="longtext", nullable = false)
     private String content;
 
-    @Column(name = "post_category", length = 30)
+    @Column(name = "post_category", length = 30, nullable = false)
     private Category category;
 
-    @Column(name = "create_date")
+    @Column(name = "create_date", nullable = false)
     @CreatedDate
     private LocalDateTime createDate;
 
-    @Column(name = "update_date")
+    @Column(name = "update_date", nullable = false)
     @LastModifiedDate
     private LocalDateTime updateDate;
 
-    @Column(name = "view_count")
+    @Column(name = "view_count", nullable = false)
     private Long viewCount;
 
-    @Column(name = "like_count")
+    @Column(name = "like_count", nullable = false)
     private Long likeCount;
 
-    @Column(name = "update_yn", length = 2)
+    @Column(name = "update_yn", length = 2, nullable = false)
     private String updateYn;
 
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "member_id", nullable = false)
     @ManyToOne
     private Member member;
 

@@ -25,25 +25,25 @@ public class Comment {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "content", length = 1000)
+    @Column(name = "content", length = 1000, nullable = false)
     private String content;
 
-    @Column(name = "create_date")
+    @Column(name = "create_date", nullable = false)
     @CreatedDate
     private LocalDateTime createDate;
 
-    @Column(name = "update_date")
+    @Column(name = "update_date", nullable = false)
     @LastModifiedDate
     private LocalDateTime updateDate;
 
-    @Column(name = "update_yn", length = 2)
+    @Column(name = "update_yn", length = 2, nullable = false)
     private boolean updateYn;
 
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "member_id", nullable = false)
     @ManyToOne
     private Member member;
 
-    @JoinColumn(name = "post_id")
+    @JoinColumn(name = "post_id", nullable = false)
     @ManyToOne
     private Post post;
 

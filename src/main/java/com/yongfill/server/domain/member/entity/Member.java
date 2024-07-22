@@ -22,35 +22,35 @@ public class Member {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "email", length = 200)
+    @Column(name = "email", length = 200, nullable = false)
     private String email;
 
-    @Column(name = "password", length = 300)
+    @Column(name = "password", length = 300, nullable = false)
     private String password;
 
-    @Column(name = "credit")
+    @Column(name = "credit", nullable = false)
     private Long credit;
 
-    @Column(name = "nickname", length = 50)
+    @Column(name = "nickname", length = 50, nullable = false)
     private String nickname;
 
-    @Column(name = "create_date")
+    @Column(name = "create_date", nullable = false)
     @CreatedDate
     private LocalDateTime createDate;
 
-    @Column(name = "role", length = 10)
+    @Column(name = "role", length = 10, nullable = false)
     private Role role;
 
-    @Column(name = "file_path", length = 2000)
+    @Column(name = "file_path", length = 2000, nullable = false)
     private String filePath;
 
-    @Column(name = "attachment_file_name", length = 2000)
+    @Column(name = "attachment_file_name", length = 2000, nullable = false)
     private String attachmentFileName;
 
-    @Column(name = "attachment_original_file_name", length = 2000)
+    @Column(name = "attachment_original_file_name", length = 2000, nullable = false)
     private String attachmentOriginalFileName;
 
-    @Column(name = "attachment_file_size")
+    @Column(name = "attachment_file_size", nullable = false)
     private Long attachmentFileSize;
 
     @Column(name = "refresh_token", length = 1000)

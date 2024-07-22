@@ -19,11 +19,11 @@ public class View {
     @Column(name = "id")
     private Long id;
 
-    @JoinColumn(name = "post_id")
+    @JoinColumn(name = "post_id", nullable = false)
     @ManyToOne
     private Post post;
 
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "member_id", nullable = false)
     @ManyToOne
     private Member member;
 

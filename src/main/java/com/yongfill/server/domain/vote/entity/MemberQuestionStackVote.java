@@ -22,15 +22,15 @@ public class MemberQuestionStackVote {
     @Column(name = "id")
     private Long id;
 
-    @JoinColumn(name = "question_stack_id")
+    @JoinColumn(name = "question_stack_id", nullable = false)
     @ManyToOne
     private QuestionStack questionStack;
 
-    @JoinColumn(name = "interview_question_id")
+    @JoinColumn(name = "interview_question_id", nullable = false)
     @ManyToOne
     private InterviewQuestion interviewQuestion;
 
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "member_id", nullable = false)
     @ManyToOne
     private Member member;
 

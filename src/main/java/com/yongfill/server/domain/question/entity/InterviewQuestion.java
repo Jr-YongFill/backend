@@ -23,21 +23,21 @@ public class InterviewQuestion {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "question", columnDefinition="text")
+    @Column(name = "question", columnDefinition="text", nullable = false)
     private String question;
 
-    @Column(name = "create_date")
+    @Column(name = "create_date", nullable = false)
     @CreatedDate
     private LocalDateTime createDate;
 
-    @Column(name = "interview_show", length = 2)
+    @Column(name = "interview_show", length = 2, nullable = false)
     private String interviewShow;
 
     @JoinColumn(name = "question_stack_id")
     @ManyToOne
     private QuestionStack questionStack; ;
 
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "member_id", nullable = false)
     @ManyToOne
     private Member member;
 

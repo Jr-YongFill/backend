@@ -19,11 +19,11 @@ public class MemberStackAuth {
     @Column(name = "id")
     private Long id;
 
-    @JoinColumn(name = "question_stack_id")
+    @JoinColumn(name = "question_stack_id", nullable = false)
     @ManyToOne
     private QuestionStack questionStack;
 
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "member_id", nullable = false)
     @ManyToOne
     private Member member;
 

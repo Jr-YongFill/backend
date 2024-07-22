@@ -18,13 +18,13 @@ public class QuestionStack {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "stack_name", length = 100)
+    @Column(name = "stack_name", length = 100, nullable = false)
     private String stackName;
 
-    @Column(name = "price")
+    @Column(name = "price", nullable = false)
     private Long price;
 
-    @Column(name = "description", length = 500)
+    @Column(name = "description", length = 500, nullable = false)
     private String description;
 
 }

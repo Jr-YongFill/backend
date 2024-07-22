@@ -20,14 +20,14 @@ public class CountVote {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "count")
+    @Column(name = "count", nullable = false)
     private Long count;
 
-    @JoinColumn(name = "interview_question_id")
+    @JoinColumn(name = "interview_question_id", nullable = false)
     @ManyToOne
     private InterviewQuestion interviewQuestion;
 
-    @JoinColumn(name = "question_stack_id")
+    @JoinColumn(name = "question_stack_id", nullable = false)
     @ManyToOne
     private QuestionStack questionStack;
 }

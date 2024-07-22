@@ -24,24 +24,24 @@ public class MemberAnswer {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "member_answer", columnDefinition="text")
+    @Column(name = "member_answer", columnDefinition="text", nullable = false)
     private String memberAnswer;
 
-    @Column(name = "gpt_answer", columnDefinition="text")
+    @Column(name = "gpt_answer", columnDefinition="text", nullable = false)
     private String gptAnswer;
 
-    @Column(name = "interview_mode", length = 2)
+    @Column(name = "interview_mode", length = 2, nullable = false)
     private InterviewMode interviewMode;
 
-    @Column(name = "create_date")
+    @Column(name = "create_date", nullable = false)
     @CreatedDate
     private LocalDateTime createDate;
 
-    @JoinColumn(name = "interview_question_id")
+    @JoinColumn(name = "interview_question_id", nullable = false)
     @ManyToOne
     private InterviewQuestion interviewquestion;
 
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "member_id", nullable = false)
     @ManyToOne
     private Member member;
 
