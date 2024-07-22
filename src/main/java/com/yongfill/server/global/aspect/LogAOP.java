@@ -17,7 +17,7 @@ import java.lang.reflect.Method;
 public class LogAOP {
 
     //domain 이하 패키지의 모든 메서드에서 진행
-    @Pointcut("execution(* com.yongfill.server.domain..*.*(..))")
+    @Pointcut("execution(* com.yongfill.server..api.*.*(..))")
     private void cut(){}
 
 
