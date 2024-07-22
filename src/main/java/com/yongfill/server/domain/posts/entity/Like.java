@@ -12,6 +12,7 @@ import lombok.ToString;
 @Getter
 @ToString
 @Entity
+@Table(name = "post_like")
 public class Like {
 
     @Id
