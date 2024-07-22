@@ -1,7 +1,10 @@
 package com.yongfill.server.domain.question.entity;
 
+import com.yongfill.server.domain.answer.entity.MemberAnswer;
 import com.yongfill.server.domain.member.entity.Member;
 import com.yongfill.server.domain.stack.entity.QuestionStack;
+import com.yongfill.server.domain.vote.entity.CountVote;
+import com.yongfill.server.domain.vote.entity.MemberQuestionStackVote;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,6 +13,7 @@ import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -40,5 +44,14 @@ public class InterviewQuestion {
     @JoinColumn(name = "member_id", nullable = false)
     @ManyToOne
     private Member member;
+
+    @OneToMany(mappedBy = "interviewQuestion", orphanRemoval = true)
+    private List<CountVote> countVotes;
+
+    @OneToMany(mappedBy = "interviewQuestion", orphanRemoval = true)
+    private List<MemberQuestionStackVote> memberQuestionStackVotes;
+
+    @OneToMany(mappedBy = "interviewQuestion", orphanRemoval = true)
+    private List<MemberAnswer> memberAnswers;
 
 }

@@ -1,5 +1,11 @@
 package com.yongfill.server.domain.member.entity;
 
+import com.yongfill.server.domain.answer.entity.MemberAnswer;
+import com.yongfill.server.domain.comments.entity.Comment;
+import com.yongfill.server.domain.posts.entity.Post;
+import com.yongfill.server.domain.question.entity.InterviewQuestion;
+import com.yongfill.server.domain.stack.entity.MemberStackAuth;
+import com.yongfill.server.domain.vote.entity.MemberQuestionStackVote;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,11 +15,12 @@ import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@ToString
+@ToString(exclude = {"posts", "comments", "stacks", "votes", "questions", "answers"})
 @Entity
 public class Member {
 
@@ -56,5 +63,22 @@ public class Member {
     @Column(name = "refresh_token", length = 1000)
     private String refreshToken;
 
+    @OneToMany(mappedBy = "member", orphanRemoval = true)
+    private List<Post> posts;
+
+    @OneToMany(mappedBy = "member", orphanRemoval = true)
+    private List<Comment> comments;
+
+    @OneToMany(mappedBy = "member", orphanRemoval = true)
+    private List<MemberStackAuth> stacks;
+
+    @OneToMany(mappedBy = "member", orphanRemoval = true)
+    private List<MemberQuestionStackVote> votes;
+
+    @OneToMany(mappedBy = "member", orphanRemoval = true)
+    private List<InterviewQuestion> questions;
+
+    @OneToMany(mappedBy = "member", orphanRemoval = true)
+    private List<MemberAnswer> answers;
 
 }

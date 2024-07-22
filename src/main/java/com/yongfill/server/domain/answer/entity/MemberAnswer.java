@@ -39,10 +39,12 @@ public class MemberAnswer {
 
     @JoinColumn(name = "interview_question_id", nullable = false)
     @ManyToOne
-    private InterviewQuestion interviewquestion;
+    private InterviewQuestion interviewQuestion;
 
     @JoinColumn(name = "member_id", nullable = false)
     @ManyToOne
     private Member member;
+
+
 
 }

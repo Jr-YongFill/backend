@@ -1,10 +1,14 @@
 package com.yongfill.server.domain.stack.entity;
 
+import com.yongfill.server.domain.vote.entity.CountVote;
+import com.yongfill.server.domain.vote.entity.MemberQuestionStackVote;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -27,4 +31,12 @@ public class QuestionStack {
     @Column(name = "description", length = 500, nullable = false)
     private String description;
 
+    @OneToMany(mappedBy = "questionStack", orphanRemoval = true)
+    private List<CountVote> countVotes;
+
+    @OneToMany(mappedBy = "questionStack", orphanRemoval = true)
+    private List<MemberQuestionStackVote> memberQuestionStackVotes;
+
+    @OneToMany(mappedBy = "questionStack", orphanRemoval = true)
+    private List<MemberStackAuth> memberStackAuths;
 }

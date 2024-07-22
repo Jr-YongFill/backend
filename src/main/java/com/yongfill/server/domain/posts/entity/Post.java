@@ -10,11 +10,12 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@ToString
+@ToString(exclude = {"likes", "views"})
 @Entity
 public class Post {
 
@@ -53,5 +54,11 @@ public class Post {
     @JoinColumn(name = "member_id", nullable = false)
     @ManyToOne
     private Member member;
+
+    @OneToMany(mappedBy = "post", orphanRemoval = true)
+    private List<Like> likes;
+
+    @OneToMany(mappedBy = "post", orphanRemoval = true)
+    private List<View> views;
 
 }
