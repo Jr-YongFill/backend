@@ -16,7 +16,7 @@ import java.lang.reflect.Method;
 @Component
 public class LogAOP {
 
-    //domain 이하 패키지의 모든 메서드에서 진행
+    //domain 이하 api 패키지의 모든 메서드에서 진행
     @Pointcut("execution(* com.yongfill.server..api.*.*(..))")
     private void cut(){}
 
@@ -40,10 +40,13 @@ public class LogAOP {
     public void afterReturnLog(JoinPoint joinPoint, Object returnObj) {
         // 메서드 정보 받아오기
         Method method = getMethod(joinPoint);
-        log.info("======= method {} ends =======", method.getName());
 
-        log.info("return type = {}", returnObj.getClass().getSimpleName());
-        log.info("return value = {}", returnObj);
+        if (returnObj != null) {
+            log.info("return type = {}", returnObj.getClass().getSimpleName());
+            log.info("return value = {}", returnObj);
+        }
+
+        log.info("======= method {} ends =======", method.getName());
     }
 
     // JoinPoint로 메서드 정보 가져오기
