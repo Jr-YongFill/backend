@@ -1,11 +1,3 @@
----
-name: pull request
-about: pull request
-title: ''
-labels: ''
-assignees: ''
-
----
 ### PR 타입(하나 이상의 PR 타입을 선택해주세요)
 - [ ] 기능 추가 ✨
 - [ ] 기능 삭제 🔥
