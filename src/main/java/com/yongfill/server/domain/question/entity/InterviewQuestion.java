@@ -68,5 +68,5 @@ public class InterviewQuestion {
         this.questionStack = stack;
     }
 
-    
+
 }
