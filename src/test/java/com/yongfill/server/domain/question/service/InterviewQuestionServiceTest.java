@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 
 import static com.yongfill.server.global.common.response.error.ErrorCode.INVALID_MEMBER;
+import static com.yongfill.server.global.common.response.error.ErrorCode.INVALID_QUESTION;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 
@@ -79,5 +80,80 @@ class InterviewQuestionServiceTest {
         );
 
         assertEquals(INVALID_MEMBER.getMessage(), exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("질문 상태 수정 N에서 Y")
+    public void 질문_상태_수정_N_to_Y() {
+        Member member = Member.builder()
+                .email("email")
+                .credit(100L)
+                .attachmentFileName("123")
+                .attachmentFileSize(100L)
+                .attachmentOriginalFileName("123")
+                .filePath("123")
+                .nickname("1")
+                .password("123")
+                .createDate(LocalDateTime.now())
+                .role(Role.USER)
+                .build();
+        memberJpaRepository.save(member);
+
+        InterviewQuestion interviewQuestion = InterviewQuestion.builder()
+                .interviewShow("N")
+                .createDate(LocalDateTime.now())
+                .member(member)
+                .question("test용 질문입니디.")
+                .build();
+        interviewQuestionJpaRepository.save(interviewQuestion);
+        Long questionId = interviewQuestion.getId();
+
+        interviewQuestionService.updateQuestionState(questionId);
+
+        assertEquals("Y", interviewQuestion.getInterviewShow());
+    }
+
+    @Test
+    @DisplayName("질문 상태 수정 Y에서 N")
+    public void 질문_상태_수정_Y_to_N() {
+        Member member = Member.builder()
+                .email("email")
+                .credit(100L)
+                .attachmentFileName("123")
+                .attachmentFileSize(100L)
+                .attachmentOriginalFileName("123")
+                .filePath("123")
+                .nickname("1")
+                .password("123")
+                .createDate(LocalDateTime.now())
+                .role(Role.USER)
+                .build();
+        memberJpaRepository.save(member);
+
+        InterviewQuestion interviewQuestion = InterviewQuestion.builder()
+                .interviewShow("Y")
+                .createDate(LocalDateTime.now())
+                .member(member)
+                .question("test용 질문입니디.")
+                .build();
+        interviewQuestionJpaRepository.save(interviewQuestion);
+        Long questionId = interviewQuestion.getId();
+
+        interviewQuestionService.updateQuestionState(questionId);
+
+        assertEquals("N", interviewQuestion.getInterviewShow());
+    }
+
+    @Test
+    @DisplayName("없는 질문 수정 시 에러")
+    public void 없는_질문_수정_예외() {
+        Long questionId = 1L;
+
+        Throwable exception = assertThrowsExactly(
+                CustomException.class,
+                () -> interviewQuestionService.updateQuestionState(questionId)
+        );
+
+        assertEquals(INVALID_QUESTION.getMessage(), exception.getMessage());
     }
 }
