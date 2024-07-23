@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
-import static com.yongfill.server.global.common.response.error.ErrorCode.NOT_COOKIE;
+import static com.yongfill.server.global.common.response.error.ErrorCode.INVALID_MEMBER;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 
@@ -78,6 +78,6 @@ class InterviewQuestionServiceTest {
                 () -> interviewQuestionService.insertInterviewQuestion(requestDto, memberId)
         );
 
-        assertEquals(NOT_COOKIE.getMessage(), exception.getMessage());
+        assertEquals(INVALID_MEMBER.getMessage(), exception.getMessage());
     }
 }
