@@ -2,10 +2,7 @@ package com.yongfill.server.domain.posts.entity;
 
 import com.yongfill.server.domain.member.entity.Member;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -17,6 +14,7 @@ import java.util.List;
 @Getter
 @ToString(exclude = {"likes", "views"})
 @Entity
+@Builder
 public class Post {
 
 

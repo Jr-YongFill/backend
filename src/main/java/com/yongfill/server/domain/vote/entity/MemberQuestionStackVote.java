@@ -5,16 +5,14 @@ import com.yongfill.server.domain.member.entity.Member;
 import com.yongfill.server.domain.question.entity.InterviewQuestion;
 import com.yongfill.server.domain.stack.entity.QuestionStack;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @ToString
 @Entity
+@Builder
 public class MemberQuestionStackVote {
 
     @Id
