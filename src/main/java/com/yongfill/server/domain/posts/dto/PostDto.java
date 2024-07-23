@@ -31,7 +31,7 @@ public class PostDto {
     public static class PostResponseDto{
 
         private String title;
-        private String category;
+        private String categoryName;
         private String content;
         private LocalDateTime createDate;
         private LocalDateTime updateDate;

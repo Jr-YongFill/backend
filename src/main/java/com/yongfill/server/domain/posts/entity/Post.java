@@ -3,6 +3,7 @@ package com.yongfill.server.domain.posts.entity;
 import com.yongfill.server.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -40,9 +41,11 @@ public class Post {
     @LastModifiedDate
     private LocalDateTime updateDate;
 
+    @ColumnDefault("0")
     @Column(name = "view_count", nullable = false)
     private Long viewCount;
 
+    @ColumnDefault("0")
     @Column(name = "like_count", nullable = false)
     private Long likeCount;
 

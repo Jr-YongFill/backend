@@ -18,39 +18,50 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PostService {
 
-    private PostJpaRepository postJpaRepository;
-    private MemberJpaRepository memberJpaRepository;
+    private final PostJpaRepository postJpaRepository;
+    private final MemberJpaRepository memberJpaRepository;
 
 
 
     @Transactional
     public PostDto.PostResponseDto createPost(PostDto.PostRequestDto postRequestDto){
         //requestDTO를 받아와서 entity로 변환 후, 실제 DB에 넣어주는 코드
-        Category category = Category.valueOf(postRequestDto.getCategoryName().toUpperCase());
         Optional<Member> memberOpt = memberJpaRepository.findMemberByNickname(postRequestDto.getMemberName());
         memberOpt.orElseThrow(()-> new CustomException(ErrorCode.INVALID_MEMBER));
 
-        Post post = Post.builder()
-                .title(postRequestDto.getTitle())
-                .content(postRequestDto.getContent())
-                .category(category)
-                .createDate(postRequestDto.getCreateDate())
-                .updateDate(postRequestDto.getUpdateDate())
-                .viewCount(postRequestDto.getViewCount())
-                .likeCount(postRequestDto.getLikeCount())
-                .updateYn(postRequestDto.getUpdateYn())
-                .member(memberOpt.get())
-                .build();
-
+        Post post =dtoToEntity(postRequestDto);
         postJpaRepository.save(post);
 
+        return entityToDto(post);
+    }
+    //엔터티 DTO로
+    private PostDto.PostResponseDto entityToDto(Post post){
         return PostDto.PostResponseDto.builder()
                 .createDate(post.getCreateDate())
                 .title(post.getTitle())
                 .content(post.getContent())
-                .category(post.getCategory().getKr())
+                .categoryName(post.getCategory().getKr())
                 .updateYn(post.getUpdateYn())
                 .memberName(post.getMember().getNickname())
                 .build();
     }
+
+    //dto엔터티로
+    private Post dtoToEntity (PostDto.PostRequestDto dto){
+
+        Member member = memberJpaRepository.findMemberByNickname(dto.getMemberName())
+                .orElseThrow(()-> new CustomException(ErrorCode.INVALID_MEMBER));
+        return Post.builder()
+                .title(dto.getTitle())
+                .content(dto.getContent())
+                .category(Category.fromKr(dto.getCategoryName()))
+                .createDate(dto.getCreateDate())
+                .updateDate(dto.getUpdateDate())
+                .viewCount(dto.getViewCount())
+                .likeCount(dto.getLikeCount())
+                .updateYn(dto.getUpdateYn())
+                .member(member)
+                .build();
+    }
+
 }
