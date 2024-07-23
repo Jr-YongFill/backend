@@ -5,6 +5,7 @@ import com.yongfill.server.domain.member.repository.MemberJpaRepository;
 import com.yongfill.server.domain.question.dto.InterviewQuestionDto;
 import com.yongfill.server.domain.question.entity.InterviewQuestion;
 import com.yongfill.server.domain.question.repository.InterviewQuestionJpaRepository;
+import com.yongfill.server.domain.question.repository.InterviewQuestionQueryDSLRepository;
 import com.yongfill.server.domain.stack.entity.QuestionStack;
 import com.yongfill.server.domain.stack.repository.QuestionStackJpaRepository;
 import com.yongfill.server.global.exception.CustomException;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.yongfill.server.global.common.response.error.ErrorCode.*;
 
@@ -20,6 +23,7 @@ import static com.yongfill.server.global.common.response.error.ErrorCode.*;
 @RequiredArgsConstructor
 public class InterviewQuestionService {
     private final InterviewQuestionJpaRepository interviewQuestionJpaRepository;
+    private final InterviewQuestionQueryDSLRepository interviewQuestionQueryDSLRepository;
     private final MemberJpaRepository memberJpaRepository;
     private final QuestionStackJpaRepository questionStackJpaRepository;
 
@@ -64,4 +68,13 @@ public class InterviewQuestionService {
         question.updateQuestionStack(stack);
     }
 
+    @Transactional
+    public List<InterviewQuestionDto.QuestionRandomResponseDto> findQuestionRandomByStacks(List<Long> stackIds, Long size) {
+        List<QuestionStack> stacks = questionStackJpaRepository.findAllById(stackIds);
+        List<InterviewQuestion> questions = interviewQuestionQueryDSLRepository.findQuestionRandomByStacks(stacks, size);
+
+        return questions.stream()
+                .map(InterviewQuestionDto.QuestionRandomResponseDto::toDto)
+                .collect(Collectors.toList());
+    }
 }

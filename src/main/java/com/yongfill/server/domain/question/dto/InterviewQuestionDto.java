@@ -36,4 +36,18 @@ public class InterviewQuestionDto {
     public static class QuestionPatchStackRequestDto {
         private Long stackId;
     }
+
+    @Data
+    @Builder
+    public static class QuestionRandomResponseDto {
+        private Long questionId;
+        private String question;
+
+        public static QuestionRandomResponseDto toDto(InterviewQuestion interviewQuestion) {
+            return QuestionRandomResponseDto.builder()
+                    .questionId(interviewQuestion.getId())
+                    .question(interviewQuestion.getQuestion())
+                    .build();
+        }
+    }
 }
