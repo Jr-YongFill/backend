@@ -2,10 +2,7 @@ package com.yongfill.server.domain.posts.entity;
 
 import com.yongfill.server.domain.member.entity.Member;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -13,6 +10,7 @@ import lombok.ToString;
 @ToString
 @Entity
 @Table(name = "post_like")
+@Builder
 public class Like {
 
     @Id
