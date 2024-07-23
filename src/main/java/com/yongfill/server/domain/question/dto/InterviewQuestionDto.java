@@ -28,4 +28,12 @@ public class InterviewQuestionDto {
                     .build();
         }
     }
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class QuestionPatchStackRequestDto {
+        private Long stackId;
+    }
 }

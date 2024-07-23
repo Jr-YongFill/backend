@@ -36,4 +36,12 @@ public class InterviewQuestionController {
 
         return new ResponseEntity<>(status);
     }
+
+    @PatchMapping("/api/questions/{question_id}/stacks")
+    public ResponseEntity<Void> updateQuestionStack(@PathVariable("question_id") Long questionId, @RequestBody InterviewQuestionDto.QuestionPatchStackRequestDto requestDto) {
+        HttpStatus status = HttpStatus.OK;
+        interviewQuestionService.updateQuestionStack(questionId, requestDto.getStackId());
+
+        return new ResponseEntity<>(status);
+    }
 }

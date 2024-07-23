@@ -63,4 +63,8 @@ public class InterviewQuestion {
 
         return "N";
     }
+
+    public void updateQuestionStack(QuestionStack stack) {
+        this.questionStack = stack;
+    }
 }
