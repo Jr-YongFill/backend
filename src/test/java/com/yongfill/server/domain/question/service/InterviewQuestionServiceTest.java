@@ -6,6 +6,7 @@ import com.yongfill.server.domain.member.repository.MemberJpaRepository;
 import com.yongfill.server.domain.question.dto.InterviewQuestionDto;
 import com.yongfill.server.domain.question.entity.InterviewQuestion;
 import com.yongfill.server.domain.question.repository.InterviewQuestionJpaRepository;
+import com.yongfill.server.domain.question.repository.InterviewQuestionQueryDSLRepository;
 import com.yongfill.server.domain.stack.entity.QuestionStack;
 import com.yongfill.server.domain.stack.repository.QuestionStackJpaRepository;
 import com.yongfill.server.global.exception.CustomException;
@@ -16,6 +17,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.yongfill.server.global.common.response.error.ErrorCode.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -176,6 +180,77 @@ class InterviewQuestionServiceTest {
         );
 
         assertEquals(INVALID_STACK.getMessage(), exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("질문 랜덤 조회")
+    public void 질문_랜덤_조회() {
+        Member member = createMember("멤버1", Role.USER);
+        QuestionStack stack = createStack("자바");
+        for (int i = 0; i < 10; i++) {
+            createInterviewQuestion(member, "Y", String.valueOf(i), stack);
+        }
+        Long size = 5L;
+        List<Long> stackIds = questionStackJpaRepository.findAll()
+                .stream()
+                .map(QuestionStack::getId)
+                .collect(Collectors.toList());
+
+        List<InterviewQuestionDto.QuestionRandomResponseDto> questions = interviewQuestionService.findQuestionRandomByStacks(stackIds, size);
+
+        assertEquals(size, questions.size());
+    }
+
+    @Test
+    @DisplayName("질문 랜덤 조회(빈 스택 조회)")
+    public void 질문_랜덤_빈_스택_조회() {
+        Member member = createMember("멤버1", Role.USER);
+        QuestionStack stack1 = createStack("자바");
+        QuestionStack stack2 = createStack("리엑트");
+        for (int i = 0; i < 10; i++) {
+            createInterviewQuestion(member, "Y", String.valueOf(i), stack2);
+        }
+        Long size = 5L;
+        List<Long> stackIds = List.of(stack1.getId());
+
+        List<InterviewQuestionDto.QuestionRandomResponseDto> questions = interviewQuestionService.findQuestionRandomByStacks(stackIds, size);
+
+        assertEquals(0L, questions.size());
+    }
+
+    @Test
+    @DisplayName("질문 랜덤 조회(답변 가능한 질문 X)")
+    public void 질문_랜덤_조회_답변_가능한_질문_X() {
+        Member member = createMember("멤버1", Role.USER);
+        QuestionStack stack = createStack("자바");
+        for (int i = 0; i < 10; i++) {
+            createInterviewQuestion(member, "N", String.valueOf(i), stack);
+        }
+        Long size = 5L;
+        List<Long> stackIds = questionStackJpaRepository.findAll()
+                .stream()
+                .map(QuestionStack::getId)
+                .collect(Collectors.toList());
+
+        List<InterviewQuestionDto.QuestionRandomResponseDto> questions = interviewQuestionService.findQuestionRandomByStacks(stackIds, size);
+
+        assertEquals(0L, questions.size());
+    }
+
+    @Test
+    @DisplayName("질문 랜덤 조회(없는 스택 조회)")
+    public void 질문_랜덤_없는_스택_조회() {
+        Member member = createMember("멤버1", Role.USER);
+        QuestionStack stack = createStack("자바");
+        for (int i = 0; i < 10; i++) {
+            createInterviewQuestion(member, "N", String.valueOf(i), stack);
+        }
+        Long size = 5L;
+        List<Long> stackIds = List.of(10L);
+
+        List<InterviewQuestionDto.QuestionRandomResponseDto> questions = interviewQuestionService.findQuestionRandomByStacks(stackIds, size);
+
+        assertEquals(0L, questions.size());
     }
 
     private Member createMember(String name, Role role) {

@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 public class InterviewQuestionController {
@@ -43,5 +45,13 @@ public class InterviewQuestionController {
         interviewQuestionService.updateQuestionStack(questionId, requestDto.getStackId());
 
         return new ResponseEntity<>(status);
+    }
+
+    @GetMapping("/api/questions")
+    public ResponseEntity<List<InterviewQuestionDto.QuestionRandomResponseDto>> findQuestionRandomByStacks(@RequestParam("stack_id") List<Long> stackIds, @RequestParam("size") Long size) {
+        HttpStatus status = HttpStatus.OK;
+        List<InterviewQuestionDto.QuestionRandomResponseDto> responseDtos = interviewQuestionService.findQuestionRandomByStacks(stackIds, size);
+
+        return new ResponseEntity<>(responseDtos, status);
     }
 }
