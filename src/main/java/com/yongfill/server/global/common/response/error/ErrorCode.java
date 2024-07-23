@@ -39,6 +39,7 @@ public enum ErrorCode {
     //CODE 404: NOT_FOUND
     INVALID_PAGE(NOT_FOUND,"존재하지 않는 페이지입니다."),
     INVALID_MEMBER(NOT_FOUND,"존재하지 않는 멤버입니다."),
+    INVALID_QUESTION(NOT_FOUND,"존재하지 않는 질문입니다."),
 
     //CODE 429: TOO MANY REQUEST
     LACK_OF_CREDIT(TOO_MANY_REQUESTS,"OPENAI API 키 크레딧을 모두 소진하였습니다."),
