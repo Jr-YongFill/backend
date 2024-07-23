@@ -3,10 +3,7 @@ package com.yongfill.server.domain.answer.entity;
 import com.yongfill.server.domain.member.entity.Member;
 import com.yongfill.server.domain.question.entity.InterviewQuestion;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
@@ -15,6 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Getter
 @ToString
+@Builder
 @Entity
 public class MemberAnswer {
 

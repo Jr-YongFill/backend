@@ -6,10 +6,7 @@ import com.yongfill.server.domain.posts.entity.Post;
 import com.yongfill.server.domain.question.entity.InterviewQuestion;
 import com.yongfill.server.domain.stack.entity.MemberStackAuth;
 import com.yongfill.server.domain.vote.entity.MemberQuestionStackVote;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -22,6 +19,7 @@ import java.util.List;
 @Getter
 @ToString(exclude = {"posts", "comments", "stacks", "votes", "questions", "answers"})
 @Entity
+@Builder
 public class Member {
 
     @Id

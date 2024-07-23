@@ -6,10 +6,7 @@ import com.yongfill.server.domain.stack.entity.QuestionStack;
 import com.yongfill.server.domain.vote.entity.CountVote;
 import com.yongfill.server.domain.vote.entity.MemberQuestionStackVote;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
@@ -20,6 +17,7 @@ import java.util.List;
 @Getter
 @ToString
 @Entity
+@Builder
 public class InterviewQuestion {
 
     @Id
