@@ -6,6 +6,8 @@ import com.yongfill.server.domain.member.repository.MemberJpaRepository;
 import com.yongfill.server.domain.question.dto.InterviewQuestionDto;
 import com.yongfill.server.domain.question.entity.InterviewQuestion;
 import com.yongfill.server.domain.question.repository.InterviewQuestionJpaRepository;
+import com.yongfill.server.domain.stack.entity.QuestionStack;
+import com.yongfill.server.domain.stack.repository.QuestionStackJpaRepository;
 import com.yongfill.server.global.exception.CustomException;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,8 @@ class InterviewQuestionServiceTest {
     InterviewQuestionJpaRepository interviewQuestionJpaRepository;
     @Autowired
     InterviewQuestionService interviewQuestionService;
+    @Autowired
+    QuestionStackJpaRepository questionStackJpaRepository;
 
     @Test
     @DisplayName("문제 생성 테스트")
@@ -187,5 +191,165 @@ class InterviewQuestionServiceTest {
 
         Boolean exists = interviewQuestionJpaRepository.existsById(questionId);
         assertEquals(false, exists);
+    }
+
+
+    @Test
+    @DisplayName("질문 스택 변경")
+    public void 질문_스택_변경() {
+        Member member = Member.builder()
+                .email("email")
+                .credit(100L)
+                .attachmentFileName("123")
+                .attachmentFileSize(100L)
+                .attachmentOriginalFileName("123")
+                .filePath("123")
+                .nickname("1")
+                .password("123")
+                .createDate(LocalDateTime.now())
+                .role(Role.USER)
+                .build();
+        memberJpaRepository.save(member);
+
+        QuestionStack originStack = QuestionStack.builder()
+                .price(0L)
+                .stackName("자바")
+                .description("자바칩 프라푸치노")
+                .build();
+        questionStackJpaRepository.save(originStack);
+
+        InterviewQuestion interviewQuestion = InterviewQuestion.builder()
+                .interviewShow("Y")
+                .createDate(LocalDateTime.now())
+                .member(member)
+                .question("test용 질문입니디.")
+                .questionStack(originStack)
+                .build();
+        interviewQuestionJpaRepository.save(interviewQuestion);
+
+        QuestionStack stack = QuestionStack.builder()
+                .price(0L)
+                .stackName("리엑트")
+                .description("Re-act")
+                .build();
+        questionStackJpaRepository.save(stack);
+
+        Long questionId = interviewQuestion.getId();
+        Long stackId = stack.getId();
+
+        interviewQuestionService.updateQuestionStack(questionId, stackId);
+
+        assertEquals(interviewQuestion.getQuestionStack(), stack);
+    }
+
+    @Test
+    @DisplayName("질문 스택 등록")
+    public void 질문_스택_등록() {
+        Member member = Member.builder()
+                .email("email")
+                .credit(100L)
+                .attachmentFileName("123")
+                .attachmentFileSize(100L)
+                .attachmentOriginalFileName("123")
+                .filePath("123")
+                .nickname("1")
+                .password("123")
+                .createDate(LocalDateTime.now())
+                .role(Role.USER)
+                .build();
+        memberJpaRepository.save(member);
+
+        InterviewQuestion interviewQuestion = InterviewQuestion.builder()
+                .interviewShow("Y")
+                .createDate(LocalDateTime.now())
+                .member(member)
+                .question("test용 질문입니디.")
+                .build();
+        interviewQuestionJpaRepository.save(interviewQuestion);
+
+        QuestionStack stack = QuestionStack.builder()
+                .price(0L)
+                .stackName("자바")
+                .description("자바칩 프라푸치노")
+                .build();
+        questionStackJpaRepository.save(stack);
+
+        Long questionId = interviewQuestion.getId();
+        Long stackId = stack.getId();
+
+        interviewQuestionService.updateQuestionStack(questionId, stackId);
+
+        assertEquals(interviewQuestion.getQuestionStack(), stack);
+    }
+
+    @Test
+    @DisplayName("없는 질문 스택 등록")
+    public void 없는_질문_스택_등록() {
+        Member member = Member.builder()
+                .email("email")
+                .credit(100L)
+                .attachmentFileName("123")
+                .attachmentFileSize(100L)
+                .attachmentOriginalFileName("123")
+                .filePath("123")
+                .nickname("1")
+                .password("123")
+                .createDate(LocalDateTime.now())
+                .role(Role.USER)
+                .build();
+        memberJpaRepository.save(member);
+
+        QuestionStack stack = QuestionStack.builder()
+                .price(0L)
+                .stackName("자바")
+                .description("자바칩 프라푸치노")
+                .build();
+        questionStackJpaRepository.save(stack);
+
+        Long questionId = 1L;
+        Long stackId = stack.getId();
+
+        Throwable exception = assertThrowsExactly(
+                CustomException.class,
+                () -> interviewQuestionService.updateQuestionStack(questionId, stackId)
+        );
+
+        assertEquals(INVALID_QUESTION.getMessage(), exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("질문에 없는 스택 등록")
+    public void 질문에_없는_스택_등록() {
+        Member member = Member.builder()
+                .email("email")
+                .credit(100L)
+                .attachmentFileName("123")
+                .attachmentFileSize(100L)
+                .attachmentOriginalFileName("123")
+                .filePath("123")
+                .nickname("1")
+                .password("123")
+                .createDate(LocalDateTime.now())
+                .role(Role.USER)
+                .build();
+        memberJpaRepository.save(member);
+
+        InterviewQuestion interviewQuestion = InterviewQuestion.builder()
+                .interviewShow("Y")
+                .createDate(LocalDateTime.now())
+                .member(member)
+                .question("test용 질문입니디.")
+                .build();
+        interviewQuestionJpaRepository.save(interviewQuestion);
+
+        Long questionId = interviewQuestion.getId();
+        Long stackId = 1L;
+
+        Throwable exception = assertThrowsExactly(
+                CustomException.class,
+                () -> interviewQuestionService.updateQuestionStack(questionId, stackId)
+        );
+
+        assertEquals(INVALID_STACK.getMessage(), exception.getMessage());
     }
 }
