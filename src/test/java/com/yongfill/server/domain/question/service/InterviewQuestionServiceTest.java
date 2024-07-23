@@ -55,12 +55,12 @@ class InterviewQuestionServiceTest {
                 .question("test 질문입니당~")
                 .build();
 
-        Long questionId = interviewQuestionService.insertInterviewQuestion(requestDto, memberId);
+        InterviewQuestionDto.QuestionInsertResponseDto responseDto = interviewQuestionService.insertInterviewQuestion(requestDto, memberId);
 
-        InterviewQuestion question = interviewQuestionJpaRepository.findById(questionId)
+        InterviewQuestion question = interviewQuestionJpaRepository.findById(responseDto.getQuestionId())
                 .orElseThrow(() -> new IllegalArgumentException());
 
-        assertEquals(questionId, question.getId());
+        assertEquals(responseDto.getQuestionId(), question.getId());
     }
 
     @Test
