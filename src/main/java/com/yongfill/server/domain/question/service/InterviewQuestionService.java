@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
-import static com.yongfill.server.global.common.response.error.ErrorCode.NOT_COOKIE;
+import static com.yongfill.server.global.common.response.error.ErrorCode.INVALID_MEMBER;
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +21,7 @@ public class InterviewQuestionService {
 
     public InterviewQuestionDto.QuestionInsertResponseDto insertInterviewQuestion(InterviewQuestionDto.QuestionInsertRequestDto requestDto, Long memberId) {
         Member member = memberJpaRepository.findById(memberId)
-                .orElseThrow(() -> new CustomException(NOT_COOKIE));
+                .orElseThrow(() -> new CustomException(INVALID_MEMBER));
 
         InterviewQuestion question = InterviewQuestion.builder()
                 .interviewShow("N")
