@@ -5,10 +5,7 @@ import com.yongfill.server.domain.question.service.InterviewQuestionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,5 +19,13 @@ public class InterviewQuestionController {
         InterviewQuestionDto.QuestionInsertResponseDto responseDto = interviewQuestionService.insertInterviewQuestion(requestDto, memberId);
 
         return new ResponseEntity<>(responseDto, status);
+    }
+
+    @PatchMapping("/api/questions/{question_id}")
+    public ResponseEntity<Void> updateQuestionState(@PathVariable("question_id") Long questionId) {
+        HttpStatus status = HttpStatus.OK;
+        interviewQuestionService.updateQuestionState(questionId);
+
+        return new ResponseEntity<>(status);
     }
 }
