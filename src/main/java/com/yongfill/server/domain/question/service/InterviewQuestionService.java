@@ -45,4 +45,9 @@ public class InterviewQuestionService {
 
         question.updateInterviewShow();
     }
+
+    @Transactional
+    public void deleteQuestion(Long questionId) {
+        interviewQuestionJpaRepository.deleteById(questionId);
+    }
 }

@@ -28,4 +28,12 @@ public class InterviewQuestionController {
 
         return new ResponseEntity<>(status);
     }
+
+    @DeleteMapping("/api/questions/{question_id}")
+    public ResponseEntity<Void> deleteQuestion(@PathVariable("question_id") Long questionId) {
+        HttpStatus status = HttpStatus.NO_CONTENT;
+        interviewQuestionService.deleteQuestion(questionId);
+
+        return new ResponseEntity<>(status);
+    }
 }
