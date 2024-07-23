@@ -10,13 +10,13 @@ import com.yongfill.server.global.exception.CustomException;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
-import static com.yongfill.server.global.common.response.error.ErrorCode.INVALID_MEMBER;
-import static com.yongfill.server.global.common.response.error.ErrorCode.INVALID_QUESTION;
+import static com.yongfill.server.global.common.response.error.ErrorCode.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 
@@ -155,5 +155,37 @@ class InterviewQuestionServiceTest {
         );
 
         assertEquals(INVALID_QUESTION.getMessage(), exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("질문 삭제")
+    public void 질문_삭제() {
+        Member member = Member.builder()
+                .email("email")
+                .credit(100L)
+                .attachmentFileName("123")
+                .attachmentFileSize(100L)
+                .attachmentOriginalFileName("123")
+                .filePath("123")
+                .nickname("1")
+                .password("123")
+                .createDate(LocalDateTime.now())
+                .role(Role.USER)
+                .build();
+        memberJpaRepository.save(member);
+
+        InterviewQuestion interviewQuestion = InterviewQuestion.builder()
+                .interviewShow("Y")
+                .createDate(LocalDateTime.now())
+                .member(member)
+                .question("test용 질문입니디.")
+                .build();
+        interviewQuestionJpaRepository.save(interviewQuestion);
+        Long questionId = interviewQuestion.getId();
+
+        interviewQuestionService.deleteQuestion(questionId);
+
+        Boolean exists = interviewQuestionJpaRepository.existsById(questionId);
+        assertEquals(false, exists);
     }
 }
