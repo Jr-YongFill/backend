@@ -52,4 +52,21 @@ public class InterviewQuestion {
     @OneToMany(mappedBy = "interviewQuestion", orphanRemoval = true)
     private List<MemberAnswer> memberAnswers;
 
+    public void updateInterviewShow() {
+        this.interviewShow = getNextInterviewShowType();
+    }
+
+    private String getNextInterviewShowType() {
+        if ("N".equals(this.interviewShow)) {
+            return "Y";
+        }
+
+        return "N";
+    }
+
+    public void updateQuestionStack(QuestionStack stack) {
+        this.questionStack = stack;
+    }
+
+
 }

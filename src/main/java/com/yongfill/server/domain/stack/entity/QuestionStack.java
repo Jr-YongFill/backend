@@ -29,12 +29,12 @@ public class QuestionStack {
     @Column(name = "description", length = 500, nullable = false)
     private String description;
 
-    @OneToMany(mappedBy = "questionStack", orphanRemoval = true)
+    @OneToMany(mappedBy = "questionStack")
     private List<CountVote> countVotes;
 
-    @OneToMany(mappedBy = "questionStack", orphanRemoval = true)
+    @OneToMany(mappedBy = "questionStack")
     private List<MemberQuestionStackVote> memberQuestionStackVotes;
 
-    @OneToMany(mappedBy = "questionStack", orphanRemoval = true)
+    @OneToMany(mappedBy = "questionStack")
     private List<MemberStackAuth> memberStackAuths;
 }

@@ -19,7 +19,7 @@ jobs:
         run: |
           touch ./src/main/resources/application.yml
           echo "${{ secrets.APPLICATION_YML }}" > ./src/main/resources/application.yml
-      - name: Cache Gradle
+      - name: Cache Maven
         uses: actions/cache@v2
         with:
           path: |  
