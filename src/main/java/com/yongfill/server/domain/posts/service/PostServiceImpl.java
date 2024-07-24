@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -55,16 +57,24 @@ public class PostServiceImpl implements PostService{
 
 
     };
-//    @Transactional(readOnly = true)
-//    public List<PostDto.PostResponseDto> findAllByCategory(String categoryName) {
-//
-//        Category category = Category.valueOf(categoryName);
-//        List<Post> posts = postJpaRepository.findAllByCategory(category);
-//
-//        return posts.stream()
-//                .map(this::entityToDto)
-//                .collect(Collectors.toList());
-//    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ReadPostDto.ResponseDto> findAllByCategory(String categoryName) {
+
+        try{
+            Category category = Category.valueOf(categoryName);
+            List<Post> posts = postJpaRepository.findAllByCategory(category);
+
+            return posts.stream()
+                    .map(this::toDto)
+                    .collect(Collectors.toList());
+
+        }catch(IllegalArgumentException e){
+            throw new CustomException(ErrorCode.CATEGORY_NOT_FOUND);
+        }
+
+    }
 
     //U
 
