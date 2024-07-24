@@ -29,6 +29,7 @@ public enum ErrorCode {
 
     //CODE 401: Unauthorized
     INVALID_API_KEY(UNAUTHORIZED,"OPENAI API 키가 올바르지 않습니다."),
+    INVALID_USER_AUTH(UNAUTHORIZED,"권한이 없습니다."),
 
 
     //CODE 403: FORBIDDEN
@@ -41,6 +42,7 @@ public enum ErrorCode {
     INVALID_MEMBER(NOT_FOUND,"존재하지 않는 멤버입니다."),
     INVALID_QUESTION(NOT_FOUND,"존재하지 않는 질문입니다."),
     INVALID_STACK(NOT_FOUND,"존재하지 않는 스택입니다."),
+    INVALID_POST(NOT_FOUND,"존재하지 않는 포스트입니다"),
 
     //CODE 429: TOO MANY REQUEST
     LACK_OF_CREDIT(TOO_MANY_REQUESTS,"OPENAI API 키 크레딧을 모두 소진하였습니다."),

@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface PostQueryDSLRepository {
     List<Post> findAllByCategoryName(String categoryName);
+
+    void updatePost(Long postId, String title, String content);
 }
