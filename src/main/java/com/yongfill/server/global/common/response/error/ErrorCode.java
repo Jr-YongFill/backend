@@ -15,6 +15,8 @@ public enum ErrorCode {
     CLIENT_BAD_REQUESTS(BAD_REQUEST,"잘못된 요청입니다."),
     CATEGORY_NAME_NOT_FOUND(BAD_REQUEST,"존재하지 않는 카테고리 이름입니다."),
     STACK_NAME_NOT_FOUND(BAD_REQUEST,"해당 스택이 존재하지 않습니다."),
+    MEMBER_CREDIT_NOT_ENOUGH(BAD_REQUEST,"크래딧이 부족합니다."),
+    DUPLICATE_MEMBER_EMAIL(BAD_REQUEST, "email이 중복 됩니다."),
 
     //아이디가 비어있다면 INVALID_EMAIL_FORMAT 호출
     INVALID_EMAIL_FORMAT(BAD_REQUEST,"올바르지 않은 이메일 형식입니다."),
