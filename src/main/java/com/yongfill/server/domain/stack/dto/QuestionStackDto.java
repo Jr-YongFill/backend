@@ -37,4 +37,14 @@ public class QuestionStackDto {
                     .build();
         }
     }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class StackUpdateRequestDto {
+        private String stackName;
+        private Long price;
+        private String description;
+    }
 }

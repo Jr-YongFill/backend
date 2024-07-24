@@ -1,5 +1,6 @@
 package com.yongfill.server.domain.stack.entity;
 
+import com.yongfill.server.domain.stack.dto.QuestionStackDto;
 import com.yongfill.server.domain.vote.entity.CountVote;
 import com.yongfill.server.domain.vote.entity.MemberQuestionStackVote;
 import jakarta.persistence.*;
@@ -37,4 +38,18 @@ public class QuestionStack {
 
     @OneToMany(mappedBy = "questionStack")
     private List<MemberStackAuth> memberStackAuths;
+
+    public void update(QuestionStackDto.StackUpdateRequestDto dto) {
+        if (dto.getPrice() != null) {
+            this.price = dto.getPrice();
+        }
+
+        if (dto.getStackName() != null) {
+            this.stackName = dto.getStackName();
+        }
+
+        if (dto.getDescription() != null) {
+            this.description = dto.getDescription();
+        }
+    }
 }

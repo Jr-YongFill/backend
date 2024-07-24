@@ -6,9 +6,7 @@ import com.yongfill.server.domain.stack.service.QuestionStackService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,5 +19,13 @@ public class QuestionStackController {
         QuestionStackDto.StackInsertResponseDto responseDto = questionStackService.insertStack(requestDto);
 
         return new ResponseEntity<>(responseDto, status);
+    }
+
+    @PatchMapping("api/stacks/{stack_id}")
+    public ResponseEntity<Void> updateStack(@RequestBody QuestionStackDto.StackUpdateRequestDto requestDto, @PathVariable("stack_id") Long stackId) {
+        HttpStatus status = HttpStatus.OK;
+        questionStackService.updateStack(requestDto, stackId);
+
+        return new ResponseEntity<>(status);
     }
 }
