@@ -4,6 +4,7 @@ import com.yongfill.server.domain.member.entity.Member;
 import com.yongfill.server.domain.member.entity.Role;
 import com.yongfill.server.domain.member.repository.MemberJpaRepository;
 import com.yongfill.server.domain.stack.dto.MemberStackAuthDto;
+import com.yongfill.server.domain.stack.dto.QuestionStackDto;
 import com.yongfill.server.domain.stack.entity.MemberStackAuth;
 import com.yongfill.server.domain.stack.entity.QuestionStack;
 import com.yongfill.server.domain.stack.repository.MemberStackAuthJpaRepository;
@@ -17,6 +18,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.yongfill.server.global.common.response.error.ErrorCode.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -95,6 +98,32 @@ class MemberStackAuthServiceTest {
         );
 
         assertEquals(INVALID_MEMBER.getMessage(), exception.getMessage());
+    }
+
+
+    @Test
+    @DisplayName("스택 목록 조회")
+    void 스택_목록_조회() {
+        Member member = createMember("사람", Role.USER, 10000L);
+        List<QuestionStack> stacks = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            QuestionStack stack = createStack(String.valueOf(i), 100L);
+            if (i % 2 == 0) {
+                MemberStackAuth memberStackAuth = MemberStackAuth.builder()
+                        .member(member)
+                        .questionStack(stack)
+                        .build();
+                memberStackAuthJpaRepository.save(memberStackAuth);
+            }
+        }
+        Long memberId = member.getId();
+
+        List<QuestionStackDto.StackResponseDto> stackInfos = memberStackAuthService.getStackInfo(memberId);
+
+        assertEquals(10, stackInfos.size());
+        assertEquals(5, stackInfos.stream()
+                .filter(QuestionStackDto.StackResponseDto::getIsPurchase)
+                .count());
     }
 
     private Member createMember(String name, Role role, Long credit) {
