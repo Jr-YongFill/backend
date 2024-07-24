@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RequiredArgsConstructor
 @RestController
@@ -31,13 +33,13 @@ public class PostAPI {
         return new ResponseEntity<>(postResponseDto,status);
     }
 
-//    @GetMapping("/api/categories/{category_name}/posts")
-//    public ResponseEntity<List<PostDto.PostResponseDto>> findAllByCategoryName(@PathVariable("category_name") String categoryName){
-//        HttpStatus status = HttpStatus.CREATED;
-//        List <PostDto.PostResponseDto> postResponseDto = postService.findAllByCategory(categoryName);
-//
-//        return new ResponseEntity<>(postResponseDto,status);
-//    }
+    @GetMapping("/api/categories/{category_name}/posts")
+    public ResponseEntity<List<ReadPostDto.ResponseDto>> findAllByCategoryName(@PathVariable("category_name") String categoryName){
+        HttpStatus status = HttpStatus.OK;
+        List <ReadPostDto.ResponseDto> postResponseDto = postService.findAllByCategory(categoryName);
+
+        return new ResponseEntity<>(postResponseDto,status);
+    }
 //
 //    @PatchMapping("/api/posts/{post_id}")
 //    public ResponseEntity<PostDto.PostResponseDto> updatePost(@PathVariable("post_id") Long postId,@RequestBody PostDto.CreateRequestDto createRequestDto){
