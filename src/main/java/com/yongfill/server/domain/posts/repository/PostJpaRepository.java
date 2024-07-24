@@ -11,6 +11,4 @@ import java.util.List;
 public interface PostJpaRepository extends JpaRepository<Post, Long>, PostQueryDSLRepository {
     List<Post> findAllByCategory(Category category);
 
-
-//    findByCategory(String CategoryName); //<-QueryDSL로 작성해야함
 }
