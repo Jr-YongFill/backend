@@ -49,20 +49,24 @@ class MemberQuestionStackVoteServiceTest {
     void 문제_투표() {
         Member member = createMember("사람", Role.USER);
         Long memberId = member.getId();
-        List<QuestionStack> stacks = new ArrayList<>();
+        QuestionStack stack = null;
         for (int i = 0; i < 10; i++) {
-            stacks.add(createStack(String.valueOf(i)));
+            stack = createStack(String.valueOf(i));
         }
-        InterviewQuestionDto.QuestionInsertRequestDto questionInsertRequestDto = InterviewQuestionDto.QuestionInsertRequestDto.builder()
-                .question("문제1")
-                .build();
-        Long questionId = interviewQuestionService.insertInterviewQuestion(questionInsertRequestDto, memberId).getQuestionId();
 
-        for (int i = 0; i < stacks.size(); i++) {
-            QuestionStack stack = stacks.get(i);
+        List<Long> questionIds = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            InterviewQuestionDto.QuestionInsertRequestDto questionInsertRequestDto = InterviewQuestionDto.QuestionInsertRequestDto.builder()
+                    .question("문제1")
+                    .build();
+            Long questionId = interviewQuestionService.insertInterviewQuestion(questionInsertRequestDto, memberId).getQuestionId();
+            questionIds.add(questionId);
+        }
+
+        for (int i = 0; i < questionIds.size(); i++) {
             if (i % 2 == 0) {
-                Long stackId = stack.getId();
-                memberQuestionStackVoteService.vote(memberId, stackId, questionId);
+                Long questionId = questionIds.get(i);
+                memberQuestionStackVoteService.vote(memberId, stack.getId(), questionId);
             }
         }
 
@@ -91,7 +95,7 @@ class MemberQuestionStackVoteServiceTest {
 
         Throwable exception = assertThrowsExactly(
                 CustomException.class,
-                () -> memberQuestionStackVoteService.vote(memberId, stackId, questionId)
+                () -> memberQuestionStackVoteService.vote(memberId, stacks.get(1).getId(), questionId)
         );
 
         assertEquals(MEMBER_ALREADY_VOTE.getMessage(), exception.getMessage());
