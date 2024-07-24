@@ -13,6 +13,7 @@ import java.util.List;
 @Getter
 @ToString
 @Entity
+@Table(name="question_stack")
 @Builder
 public class QuestionStack {
 
