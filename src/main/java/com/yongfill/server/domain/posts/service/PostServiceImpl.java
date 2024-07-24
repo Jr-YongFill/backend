@@ -3,6 +3,7 @@ package com.yongfill.server.domain.posts.service;
 import com.yongfill.server.domain.member.entity.Member;
 import com.yongfill.server.domain.member.repository.MemberJpaRepository;
 import com.yongfill.server.domain.posts.dto.CreatePostDto;
+import com.yongfill.server.domain.posts.dto.DeletePostDto;
 import com.yongfill.server.domain.posts.dto.ReadPostDto;
 import com.yongfill.server.domain.posts.entity.Category;
 import com.yongfill.server.domain.posts.entity.Post;
@@ -11,6 +12,7 @@ import com.yongfill.server.global.common.response.error.ErrorCode;
 import com.yongfill.server.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -80,7 +82,21 @@ public class PostServiceImpl implements PostService{
 
 
     //D
+    public DeletePostDto.ResponseDto deletePost(Long postId){
+        //TODO: 인증인가 업데이트 ㅠㅠ
 
+        if (!postJpaRepository.existsById(postId)) {
+            throw new CustomException(ErrorCode.INVALID_POST);
+        }
+        postJpaRepository.deleteById(postId);
+
+        return DeletePostDto.ResponseDto
+                .builder()
+                .status(HttpStatus.NO_CONTENT)
+                .message("정상적으로 삭제되었습니다.")
+                .build();
+
+    }
 
     public Post toEntity(CreatePostDto.RequestDto dto){
         //TODO: 인증인가 업데이트ㅠㅠ (매개변수에 뭘 더 받아야함)

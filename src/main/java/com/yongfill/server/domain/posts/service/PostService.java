@@ -1,6 +1,7 @@
 package com.yongfill.server.domain.posts.service;
 
 import com.yongfill.server.domain.posts.dto.CreatePostDto;
+import com.yongfill.server.domain.posts.dto.DeletePostDto;
 import com.yongfill.server.domain.posts.dto.ReadPostDto;
 import com.yongfill.server.domain.posts.entity.Post;
 
@@ -14,6 +15,7 @@ public interface PostService {
     ReadPostDto.ResponseDto readPost(Long postId);
     //카테고리별 목록 조회
     List<ReadPostDto.ResponseDto> findAllByCategory(String categoryName);
+    DeletePostDto.ResponseDto deletePost(Long postId);
     
 
     

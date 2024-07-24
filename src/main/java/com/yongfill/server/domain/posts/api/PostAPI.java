@@ -1,6 +1,7 @@
 package com.yongfill.server.domain.posts.api;
 
 import com.yongfill.server.domain.posts.dto.CreatePostDto;
+import com.yongfill.server.domain.posts.dto.DeletePostDto;
 import com.yongfill.server.domain.posts.dto.ReadPostDto;
 import com.yongfill.server.domain.posts.service.PostServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +40,13 @@ public class PostAPI {
         List <ReadPostDto.ResponseDto> postResponseDto = postService.findAllByCategory(categoryName);
 
         return new ResponseEntity<>(postResponseDto,status);
+    }
+
+    @DeleteMapping("/api/posts/{post_id}")
+    public ResponseEntity<DeletePostDto.ResponseDto> deletePost(@PathVariable("post_id")Long postId){
+        HttpStatus status = HttpStatus.OK;
+        DeletePostDto.ResponseDto deleteResponseDto= postService.deletePost(postId);
+        return new ResponseEntity<>(deleteResponseDto,status);
     }
 //
 //    @PatchMapping("/api/posts/{post_id}")
