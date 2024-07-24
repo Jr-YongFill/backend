@@ -1,7 +1,9 @@
 package com.yongfill.server.domain.posts.entity;
 
+import com.yongfill.server.global.common.response.error.ErrorCode;
 import com.yongfill.server.global.common.util.converter.AbstractEnumNameConverter;
 import com.yongfill.server.global.common.util.converter.EnumName;
+import com.yongfill.server.global.exception.CustomException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -24,5 +26,18 @@ public enum Category implements EnumName<String> {
         public Converter() {
             super(Category.class);
         }
+    }
+
+    //한글 이름으로 Category 객체를 반환
+    public static Category fromKr(String kr) {
+        if(kr == null) {
+            throw new CustomException(ErrorCode.CATEGORY_NAME_NOT_FOUND);
+        }
+        for (Category category : Category.values()) {
+            if (category.getKr().equals(kr)) {
+                return category;
+            }
+        }
+        throw new CustomException(ErrorCode.CATEGORY_NAME_NOT_FOUND);
     }
 }

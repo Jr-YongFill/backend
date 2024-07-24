@@ -3,6 +3,7 @@ package com.yongfill.server.domain.posts.entity;
 import com.yongfill.server.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -40,14 +41,17 @@ public class Post {
     @LastModifiedDate
     private LocalDateTime updateDate;
 
+
     @Column(name = "view_count", nullable = false)
-    private Long viewCount;
+    private Long viewCount = 0L;
+
 
     @Column(name = "like_count", nullable = false)
-    private Long likeCount;
+    private Long likeCount = 0L;
+
 
     @Column(name = "update_yn", length = 2, nullable = false)
-    private String updateYn;
+    private String updateYn = "N";
 
     @JoinColumn(name = "member_id", nullable = false)
     @ManyToOne
