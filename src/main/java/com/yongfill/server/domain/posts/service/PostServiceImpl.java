@@ -3,9 +3,12 @@ package com.yongfill.server.domain.posts.service;
 import com.yongfill.server.domain.member.entity.Member;
 import com.yongfill.server.domain.member.repository.MemberJpaRepository;
 import com.yongfill.server.domain.posts.dto.CreatePostDto;
+import com.yongfill.server.domain.posts.dto.ReadPostDto;
 import com.yongfill.server.domain.posts.entity.Category;
 import com.yongfill.server.domain.posts.entity.Post;
 import com.yongfill.server.domain.posts.repository.PostJpaRepository;
+import com.yongfill.server.global.common.response.error.ErrorCode;
+import com.yongfill.server.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -29,7 +32,7 @@ public class PostServiceImpl implements PostService{
     public CreatePostDto.ResponseDto createPost(CreatePostDto.RequestDto requestDto) {
         //TODO: 작성자 확인은 이메일 인증 후 넣기로...
 
-        Post post = createRequestDtoToEntity(requestDto);
+        Post post = toEntity(requestDto);
         postJpaRepository.save(post);
 
 
@@ -41,6 +44,17 @@ public class PostServiceImpl implements PostService{
 
 
     //R
+    @Override
+    @Transactional(readOnly = true)
+    public ReadPostDto.ResponseDto readPost(Long postId){
+
+        Post post = postJpaRepository.findById(postId)
+                .orElseThrow(()-> new CustomException(ErrorCode.INVALID_POST));
+
+        return toDto(post);
+
+
+    };
 //    @Transactional(readOnly = true)
 //    public List<PostDto.PostResponseDto> findAllByCategory(String categoryName) {
 //
@@ -58,7 +72,7 @@ public class PostServiceImpl implements PostService{
     //D
 
 
-    public Post createRequestDtoToEntity(CreatePostDto.RequestDto dto){
+    public Post toEntity(CreatePostDto.RequestDto dto){
         //TODO: 인증인가 업데이트ㅠㅠ (매개변수에 뭘 더 받아야함)
         Member member = memberJpaRepository.findById(1L).get();
 
@@ -74,5 +88,18 @@ public class PostServiceImpl implements PostService{
                 .build();
     };
 
+    public ReadPostDto.ResponseDto toDto (Post post){
+        return ReadPostDto.ResponseDto.builder()
+                .categoryName(post.getCategory().getKr())
+                .content(post.getContent())
+                .title(post.getTitle())
+                .createTime(post.getCreateDate())
+                .lastUpdateTime(post.getUpdateDate())
+                .updateYn(post.getUpdateYn())
+                .writerName(post.getMember().getNickname())
+                .viewCount(post.getViewCount())
+                .likeCount(post.getLikeCount())
+                .build();
+    }
 
 }
