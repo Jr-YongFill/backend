@@ -17,7 +17,7 @@ public class MemberStackAuthController {
     @PostMapping("/api/stacks/{stack_id}")
     public ResponseEntity<MemberStackAuthDto.AuthResponseDto> purchaseStack(@PathVariable("stack_id") Long stackId) {
         HttpStatus status = HttpStatus.CREATED;
-        Long memberId = 100L;
+        Long memberId = 1L;
         MemberStackAuthDto.AuthResponseDto responseDto = memberStackAuthService.purchaseStack(memberId, stackId);
 
         return new ResponseEntity<>(responseDto, status);
