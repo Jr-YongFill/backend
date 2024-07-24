@@ -28,4 +28,8 @@ public class CountVote {
     @JoinColumn(name = "question_stack_id", nullable = false)
     @ManyToOne
     private QuestionStack questionStack;
+
+    public void plusCount() {
+        this.count++;
+    }
 }
