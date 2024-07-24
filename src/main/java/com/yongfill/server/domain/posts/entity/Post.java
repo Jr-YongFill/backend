@@ -42,16 +42,19 @@ public class Post {
     private LocalDateTime updateDate;
 
 
+    @ColumnDefault("0")
     @Column(name = "view_count", nullable = false)
-    private Long viewCount = 0L;
+    private Long viewCount;
 
 
+    @ColumnDefault("0")
     @Column(name = "like_count", nullable = false)
-    private Long likeCount = 0L;
+    private Long likeCount;
 
 
+    @ColumnDefault("N")
     @Column(name = "update_yn", length = 2, nullable = false)
-    private String updateYn = "N";
+    private String updateYn;
 
     @JoinColumn(name = "member_id", nullable = false)
     @ManyToOne
