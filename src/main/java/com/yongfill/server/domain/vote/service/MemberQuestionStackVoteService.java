@@ -37,7 +37,7 @@ public class MemberQuestionStackVoteService {
         InterviewQuestion question = interviewQuestionJpaRepository.findById(questionId)
                 .orElseThrow(() -> new CustomException(INVALID_QUESTION));
 
-        if (memberQuestionStackVoteQueryDSLRepository.isVote(member, stack, question)) {
+        if (memberQuestionStackVoteQueryDSLRepository.isVote(member, question)) {
             throw new CustomException(MEMBER_ALREADY_VOTE);
         }
 

@@ -19,11 +19,10 @@ public class MemberQuestionStackVoteQueryDSLRepository extends QuerydslRepositor
         this.jpaQueryFactory = jpaQueryFactory;
     }
 
-    public Boolean isVote(Member member, QuestionStack stack, InterviewQuestion question) {
+    public Boolean isVote(Member member, InterviewQuestion question) {
         return !jpaQueryFactory
                 .selectFrom(qMemberQuestionStackVote)
                 .where(qMemberQuestionStackVote.member.eq(member)
-                        .and(qMemberQuestionStackVote.questionStack.eq(stack))
                         .and(qMemberQuestionStackVote.interviewQuestion.eq(question)))
                 .fetch()
                 .isEmpty();
