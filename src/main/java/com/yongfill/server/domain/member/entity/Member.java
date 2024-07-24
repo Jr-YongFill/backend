@@ -79,6 +79,14 @@ public class Member {
     @OneToMany(mappedBy = "member", orphanRemoval = true)
     private List<MemberAnswer> answers;
 
+    public boolean isPurchaseStack(Long price) {
+        return this.credit >= price;
+    }
+
+    public void purchaseStack(Long price) {
+        this.credit -= price;
+    }
+
     @Builder
     public Member(Long id, String email, String password, Long credit, String nickname, LocalDateTime createDate, Role role) {
         this.id = id;
