@@ -86,4 +86,16 @@ public class Member {
     public void purchaseStack(Long price) {
         this.credit -= price;
     }
+
+    @Builder
+    public Member(Long id, String email, String password, Long credit, String nickname, LocalDateTime createDate, Role role) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.credit = credit;
+        this.nickname = nickname;
+        this.createDate = createDate;
+        this.role = role;
+    }
+
 }
