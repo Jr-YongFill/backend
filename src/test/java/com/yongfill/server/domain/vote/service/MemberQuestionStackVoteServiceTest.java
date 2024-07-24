@@ -160,7 +160,7 @@ class MemberQuestionStackVoteServiceTest {
 
         Throwable exception = assertThrowsExactly(
                 CustomException.class,
-                () -> memberQuestionStackVoteService.vote(memberId, stackId+stacks.size()+1, stackId)
+                () -> memberQuestionStackVoteService.vote(memberId, stackId+stacks.size()+1, questionId)
         );
 
         assertEquals(INVALID_STACK.getMessage(), exception.getMessage());
