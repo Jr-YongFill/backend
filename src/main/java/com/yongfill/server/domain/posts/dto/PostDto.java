@@ -13,7 +13,6 @@ public class PostDto {
     @Builder
     @AllArgsConstructor
     public static class PostRequestDto {
-
         private String title;
         private String categoryName;
         private String content;

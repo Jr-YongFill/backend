@@ -12,6 +12,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -25,11 +26,12 @@ public class PostService {
 
     @Transactional
     public PostDto.PostResponseDto createPost(PostDto.PostRequestDto postRequestDto){
-        //requestDTO를 받아와서 entity로 변환 후, 실제 DB에 넣어주는 코드
-        Optional<Member> memberOpt = memberJpaRepository.findMemberByNickname(postRequestDto.getMemberName());
-        memberOpt.orElseThrow(()-> new CustomException(ErrorCode.INVALID_MEMBER));
+        // Member를 조회하고 예외 처리
+        Member member = memberJpaRepository.findMemberByNickname(postRequestDto.getMemberName())
+                .orElseThrow(() -> new CustomException(ErrorCode.INVALID_MEMBER));
 
-        Post post =dtoToEntity(postRequestDto);
+        // Post 엔티티 생성
+        Post post = dtoToEntity(postRequestDto, member);
         postJpaRepository.save(post);
 
         return entityToDto(post);
@@ -43,23 +45,24 @@ public class PostService {
                 .categoryName(post.getCategory().getKr())
                 .updateYn(post.getUpdateYn())
                 .memberName(post.getMember().getNickname())
+                .viewCount(post.getViewCount())
+                .likeCount(post.getLikeCount())
+                .updateDate(post.getUpdateDate())
                 .build();
     }
 
     //dto엔터티로
-    private Post dtoToEntity (PostDto.PostRequestDto dto){
-
-        Member member = memberJpaRepository.findMemberByNickname(dto.getMemberName())
-                .orElseThrow(()-> new CustomException(ErrorCode.INVALID_MEMBER));
+    // DTO를 엔터티로 변환
+    private Post dtoToEntity(PostDto.PostRequestDto dto, Member member){
         return Post.builder()
                 .title(dto.getTitle())
                 .content(dto.getContent())
                 .category(Category.fromKr(dto.getCategoryName()))
-                .createDate(dto.getCreateDate())
-                .updateDate(dto.getUpdateDate())
-                .viewCount(dto.getViewCount())
-                .likeCount(dto.getLikeCount())
-                .updateYn(dto.getUpdateYn())
+                .createDate(dto.getCreateDate() != null ? dto.getCreateDate() : LocalDateTime.now())
+                .updateDate(dto.getUpdateDate() != null ? dto.getUpdateDate() : LocalDateTime.now())
+                .viewCount(dto.getViewCount() != null ? dto.getViewCount() : 0L)
+                .likeCount(dto.getLikeCount() != null ? dto.getLikeCount() : 0L)
+                .updateYn(dto.getUpdateYn() != null ? dto.getUpdateYn() : "N")
                 .member(member)
                 .build();
     }
