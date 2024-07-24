@@ -79,4 +79,11 @@ public class Member {
     @OneToMany(mappedBy = "member", orphanRemoval = true)
     private List<MemberAnswer> answers;
 
+    public boolean isPurchaseStack(Long price) {
+        return this.credit >= price;
+    }
+
+    public void purchaseStack(Long price) {
+        this.credit -= price;
+    }
 }
