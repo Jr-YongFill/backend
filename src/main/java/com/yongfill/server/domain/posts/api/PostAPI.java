@@ -12,8 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 
 @RequiredArgsConstructor
 @RestController
@@ -37,10 +35,15 @@ public class PostAPI {
         return new ResponseEntity<>(postDetailResponseDto,status);
     }
 
-    @GetMapping("/api/categories/{category_name}/posts")
-    public PageResponseDTO<ReadPostDto.SimpleResponseDto, Post> findAllByCategoryName(@PathVariable("category_name") String categoryName, PageRequestDTO pageRequest){
 
-        return postService.getPostByCategory(categoryName,pageRequest);
+    @GetMapping("/api/categories/{category_name}/posts")
+    public PageResponseDTO<ReadPostDto.SimpleResponseDto, Post> findAllByCategoryNameAndTitle(@PathVariable("category_name") String categoryName, @RequestParam(value = "title", required = false)String title, PageRequestDTO pageRequest){
+
+        if (title == null || title.isEmpty()) {
+            return postService.findAllByCategory(categoryName,pageRequest);
+        } else {
+            return postService.findAllByCategoryAndTitle(categoryName,title,pageRequest);
+        }
     }
 
 

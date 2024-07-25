@@ -66,24 +66,28 @@ public class PostServiceImpl implements PostService{
         return entityToDetailResponseDto(post);
 
 
-    };
+    }
 
-    @Override
     @Transactional(readOnly = true)
-    public List<ReadPostDto.DetailResponseDto> findAllByCategory(String categoryName) {
+    public PageResponseDTO<ReadPostDto.SimpleResponseDto, Post> findAllByCategory(String categoryName, PageRequestDTO pageRequest) {
 
-        try{
-            Category category = Category.valueOf(categoryName);
-            List<Post> posts = postJpaRepository.findAllByCategory(category);
+        Pageable pageable = PageRequest.of(pageRequest.getPage(), pageRequest.getSize(), Sort.by(Sort.Direction.DESC, "createDate"));
+        Page<Post> result = postQueryDSLRepository.findAllByCategoryName(categoryName, pageable);
 
-            return posts.stream()
-                    .map(this::entityToDetailResponseDto)
-                    .collect(Collectors.toList());
+        Function<Post, ReadPostDto.SimpleResponseDto> fn = (entity -> entityToSimpleResponseDto(entity));
 
-        }catch(IllegalArgumentException e){
-            throw new CustomException(ErrorCode.CATEGORY_NOT_FOUND);
-        }
+        return new PageResponseDTO<>(result, fn);
+    }
 
+    @Transactional(readOnly = true)
+    public PageResponseDTO<ReadPostDto.SimpleResponseDto, Post> findAllByCategoryAndTitle(String categoryName, String title, PageRequestDTO pageRequest) {
+
+        Pageable pageable = PageRequest.of(pageRequest.getPage(), pageRequest.getSize(), Sort.by(Sort.Direction.DESC, "createDate"));
+        Page<Post> result = postQueryDSLRepository.findAllByCategoryNameAndTitle(categoryName, pageable, title);
+
+        Function<Post, ReadPostDto.SimpleResponseDto> fn = (entity -> entityToSimpleResponseDto(entity));
+
+        return new PageResponseDTO<>(result, fn);
     }
 
     @Override
@@ -107,6 +111,11 @@ public class PostServiceImpl implements PostService{
                 .writerName(post.getMember().getNickname())
                 .build();
     }
+
+
+
+
+
     //U
 
 
@@ -157,19 +166,5 @@ public class PostServiceImpl implements PostService{
                 .build();
     }
 
-    @Transactional(readOnly = true)
-    public PageResponseDTO<ReadPostDto.SimpleResponseDto, Post> getPostByCategory(String categoryName, PageRequestDTO pageRequest) {
-
-        Pageable pageable = PageRequest.of(pageRequest.getPage(), pageRequest.getSize(), Sort.by(Sort.Direction.DESC, "createDate"));
-        Page<Post> result = postQueryDSLRepository.findAllByCategoryName(categoryName, pageable);
-
-        Function<Post, ReadPostDto.SimpleResponseDto> fn = (entity -> entityToSimpleResponseDto(entity));
-
-        return new PageResponseDTO<>(result, fn);
-    }
-
-//    public ReadPostDto.SearchResponseDto toDto(Post post){
-//
-//    }
 
 }

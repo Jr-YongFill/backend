@@ -10,10 +10,8 @@ import com.yongfill.server.global.exception.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.data.support.PageableExecutionUtils;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,12 +34,13 @@ public class PostQueryDSLRepository extends QuerydslRepositorySupport {
         this.qPost = QPost.post;
     }
 
-    @Transactional
-    public Page<Post> findAllByCategoryName(String categoryName, Pageable pageable) {
 
-        try{
+
+    @Transactional(readOnly = true)
+    public Page<Post> findAllByCategoryName(String categoryName, Pageable pageable) {
+        try {
             Category category = Category.valueOf(categoryName);
-            List<Post> noticeList = jpaQueryFactory.selectFrom(qPost)
+            List<Post> posts = jpaQueryFactory.selectFrom(qPost)
                     .where(qPost.category.eq(category))
                     .orderBy(qPost.createDate.desc())
                     .offset(pageable.getOffset())
@@ -51,6 +50,32 @@ public class PostQueryDSLRepository extends QuerydslRepositorySupport {
             JPAQuery<Long> total = jpaQueryFactory.select(qPost.count())
                     .from(qPost)
                     .where(qPost.category.eq(category));
+
+            return PageableExecutionUtils.getPage(posts, pageable, total::fetchOne);
+        } catch (IllegalArgumentException e) {
+            throw new CustomException(ErrorCode.CATEGORY_NOT_FOUND);
+        }
+    }
+
+
+    @Transactional
+    public Page<Post> findAllByCategoryNameAndTitle(String categoryName, Pageable pageable, String title) {
+
+        try{
+            Category category = Category.valueOf(categoryName);
+            List<Post> noticeList = jpaQueryFactory.selectFrom(qPost)
+                    .where(qPost.category.eq(category)
+                        .and(qPost.title.containsIgnoreCase(title)))
+                    .orderBy(qPost.createDate.desc())
+                    .offset(pageable.getOffset())
+                    .limit(pageable.getPageSize())
+                    .fetch();
+
+            JPAQuery<Long> total = jpaQueryFactory.select(qPost.count())
+                    .from(qPost)
+                    .where(qPost.category.eq(category)
+                            .and(qPost.title.containsIgnoreCase(title)))
+                    .where(qPost.title.contains(title));
 
             return PageableExecutionUtils.getPage(noticeList, pageable, total::fetchOne);
 
