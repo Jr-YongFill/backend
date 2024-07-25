@@ -59,7 +59,6 @@ public class Member {
     private Long attachmentFileSize;
 
     @Column(name = "refresh_token", length = 1000)
-    private String refreshToken;
 
     @OneToMany(mappedBy = "member", orphanRemoval = true)
     private List<Post> posts;

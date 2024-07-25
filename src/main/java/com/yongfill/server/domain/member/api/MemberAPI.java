@@ -28,21 +28,26 @@ public class MemberAPI {
     public ResponseEntity<Member> createMember(@RequestBody MemberDTO.MemberRequestDTO requestDTO) {
         HttpStatus status = HttpStatus.CREATED;
         Member member = memberService.createMember(requestDTO);
-        System.out.println(member);
         return new ResponseEntity<>(member, status);
     }
 
     // 로그인
     @PostMapping("/api/auth/sign-in")
     public ResponseEntity<Boolean> findMemberLogin(@RequestBody MemberDTO.MemberRequestDTO requestDTO, HttpServletResponse response, HttpServletRequest request) throws Exception {
+        System.out.println("로그인페이지");
         HttpStatus status = HttpStatus.OK;
         boolean loginSuccess = memberService.findMemberLogin(requestDTO.getEmail(), requestDTO.getPassword());
         System.out.println(loginSuccess);
-//        Member cookiemember = memberService.getByEmail(requestDTO.getEmail());
+        if (!loginSuccess) {
+            return new ResponseEntity<>(false, HttpStatus.UNAUTHORIZED); // 로그인 실패 시 401 응답
+        }
+
+        return new ResponseEntity<>(true, HttpStatus.OK); // 로그인 성공 시 200 응답
+        //        Member cookiemember = memberService.getByEmail(requestDTO.getEmail());
 //        MemberLoginDTO memberLoginDTO = new MemberLoginDTO(cookieMember);
 //        request.setAttribute("memberLoginDTO", memberLoginDTO);	// 인터셉터에 userLoginDTO 사용
 
-        return new ResponseEntity<>(status);
+//        return new ResponseEntity<>(status);
 
     }
 
