@@ -9,6 +9,7 @@ import lombok.*;
 @Getter
 @ToString
 @Entity
+@Table(name="member_stack_auth")
 @Builder
 public class MemberStackAuth {
 
