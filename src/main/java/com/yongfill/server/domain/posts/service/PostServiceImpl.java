@@ -8,15 +8,23 @@ import com.yongfill.server.domain.posts.dto.ReadPostDto;
 import com.yongfill.server.domain.posts.entity.Category;
 import com.yongfill.server.domain.posts.entity.Post;
 import com.yongfill.server.domain.posts.repository.PostJpaRepository;
+import com.yongfill.server.domain.posts.repository.PostQueryDSLRepository;
+import com.yongfill.server.global.common.dto.PageRequestDTO;
+import com.yongfill.server.global.common.dto.PageResponseDTO;
 import com.yongfill.server.global.common.response.error.ErrorCode;
 import com.yongfill.server.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 
@@ -25,6 +33,7 @@ import java.util.stream.Collectors;
 public class PostServiceImpl implements PostService{
 
     private final PostJpaRepository postJpaRepository;
+    private final PostQueryDSLRepository postQueryDSLRepository;
     private final MemberJpaRepository memberJpaRepository;
 
 
@@ -79,19 +88,19 @@ public class PostServiceImpl implements PostService{
 
     @Override
     @Transactional(readOnly = true)
-    public List<ReadPostDto.SearchResponseDto> searchPost(String categoryName,String title){
-        List<ReadPostDto.SearchResponseDto> searchResponseDtos;
+    public List<ReadPostDto.SimpleResponseDto> searchPost(String categoryName, String title){
+        List<ReadPostDto.SimpleResponseDto> simpleResponseDtos;
         Category category = Category.valueOf(categoryName);
         List<Post> searchResult = postJpaRepository.findAllByCategoryAndTitle(category,title);
         return searchResult.stream()
-                .map(this::entityToSearchResponseDto)
+                .map(this::entityToSimpleResponseDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     @Transactional(readOnly = true)
-    public ReadPostDto.SearchResponseDto entityToSearchResponseDto(Post post) {
-        return ReadPostDto.SearchResponseDto.builder()
+    public ReadPostDto.SimpleResponseDto entityToSimpleResponseDto(Post post) {
+        return ReadPostDto.SimpleResponseDto.builder()
                 .createTime(post.getCreateDate())
                 .lastUpdateTime(post.getUpdateDate())
                 .title(post.getTitle())
@@ -146,6 +155,17 @@ public class PostServiceImpl implements PostService{
                 .viewCount(post.getViewCount())
                 .likeCount(post.getLikeCount())
                 .build();
+    }
+
+    @Transactional(readOnly = true)
+    public PageResponseDTO<ReadPostDto.SimpleResponseDto, Post> getPostByCategory(String categoryName, PageRequestDTO pageRequest) {
+
+        Pageable pageable = PageRequest.of(pageRequest.getPage(), pageRequest.getSize(), Sort.by(Sort.Direction.DESC, "createDate"));
+        Page<Post> result = postQueryDSLRepository.findAllByCategoryName(categoryName, pageable);
+
+        Function<Post, ReadPostDto.SimpleResponseDto> fn = (entity -> entityToSimpleResponseDto(entity));
+
+        return new PageResponseDTO<>(result, fn);
     }
 
 //    public ReadPostDto.SearchResponseDto toDto(Post post){

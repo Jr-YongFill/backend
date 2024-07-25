@@ -22,7 +22,7 @@ public interface PostService {
     //게시글 삭제
     DeletePostDto.ResponseDto deletePost(Long postId);
 
-    List<ReadPostDto.SearchResponseDto> searchPost(String categoryName,String title);
+    List<ReadPostDto.SimpleResponseDto> searchPost(String categoryName, String title);
     
 
     
@@ -32,6 +32,6 @@ public interface PostService {
     //PatchRequestDto 엔터티로 변경
 
     //게시글 검색 Dto 변환
-    ReadPostDto.SearchResponseDto entityToSearchResponseDto(Post post);
+    ReadPostDto.SimpleResponseDto entityToSimpleResponseDto(Post post);
 
 }

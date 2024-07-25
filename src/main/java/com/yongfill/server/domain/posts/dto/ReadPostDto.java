@@ -30,7 +30,7 @@ public class ReadPostDto {
     @Data
     @Builder
     @AllArgsConstructor
-    public static class SearchResponseDto {
+    public static class SimpleResponseDto {
 
         private String title;
         private String writerName;

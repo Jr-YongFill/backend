@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface PostJpaRepository extends JpaRepository<Post, Long>, PostQueryDSLRepository {
+public interface PostJpaRepository extends JpaRepository<Post, Long> {
     List<Post> findAllByCategory(Category category);
 
     List<Post> findAllByCategoryAndTitle(Category category, String title);

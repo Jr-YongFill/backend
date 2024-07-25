@@ -3,7 +3,10 @@ package com.yongfill.server.domain.posts.api;
 import com.yongfill.server.domain.posts.dto.CreatePostDto;
 import com.yongfill.server.domain.posts.dto.DeletePostDto;
 import com.yongfill.server.domain.posts.dto.ReadPostDto;
+import com.yongfill.server.domain.posts.entity.Post;
 import com.yongfill.server.domain.posts.service.PostServiceImpl;
+import com.yongfill.server.global.common.dto.PageRequestDTO;
+import com.yongfill.server.global.common.dto.PageResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,12 +38,11 @@ public class PostAPI {
     }
 
     @GetMapping("/api/categories/{category_name}/posts")
-    public ResponseEntity<List<ReadPostDto.DetailResponseDto>> findAllByCategoryName(@PathVariable("category_name") String categoryName){
-        HttpStatus status = HttpStatus.OK;
-        List <ReadPostDto.DetailResponseDto> postDetailResponseDto = postService.findAllByCategory(categoryName);
+    public PageResponseDTO<ReadPostDto.SimpleResponseDto, Post> findAllByCategoryName(@PathVariable("category_name") String categoryName, PageRequestDTO pageRequest){
 
-        return new ResponseEntity<>(postDetailResponseDto,status);
+        return postService.getPostByCategory(categoryName,pageRequest);
     }
+
 
     @DeleteMapping("/api/posts/{post_id}")
     public ResponseEntity<DeletePostDto.ResponseDto> deletePost(@PathVariable("post_id")Long postId){
