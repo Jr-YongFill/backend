@@ -6,9 +6,9 @@ import com.yongfill.server.domain.posts.entity.Post;
 import com.yongfill.server.domain.posts.entity.QPost;
 import lombok.RequiredArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.yongfill.server.domain.posts.entity.QPost.post;
 
 @RequiredArgsConstructor
 public class PostQueryDSLRepositoryImpl implements PostQueryDSLRepository{
@@ -20,5 +20,16 @@ public class PostQueryDSLRepositoryImpl implements PostQueryDSLRepository{
         return queryFactory.selectFrom(post)
                 .where(post.category.eq(Category.fromKr(categoryName)))
                 .fetch();
+    }
+
+    @Override
+    public void updatePost(Long postId, String title, String content) {
+        QPost qPost = QPost.post;
+        queryFactory.update(qPost)
+                .where(qPost.id.eq(postId))
+                .set(qPost.title, title)
+                .set(qPost.content, content)
+                .set(qPost.updateYn, "Y")
+                .execute();
     }
 }
