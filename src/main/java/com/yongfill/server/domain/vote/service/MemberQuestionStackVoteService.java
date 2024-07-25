@@ -2,8 +2,10 @@ package com.yongfill.server.domain.vote.service;
 
 import com.yongfill.server.domain.member.entity.Member;
 import com.yongfill.server.domain.member.repository.MemberJpaRepository;
+import com.yongfill.server.domain.question.dto.InterviewQuestionDto;
 import com.yongfill.server.domain.question.entity.InterviewQuestion;
 import com.yongfill.server.domain.question.repository.InterviewQuestionJpaRepository;
+import com.yongfill.server.domain.question.repository.InterviewQuestionQueryDSLRepository;
 import com.yongfill.server.domain.stack.entity.QuestionStack;
 import com.yongfill.server.domain.stack.repository.QuestionStackJpaRepository;
 import com.yongfill.server.domain.vote.entity.CountVote;
@@ -11,10 +13,16 @@ import com.yongfill.server.domain.vote.entity.MemberQuestionStackVote;
 import com.yongfill.server.domain.vote.repository.CountVoteQueryDSLRepository;
 import com.yongfill.server.domain.vote.repository.MemberQuestionStackVoteJpaRepository;
 import com.yongfill.server.domain.vote.repository.MemberQuestionStackVoteQueryDSLRepository;
+import com.yongfill.server.global.common.dto.PageRequestDTO;
+import com.yongfill.server.global.common.dto.PageResponseNoEntityDto;
 import com.yongfill.server.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static com.yongfill.server.global.common.response.error.ErrorCode.*;
 
@@ -27,6 +35,7 @@ public class MemberQuestionStackVoteService {
     private final InterviewQuestionJpaRepository interviewQuestionJpaRepository;
     private final MemberQuestionStackVoteQueryDSLRepository memberQuestionStackVoteQueryDSLRepository;
     private final CountVoteQueryDSLRepository countVoteQueryDSLRepository;
+    private final InterviewQuestionQueryDSLRepository interviewQuestionQueryDSLRepository;
 
     @Transactional
     public void vote(Long memberId, Long stackId, Long questionId) {
@@ -51,5 +60,20 @@ public class MemberQuestionStackVoteService {
 
         CountVote countVote = countVoteQueryDSLRepository.findByQuestionAndStack(question, stack);
         countVote.plusCount();
+    }
+
+    @Transactional
+    public InterviewQuestionDto.QuestionVoteResponseDto getVoteInfos(Long memberId, PageRequestDTO pageRequestDTO) {
+        Page<InterviewQuestionDto.QuestionVoteResponseDto.QuestionPageDto> questions = interviewQuestionQueryDSLRepository.getVoteQuestionInfo(memberId, PageRequest.of(pageRequestDTO.getPage(), pageRequestDTO.getSize()));
+        List<InterviewQuestionDto.QuestionVoteResponseDto.StackInfoDto> stackInfoDtos = questionStackJpaRepository.findAll()
+                .stream()
+                .map(InterviewQuestionDto.QuestionVoteResponseDto.StackInfoDto::toDto)
+                .toList();
+
+        return InterviewQuestionDto.QuestionVoteResponseDto
+                .builder()
+                .pageResponseDTO(new PageResponseNoEntityDto<>(questions))
+                .stackInfoDtos(stackInfoDtos)
+                .build();
     }
 }

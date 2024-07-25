@@ -17,6 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Table(name="member_")
 @ToString(exclude = {"posts", "comments", "stacks", "votes", "questions", "answers"})
 @Entity
 @Builder

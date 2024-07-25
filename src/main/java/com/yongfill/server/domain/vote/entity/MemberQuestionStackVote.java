@@ -12,6 +12,7 @@ import lombok.*;
 @Getter
 @ToString
 @Entity
+@Table(name="member_question_stack_vote")
 @Builder
 public class MemberQuestionStackVote {
 
