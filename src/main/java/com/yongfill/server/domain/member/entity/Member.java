@@ -14,9 +14,10 @@ import org.springframework.data.annotation.CreatedDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
+@Setter
 @ToString(exclude = {"posts", "comments", "stacks", "votes", "questions", "answers"})
 @Entity
 @Builder
@@ -88,7 +89,7 @@ public class Member {
     }
 
     @Builder
-    public Member(Long id, String email, String password, Long credit, String nickname, LocalDateTime createDate, Role role) {
+    public Member(Long id, String email, String password, Long credit, String nickname, LocalDateTime createDate, Role role, String auth) {
         this.id = id;
         this.email = email;
         this.password = password;
