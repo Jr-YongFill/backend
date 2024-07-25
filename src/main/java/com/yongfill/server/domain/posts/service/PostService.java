@@ -12,10 +12,17 @@ public interface PostService {
     CreatePostDto.ResponseDto createPost(CreatePostDto.RequestDto dto);
 
     //게시글 상세 조회
-    ReadPostDto.ResponseDto readPost(Long postId);
+    ReadPostDto.DetailResponseDto readPost(Long postId);
+
     //카테고리별 목록 조회
-    List<ReadPostDto.ResponseDto> findAllByCategory(String categoryName);
+    List<ReadPostDto.DetailResponseDto> findAllByCategory(String categoryName);
+
+
+
+    //게시글 삭제
     DeletePostDto.ResponseDto deletePost(Long postId);
+
+    List<ReadPostDto.SearchResponseDto> searchPost(String categoryName,String title);
     
 
     
@@ -24,5 +31,7 @@ public interface PostService {
 
     //PatchRequestDto 엔터티로 변경
 
+    //게시글 검색 Dto 변환
+    ReadPostDto.SearchResponseDto entityToSearchResponseDto(Post post);
 
 }

@@ -28,18 +28,18 @@ public class PostAPI {
     }
 
     @GetMapping("/api/posts/{post_id}")
-    public ResponseEntity<ReadPostDto.ResponseDto> updatePost(@PathVariable("post_id") Long postId){
+    public ResponseEntity<ReadPostDto.DetailResponseDto> updatePost(@PathVariable("post_id") Long postId){
         HttpStatus status = HttpStatus.OK;
-        ReadPostDto.ResponseDto postResponseDto= postService.readPost(postId);
-        return new ResponseEntity<>(postResponseDto,status);
+        ReadPostDto.DetailResponseDto postDetailResponseDto = postService.readPost(postId);
+        return new ResponseEntity<>(postDetailResponseDto,status);
     }
 
     @GetMapping("/api/categories/{category_name}/posts")
-    public ResponseEntity<List<ReadPostDto.ResponseDto>> findAllByCategoryName(@PathVariable("category_name") String categoryName){
+    public ResponseEntity<List<ReadPostDto.DetailResponseDto>> findAllByCategoryName(@PathVariable("category_name") String categoryName){
         HttpStatus status = HttpStatus.OK;
-        List <ReadPostDto.ResponseDto> postResponseDto = postService.findAllByCategory(categoryName);
+        List <ReadPostDto.DetailResponseDto> postDetailResponseDto = postService.findAllByCategory(categoryName);
 
-        return new ResponseEntity<>(postResponseDto,status);
+        return new ResponseEntity<>(postDetailResponseDto,status);
     }
 
     @DeleteMapping("/api/posts/{post_id}")

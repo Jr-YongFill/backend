@@ -12,7 +12,6 @@ import com.yongfill.server.global.common.response.error.ErrorCode;
 import com.yongfill.server.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,26 +49,26 @@ public class PostServiceImpl implements PostService{
     //R
     @Override
     @Transactional(readOnly = true)
-    public ReadPostDto.ResponseDto readPost(Long postId){
+    public ReadPostDto.DetailResponseDto readPost(Long postId){
 
         Post post = postJpaRepository.findById(postId)
                 .orElseThrow(()-> new CustomException(ErrorCode.INVALID_POST));
 
-        return toDto(post);
+        return entityToDetailResponseDto(post);
 
 
     };
 
     @Override
     @Transactional(readOnly = true)
-    public List<ReadPostDto.ResponseDto> findAllByCategory(String categoryName) {
+    public List<ReadPostDto.DetailResponseDto> findAllByCategory(String categoryName) {
 
         try{
             Category category = Category.valueOf(categoryName);
             List<Post> posts = postJpaRepository.findAllByCategory(category);
 
             return posts.stream()
-                    .map(this::toDto)
+                    .map(this::entityToDetailResponseDto)
                     .collect(Collectors.toList());
 
         }catch(IllegalArgumentException e){
@@ -78,6 +77,27 @@ public class PostServiceImpl implements PostService{
 
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<ReadPostDto.SearchResponseDto> searchPost(String categoryName,String title){
+        List<ReadPostDto.SearchResponseDto> searchResponseDtos;
+        Category category = Category.valueOf(categoryName);
+        List<Post> searchResult = postJpaRepository.findAllByCategoryAndTitle(category,title);
+        return searchResult.stream()
+                .map(this::entityToSearchResponseDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ReadPostDto.SearchResponseDto entityToSearchResponseDto(Post post) {
+        return ReadPostDto.SearchResponseDto.builder()
+                .createTime(post.getCreateDate())
+                .lastUpdateTime(post.getUpdateDate())
+                .title(post.getTitle())
+                .writerName(post.getMember().getNickname())
+                .build();
+    }
     //U
 
 
@@ -114,8 +134,8 @@ public class PostServiceImpl implements PostService{
                 .build();
     };
 
-    public ReadPostDto.ResponseDto toDto (Post post){
-        return ReadPostDto.ResponseDto.builder()
+    public ReadPostDto.DetailResponseDto entityToDetailResponseDto(Post post){
+        return ReadPostDto.DetailResponseDto.builder()
                 .categoryName(post.getCategory().getKr())
                 .content(post.getContent())
                 .title(post.getTitle())
@@ -127,5 +147,9 @@ public class PostServiceImpl implements PostService{
                 .likeCount(post.getLikeCount())
                 .build();
     }
+
+//    public ReadPostDto.SearchResponseDto toDto(Post post){
+//
+//    }
 
 }

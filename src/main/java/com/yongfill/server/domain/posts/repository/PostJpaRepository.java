@@ -1,5 +1,6 @@
 package com.yongfill.server.domain.posts.repository;
 
+import com.yongfill.server.domain.posts.dto.ReadPostDto;
 import com.yongfill.server.domain.posts.entity.Category;
 import com.yongfill.server.domain.posts.entity.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,4 +12,5 @@ import java.util.List;
 public interface PostJpaRepository extends JpaRepository<Post, Long>, PostQueryDSLRepository {
     List<Post> findAllByCategory(Category category);
 
+    List<Post> findAllByCategoryAndTitle(Category category, String title);
 }
