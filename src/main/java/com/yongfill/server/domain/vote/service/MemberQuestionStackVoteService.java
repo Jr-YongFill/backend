@@ -56,10 +56,15 @@ public class MemberQuestionStackVoteService {
                 .interviewQuestion(question)
                 .build();
 
+
         memberQuestionStackVoteJpaRepository.save(memberQuestionStackVote);
 
         CountVote countVote = countVoteQueryDSLRepository.findByQuestionAndStack(question, stack);
         countVote.plusCount();
+
+        if (!question.getMember().getId().equals(memberId)) {
+            member.urgentCredit(1);
+        }
     }
 
     @Transactional
