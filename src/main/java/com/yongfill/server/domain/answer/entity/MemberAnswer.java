@@ -5,6 +5,7 @@ import com.yongfill.server.domain.question.entity.InterviewQuestion;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 @ToString
 @Builder
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class MemberAnswer {
 
 
@@ -28,7 +30,7 @@ public class MemberAnswer {
     @Column(name = "gpt_answer", columnDefinition="text", nullable = false)
     private String gptAnswer;
 
-    @Column(name = "interview_mode", length = 2, nullable = false)
+    @Column(name = "interview_mode", length = 20, nullable = false)
     private InterviewMode interviewMode;
 
     @Column(name = "create_date", nullable = false)

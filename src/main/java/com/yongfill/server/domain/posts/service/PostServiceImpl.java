@@ -3,15 +3,22 @@ package com.yongfill.server.domain.posts.service;
 import com.yongfill.server.domain.member.entity.Member;
 import com.yongfill.server.domain.member.repository.MemberJpaRepository;
 import com.yongfill.server.domain.posts.dto.CreatePostDto;
+import com.yongfill.server.domain.posts.dto.DeletePostDto;
+import com.yongfill.server.domain.posts.dto.ReadPostDto;
 import com.yongfill.server.domain.posts.entity.Category;
 import com.yongfill.server.domain.posts.entity.Post;
 import com.yongfill.server.domain.posts.repository.PostJpaRepository;
+import com.yongfill.server.global.common.response.error.ErrorCode;
+import com.yongfill.server.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -29,7 +36,7 @@ public class PostServiceImpl implements PostService{
     public CreatePostDto.ResponseDto createPost(CreatePostDto.RequestDto requestDto) {
         //TODO: 작성자 확인은 이메일 인증 후 넣기로...
 
-        Post post = createRequestDtoToEntity(requestDto);
+        Post post = toEntity(requestDto);
         postJpaRepository.save(post);
 
 
@@ -41,24 +48,57 @@ public class PostServiceImpl implements PostService{
 
 
     //R
-//    @Transactional(readOnly = true)
-//    public List<PostDto.PostResponseDto> findAllByCategory(String categoryName) {
-//
-//        Category category = Category.valueOf(categoryName);
-//        List<Post> posts = postJpaRepository.findAllByCategory(category);
-//
-//        return posts.stream()
-//                .map(this::entityToDto)
-//                .collect(Collectors.toList());
-//    }
+    @Override
+    @Transactional(readOnly = true)
+    public ReadPostDto.ResponseDto readPost(Long postId){
+
+        Post post = postJpaRepository.findById(postId)
+                .orElseThrow(()-> new CustomException(ErrorCode.INVALID_POST));
+
+        return toDto(post);
+
+
+    };
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ReadPostDto.ResponseDto> findAllByCategory(String categoryName) {
+
+        try{
+            Category category = Category.valueOf(categoryName);
+            List<Post> posts = postJpaRepository.findAllByCategory(category);
+
+            return posts.stream()
+                    .map(this::toDto)
+                    .collect(Collectors.toList());
+
+        }catch(IllegalArgumentException e){
+            throw new CustomException(ErrorCode.CATEGORY_NOT_FOUND);
+        }
+
+    }
 
     //U
 
 
     //D
+    public DeletePostDto.ResponseDto deletePost(Long postId){
+        //TODO: 인증인가 업데이트 ㅠㅠ
 
+        if (!postJpaRepository.existsById(postId)) {
+            throw new CustomException(ErrorCode.INVALID_POST);
+        }
+        postJpaRepository.deleteById(postId);
 
-    public Post createRequestDtoToEntity(CreatePostDto.RequestDto dto){
+        return DeletePostDto.ResponseDto
+                .builder()
+                .status(HttpStatus.NO_CONTENT)
+                .message("정상적으로 삭제되었습니다.")
+                .build();
+
+    }
+
+    public Post toEntity(CreatePostDto.RequestDto dto){
         //TODO: 인증인가 업데이트ㅠㅠ (매개변수에 뭘 더 받아야함)
         Member member = memberJpaRepository.findById(1L).get();
 
@@ -74,5 +114,18 @@ public class PostServiceImpl implements PostService{
                 .build();
     };
 
+    public ReadPostDto.ResponseDto toDto (Post post){
+        return ReadPostDto.ResponseDto.builder()
+                .categoryName(post.getCategory().getKr())
+                .content(post.getContent())
+                .title(post.getTitle())
+                .createTime(post.getCreateDate())
+                .lastUpdateTime(post.getUpdateDate())
+                .updateYn(post.getUpdateYn())
+                .writerName(post.getMember().getNickname())
+                .viewCount(post.getViewCount())
+                .likeCount(post.getLikeCount())
+                .build();
+    }
 
 }

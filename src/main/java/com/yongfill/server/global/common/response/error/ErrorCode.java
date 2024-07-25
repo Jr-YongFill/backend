@@ -13,7 +13,7 @@ import static org.springframework.http.HttpStatus.*;
 public enum ErrorCode {
     //CODE 400: BAD REQUEST
     CLIENT_BAD_REQUESTS(BAD_REQUEST,"잘못된 요청입니다."),
-    CATEGORY_NAME_NOT_FOUND(BAD_REQUEST,"존재하지 않는 카테고리 이름입니다."),
+    CATEGORY_NOT_FOUND(NOT_FOUND,"존재하지 않는 카테고리 이름입니다."),
     STACK_NAME_NOT_FOUND(BAD_REQUEST,"해당 스택이 존재하지 않습니다."),
     MEMBER_CREDIT_NOT_ENOUGH(BAD_REQUEST,"크래딧이 부족합니다."),
     DUPLICATE_MEMBER_EMAIL(BAD_REQUEST, "email이 중복 됩니다."),

@@ -31,13 +31,13 @@ public enum Category implements EnumName<String> {
     //한글 이름으로 Category 객체를 반환
     public static Category fromKr(String kr) {
         if(kr == null) {
-            throw new CustomException(ErrorCode.CATEGORY_NAME_NOT_FOUND);
+            throw new CustomException(ErrorCode.CATEGORY_NOT_FOUND);
         }
         for (Category category : Category.values()) {
             if (category.getKr().equals(kr)) {
                 return category;
             }
         }
-        throw new CustomException(ErrorCode.CATEGORY_NAME_NOT_FOUND);
+        throw new CustomException(ErrorCode.CATEGORY_NOT_FOUND);
     }
 }
