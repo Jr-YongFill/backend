@@ -8,12 +8,16 @@ import com.yongfill.server.domain.question.repository.InterviewQuestionJpaReposi
 import com.yongfill.server.domain.question.repository.InterviewQuestionQueryDSLRepository;
 import com.yongfill.server.domain.stack.entity.QuestionStack;
 import com.yongfill.server.domain.stack.repository.QuestionStackJpaRepository;
+import com.yongfill.server.domain.stack.service.QuestionStackService;
+import com.yongfill.server.domain.vote.entity.CountVote;
+import com.yongfill.server.domain.vote.repository.CountVoteJpaRepository;
 import com.yongfill.server.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,6 +30,7 @@ public class InterviewQuestionService {
     private final InterviewQuestionQueryDSLRepository interviewQuestionQueryDSLRepository;
     private final MemberJpaRepository memberJpaRepository;
     private final QuestionStackJpaRepository questionStackJpaRepository;
+    private final CountVoteJpaRepository countVoteJpaRepository;
 
     @Transactional
     public InterviewQuestionDto.QuestionInsertResponseDto insertInterviewQuestion(InterviewQuestionDto.QuestionInsertRequestDto requestDto, Long memberId) {
@@ -38,8 +43,19 @@ public class InterviewQuestionService {
                 .question(requestDto.getQuestion())
                 .createDate(LocalDateTime.now())
                 .build();
-
         interviewQuestionJpaRepository.save(question);
+
+        List<QuestionStack> stacks = questionStackJpaRepository.findAll();
+        List<CountVote> countVotes = stacks.stream()
+                .map(stack ->
+                    CountVote.builder()
+                                    .count(0L)
+                                    .questionStack(stack)
+                                    .interviewQuestion(question)
+                                    .build()
+                ).toList();
+
+        countVoteJpaRepository.saveAll(countVotes);
 
         return InterviewQuestionDto.QuestionInsertResponseDto.toDto(question);
     }

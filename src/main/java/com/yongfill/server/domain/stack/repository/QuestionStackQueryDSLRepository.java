@@ -5,6 +5,7 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.QueryHandler;
 import com.querydsl.jpa.sql.JPASQLQuery;
 import com.querydsl.sql.SQLTemplates;
 import com.yongfill.server.domain.member.entity.Member;
@@ -22,13 +23,14 @@ import java.util.List;
 @Repository
 @RequiredArgsConstructor
 public class QuestionStackQueryDSLRepository {
-    private final SQLTemplates sqlTemplates;
+    private final com.querydsl.sql.Configuration configuration;
+    private final QueryHandler queryHandler;
 
     @PersistenceContext
     private EntityManager entityManager;
 
     public List<QuestionStackDto.StackResponseDto> findByMember(Long memberId) {
-        JPASQLQuery<?> jpaSqlQuery = new JPASQLQuery<>(entityManager, sqlTemplates);
+        JPASQLQuery<?> jpaSqlQuery = new JPASQLQuery<>(entityManager, configuration, queryHandler);
         QMemberStackAuth qMemberStackAuth = QMemberStackAuth.memberStackAuth;
         QQuestionStack qQuestionStack = QQuestionStack.questionStack;
         StringPath msa = Expressions.stringPath("msa");

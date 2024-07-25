@@ -17,6 +17,7 @@ import java.util.List;
 @Getter
 @ToString
 @Entity
+@Table(name="interview_question")
 @Builder
 public class InterviewQuestion {
 
