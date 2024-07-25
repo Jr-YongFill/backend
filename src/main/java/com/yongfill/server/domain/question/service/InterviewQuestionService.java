@@ -93,4 +93,20 @@ public class InterviewQuestionService {
                 .map(InterviewQuestionDto.QuestionRandomResponseDto::toDto)
                 .collect(Collectors.toList());
     }
+
+    @Transactional
+    public void addQuestionStack(Long questionId, Long stackId) {
+        InterviewQuestion question = interviewQuestionJpaRepository.findById(questionId)
+                .orElseThrow(() -> new CustomException(INVALID_QUESTION));
+
+        QuestionStack stack = questionStackJpaRepository.findById(stackId)
+                .orElseThrow(() -> new CustomException(INVALID_STACK));
+
+        Member createMember = question.getMember();
+
+        question.updateQuestionStack(stack);
+        question.updateInterviewShow();
+
+        createMember.urgentCredit(10);
+    }
 }
