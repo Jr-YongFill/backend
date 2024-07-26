@@ -1,4 +1,4 @@
-package com.yongfill.server.domain.posts.dto;
+package com.yongfill.server.domain.posts.dto.post;
 
 import lombok.Builder;
 import lombok.Data;

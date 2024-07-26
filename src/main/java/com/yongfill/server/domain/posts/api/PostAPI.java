@@ -1,9 +1,9 @@
 package com.yongfill.server.domain.posts.api;
 
-import com.yongfill.server.domain.posts.dto.CreatePostDto;
-import com.yongfill.server.domain.posts.dto.DeletePostDto;
-import com.yongfill.server.domain.posts.dto.ReadPostDto;
-import com.yongfill.server.domain.posts.dto.UpdatePostDto;
+import com.yongfill.server.domain.posts.dto.post.CreatePostDto;
+import com.yongfill.server.domain.posts.dto.post.DeletePostDto;
+import com.yongfill.server.domain.posts.dto.post.ReadPostDto;
+import com.yongfill.server.domain.posts.dto.post.UpdatePostDto;
 import com.yongfill.server.domain.posts.entity.Post;
 import com.yongfill.server.domain.posts.service.PostServiceImpl;
 import com.yongfill.server.global.common.dto.PageRequestDTO;
@@ -69,5 +69,11 @@ public class PostAPI {
         UpdatePostDto.ResponseDto responseDto = postService.updatePost(postId,requestDto);
         return new ResponseEntity<>(responseDto,HttpStatus.ACCEPTED);
     }
+
+    //////////////////////// 좋아요 기능 ////////////////////////
+//
+//    @PostMapping("/api/post/{post_id}/likes")
+//    public ResponseEntity<>
+
 
 }

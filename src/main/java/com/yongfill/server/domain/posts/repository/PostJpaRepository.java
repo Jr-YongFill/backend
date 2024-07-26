@@ -1,6 +1,5 @@
 package com.yongfill.server.domain.posts.repository;
 
-import com.yongfill.server.domain.posts.dto.ReadPostDto;
 import com.yongfill.server.domain.posts.entity.Category;
 import com.yongfill.server.domain.posts.entity.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
