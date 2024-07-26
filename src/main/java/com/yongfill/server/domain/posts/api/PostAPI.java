@@ -3,6 +3,7 @@ package com.yongfill.server.domain.posts.api;
 import com.yongfill.server.domain.posts.dto.CreatePostDto;
 import com.yongfill.server.domain.posts.dto.DeletePostDto;
 import com.yongfill.server.domain.posts.dto.ReadPostDto;
+import com.yongfill.server.domain.posts.dto.UpdatePostDto;
 import com.yongfill.server.domain.posts.entity.Post;
 import com.yongfill.server.domain.posts.service.PostServiceImpl;
 import com.yongfill.server.global.common.dto.PageRequestDTO;
@@ -53,12 +54,11 @@ public class PostAPI {
         DeletePostDto.ResponseDto deleteResponseDto= postService.deletePost(postId);
         return new ResponseEntity<>(deleteResponseDto,status);
     }
-//
-//    @PatchMapping("/api/posts/{post_id}")
-//    public ResponseEntity<PostDto.PostResponseDto> updatePost(@PathVariable("post_id") Long postId,@RequestBody PostDto.CreateRequestDto createRequestDto){
-//        HttpStatus status = HttpStatus.CREATED;
-//        PostDto.PostResponseDto postResponseDto= postService.updatePost(postId, createRequestDto);
-//        return new ResponseEntity<>(postResponseDto,status);
-//    }
+
+    @PatchMapping("/api/posts/{post_id}")
+    public ResponseEntity<UpdatePostDto.ResponseDto> updatePost(@PathVariable("post_id") Long postId, @RequestBody UpdatePostDto.RequestDto requestDto){
+        UpdatePostDto.ResponseDto responseDto = postService.updatePost(postId,requestDto);
+        return new ResponseEntity<>(responseDto,HttpStatus.ACCEPTED);
+    }
 
 }

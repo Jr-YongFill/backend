@@ -68,4 +68,12 @@ public class Post {
     @OneToMany(mappedBy = "post", orphanRemoval = true)
     private List<View> views;
 
+    public void update(String title, Category category, String content){
+        if(title!=null) this.title = title;
+        if(category!=null)this.category=category;
+        if(content!=null)this.content=content;
+        this.updateYn="Y";
+        this.updateDate=LocalDateTime.now();
+    }
+
 }

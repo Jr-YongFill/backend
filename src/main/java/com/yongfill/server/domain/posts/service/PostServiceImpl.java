@@ -5,6 +5,7 @@ import com.yongfill.server.domain.member.repository.MemberJpaRepository;
 import com.yongfill.server.domain.posts.dto.CreatePostDto;
 import com.yongfill.server.domain.posts.dto.DeletePostDto;
 import com.yongfill.server.domain.posts.dto.ReadPostDto;
+import com.yongfill.server.domain.posts.dto.UpdatePostDto;
 import com.yongfill.server.domain.posts.entity.Category;
 import com.yongfill.server.domain.posts.entity.Post;
 import com.yongfill.server.domain.posts.repository.PostJpaRepository;
@@ -117,6 +118,26 @@ public class PostServiceImpl implements PostService{
 
 
     //U
+
+    public UpdatePostDto.ResponseDto updatePost(Long postId, UpdatePostDto.RequestDto requestDto){
+
+        String title = requestDto.getTitle();
+        Category category= Category.fromKr(requestDto.getCategoryName());
+        String content = requestDto.getContent();
+
+        Post post = postJpaRepository.findById(postId).orElseThrow(
+                ()->new CustomException(ErrorCode.INVALID_POST)
+        );
+
+        post.update(title,category,content);
+        postJpaRepository.save(post);
+
+        return UpdatePostDto.ResponseDto.builder()
+                .message("수정이 완료되었습니다.")
+                .status(HttpStatus.ACCEPTED)
+                .build();
+
+    }
 
 
     //D
