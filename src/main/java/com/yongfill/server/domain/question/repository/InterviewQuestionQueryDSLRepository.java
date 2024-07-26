@@ -1,11 +1,13 @@
+
 package com.yongfill.server.domain.question.repository;
 
 import com.querydsl.core.group.GroupBy;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.core.types.dsl.StringPath;
-import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.QueryHandler;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.querydsl.jpa.sql.JPASQLQuery;
 import com.querydsl.sql.SQLTemplates;
@@ -13,6 +15,7 @@ import com.yongfill.server.domain.member.entity.QMember;
 import com.yongfill.server.domain.question.dto.InterviewQuestionDto;
 import com.yongfill.server.domain.question.dto.QInterviewQuestionDto_QuestionVoteResponseDto_QuestionPageDto;
 import com.yongfill.server.domain.question.dto.QInterviewQuestionDto_QuestionVoteResponseDto_QuestionPageDto_StackDto;
+import com.yongfill.server.domain.answer.dto.MemberAnswerDTO;
 import com.yongfill.server.domain.question.entity.InterviewQuestion;
 import com.yongfill.server.domain.question.entity.QInterviewQuestion;
 import com.yongfill.server.domain.stack.entity.QuestionStack;
@@ -23,15 +26,22 @@ import jakarta.persistence.PersistenceContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import com.yongfill.server.domain.answer.entity.QMemberAnswer;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Timestamp;
 import java.util.List;
+
+import static com.querydsl.core.group.GroupBy.groupBy;
+import static com.querydsl.core.types.Projections.list;
 
 @Repository
 public class InterviewQuestionQueryDSLRepository extends QuerydslRepositorySupport {
     private final JPAQueryFactory jpaQueryFactory;
     private final QInterviewQuestion qInterviewQuestion = QInterviewQuestion.interviewQuestion;
+    private final QMemberAnswer qMemberAnswer = QMemberAnswer.memberAnswer1;
     private final QMemberQuestionStackVote qMemberQuestionStackVote = QMemberQuestionStackVote.memberQuestionStackVote;
     private final QMember qMember = QMember.member;
     private final QCountVote qCountVote = QCountVote.countVote;
@@ -57,6 +67,79 @@ public class InterviewQuestionQueryDSLRepository extends QuerydslRepositorySuppo
                 .limit(size)
                 .fetch();
     }
+
+    public Page<InterviewQuestionDto.QuestionMemberAnswerResponseDTO> findQuestionByMemberStack(Long stackId, Long memberId, int page, int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        JPASQLQuery<?> jpaSqlQuery = new JPASQLQuery<>(em, configuration, queryHandler);
+        NumberPath<Long> qId = Expressions.numberPath(Long.class, qInterviewQuestion, "id");
+        StringPath qQuestoin = Expressions.stringPath(qInterviewQuestion, "question");
+        StringPath iq = Expressions.stringPath("iq");
+        NumberPath<Long> iqId = Expressions.numberPath(Long.class, iq, "id");
+        NumberPath<Long> qQsId = Expressions.numberPath(Long.class, qInterviewQuestion, "question_stack_id");
+        StringPath ma = Expressions.stringPath("ma");
+
+        List<InterviewQuestionDto.QuestionMemberAnswerResponseDTO> result =
+
+                jpaSqlQuery
+                        .from (JPAExpressions
+                                .select(qId, qQuestoin, qQsId)
+                                .from(qInterviewQuestion)
+                                .where(Expressions.numberPath(Long.class, qInterviewQuestion, "question_stack_id").eq(stackId)
+                                        .and(Expressions.stringPath(qInterviewQuestion, "interview_show").eq("Y")))
+                                .orderBy(qInterviewQuestion.createDate.desc())
+                                .limit(pageable.getPageSize())
+                                .offset(pageable.getOffset()), iq)
+                        .leftJoin(JPAExpressions
+                                .select(
+                                        Expressions.datePath(Timestamp.class, qMemberAnswer, "create_date"),
+                                        Expressions.numberPath(Long.class, qMemberAnswer, "id"),
+                                        Expressions.stringPath(qMemberAnswer, "member_answer"),
+                                        Expressions.stringPath(qMemberAnswer, "gpt_answer"),
+                                        Expressions.stringPath(qMemberAnswer, "interview_mode"),
+                                        Expressions.numberPath(Long.class, qMemberAnswer, "interview_question_id")
+                                )
+                                .from(qMemberAnswer)
+                                .where(Expressions.numberPath(Long.class, qMemberAnswer, "member_id").eq(memberId)), ma)
+                        .on(iqId.eq(Expressions.numberPath(Long.class, ma, "interview_question_id")))
+
+                        .orderBy(iqId.asc(),
+                                Expressions.datePath(Timestamp.class, ma, "create_date").desc())
+                        .transform(GroupBy.groupBy(iqId).list(
+                                Projections.constructor(
+                                        InterviewQuestionDto.QuestionMemberAnswerResponseDTO.class,
+                                        iqId,
+                                        Expressions.stringPath(iq, "question"),
+                                        GroupBy.list(
+                                                Projections.constructor(
+                                                        MemberAnswerDTO.MemberAnswerPageResponseDTO.class,
+                                                        Expressions.datePath(Timestamp.class, ma, "create_date"),
+                                                        Expressions.numberPath(Long.class, ma, "id"),
+                                                        Expressions.stringPath(ma, "member_answer"),
+                                                        Expressions.stringPath(ma, "gpt_answer"),
+                                                        Expressions.stringPath(ma, "interview_mode")
+                                                )
+                                        )
+                                  )
+                        ));
+
+
+        Long count = jpaQueryFactory.selectFrom(qInterviewQuestion)
+                .where(qInterviewQuestion.questionStack.id.eq(stackId)
+                        .and(qInterviewQuestion.interviewShow.eq("Y")))
+                .stream().count();
+
+
+        System.out.println(count);
+
+
+        return new PageImpl<>(result, pageable, count);
+
+    }
+
+
+
+
 
 
     public Page<InterviewQuestionDto.QuestionVoteResponseDto.QuestionPageDto> getVoteQuestionInfo(Long memberId, Pageable pageable) {
