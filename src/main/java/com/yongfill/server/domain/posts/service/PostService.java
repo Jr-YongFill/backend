@@ -32,7 +32,7 @@ public interface PostService {
 
     
     //PostRequestDto 엔터티로 변경
-    Post toEntity(CreatePostDto.RequestDto dto);
+    Post toEntity(CreatePostDto.RequestDto dto, Long memberId);
 
     //PatchRequestDto 엔터티로 변경
 

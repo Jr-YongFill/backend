@@ -8,6 +8,7 @@ import com.yongfill.server.domain.posts.dto.ReadPostDto;
 import com.yongfill.server.domain.posts.dto.UpdatePostDto;
 import com.yongfill.server.domain.posts.entity.Category;
 import com.yongfill.server.domain.posts.entity.Post;
+import com.yongfill.server.domain.posts.repository.LikeJpaRepository;
 import com.yongfill.server.domain.posts.repository.PostJpaRepository;
 import com.yongfill.server.domain.posts.repository.PostQueryDSLRepository;
 import com.yongfill.server.global.common.dto.PageRequestDTO;
@@ -37,6 +38,7 @@ public class PostServiceImpl implements PostService{
     private final PostJpaRepository postJpaRepository;
     private final PostQueryDSLRepository postQueryDSLRepository;
     private final MemberJpaRepository memberJpaRepository;
+    private final LikeJpaRepository likeJpaRepository;
 
 
 
@@ -45,8 +47,8 @@ public class PostServiceImpl implements PostService{
     @Transactional
     public CreatePostDto.ResponseDto createPost(CreatePostDto.RequestDto requestDto) {
         //TODO: 작성자 확인은 이메일 인증 후 넣기로...
-
-        Post post = toEntity(requestDto);
+        Long memberId = 1L;
+        Post post = toEntity(requestDto, memberId);
         postJpaRepository.save(post);
 
 
@@ -61,11 +63,13 @@ public class PostServiceImpl implements PostService{
     @Override
     @Transactional(readOnly = true)
     public ReadPostDto.DetailResponseDto readPost(Long postId){
+        //TODO: 로그인한 멤버 인자로 넣기
 
+        Long memberId = 1L;
         Post post = postJpaRepository.findById(postId)
                 .orElseThrow(()-> new CustomException(ErrorCode.INVALID_POST));
 
-        return entityToDetailResponseDto(post);
+        return entityToDetailResponseDto(memberId,post);
 
 
     }
@@ -163,9 +167,10 @@ public class PostServiceImpl implements PostService{
 
     }
 
-    public Post toEntity(CreatePostDto.RequestDto dto){
+    public Post toEntity(CreatePostDto.RequestDto dto,Long memberId){
         //TODO: 인증인가 업데이트ㅠㅠ (매개변수에 뭘 더 받아야함)
-        Member member = memberJpaRepository.findById(1L).get();
+        Member member = memberJpaRepository.findById(memberId)
+                .orElseThrow(()->new CustomException(ErrorCode.INVALID_MEMBER));
 
         return Post.builder()
                 .title(dto.getTitle())
@@ -179,7 +184,9 @@ public class PostServiceImpl implements PostService{
                 .build();
     };
 
-    public ReadPostDto.DetailResponseDto entityToDetailResponseDto(Post post){
+    public ReadPostDto.DetailResponseDto entityToDetailResponseDto(Long memberId,Post post){
+        boolean isLiked = likeJpaRepository.existsByMemberIdAndPostId(memberId, post.getId());
+
         return ReadPostDto.DetailResponseDto.builder()
                 .category(post.getCategory().getKr())
                 .content(post.getContent())
@@ -188,6 +195,7 @@ public class PostServiceImpl implements PostService{
                 .lastUpdateTime(post.getUpdateDate())
                 .updateYn(post.getUpdateYn())
                 .writerName(post.getMember().getNickname())
+                .isLiked(isLiked)
                 .viewCount(post.getViewCount())
                 .likeCount(post.getLikeCount())
                 .build();
