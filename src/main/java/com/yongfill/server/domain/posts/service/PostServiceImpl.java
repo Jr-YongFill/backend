@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -91,16 +92,23 @@ public class PostServiceImpl implements PostService{
         return new PageResponseDTO<>(result, fn);
     }
 
-    @Override
+
     @Transactional(readOnly = true)
-    public List<ReadPostDto.SimpleResponseDto> searchPost(String categoryName, String title){
-        List<ReadPostDto.SimpleResponseDto> simpleResponseDtos;
-        Category category = Category.valueOf(categoryName);
-        List<Post> searchResult = postJpaRepository.findAllByCategoryAndTitle(category,title);
-        return searchResult.stream()
-                .map(this::entityToSimpleResponseDto)
-                .collect(Collectors.toList());
+    public List<ReadPostDto.MainPageResponseDto> findAllCategoryAndPost() {
+        return Arrays.stream(Category.values()).map(
+                category -> ReadPostDto.MainPageResponseDto.builder()
+                        .category(category.getKr())
+                        .postList(
+                                postJpaRepository.findAllByCategory(category).stream()
+                                        .map(this::entityToSimpleResponseDto)
+                                        .limit(5)
+                                        .collect(Collectors.toList())
+                                //최대 5개까지만 달고싶은데.....
+                        ).build()
+        ).collect(Collectors.toList());
     }
+
+
 
     @Override
     @Transactional(readOnly = true)
@@ -138,8 +146,6 @@ public class PostServiceImpl implements PostService{
                 .build();
 
     }
-
-
     //D
     public DeletePostDto.ResponseDto deletePost(Long postId){
         //TODO: 인증인가 업데이트 ㅠㅠ
@@ -186,6 +192,7 @@ public class PostServiceImpl implements PostService{
                 .likeCount(post.getLikeCount())
                 .build();
     }
+
 
 
 }
