@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@ToString
+@ToString (exclude = {"member", "post"})
 @Entity
 @Builder
 public class Comment {
@@ -35,7 +35,7 @@ public class Comment {
     private LocalDateTime updateDate;
 
     @Column(name = "update_yn", length = 2, nullable = false)
-    private boolean updateYn;
+    private String updateYn;
 
     @JoinColumn(name = "member_id", nullable = false)
     @ManyToOne

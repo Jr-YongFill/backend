@@ -1,5 +1,6 @@
 package com.yongfill.server.domain.posts.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.yongfill.server.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.*;
@@ -59,9 +60,11 @@ public class Post {
     @ManyToOne
     private Member member;
 
+    @JsonBackReference
     @OneToMany(mappedBy = "post", orphanRemoval = true)
     private List<Like> likes;
 
+    @JsonBackReference
     @OneToMany(mappedBy = "post", orphanRemoval = true)
     private List<View> views;
 
