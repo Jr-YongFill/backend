@@ -13,7 +13,7 @@ public class PageRequestDTO {
 
     // 기본값
     public PageRequestDTO() {
-        this(0, 10);
+        this(0, 5);
     }
 
     public PageRequestDTO(int page, int size) {

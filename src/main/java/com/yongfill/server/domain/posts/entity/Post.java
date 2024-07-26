@@ -20,7 +20,6 @@ import java.util.List;
 @EntityListeners(AuditingEntityListener.class)
 public class Post {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -29,9 +28,10 @@ public class Post {
     @Column(name = "title", length = 200, nullable = false)
     private String title;
 
-    @Column(name = "content", columnDefinition="longtext", nullable = false)
+    @Column(name = "content", columnDefinition = "longtext", nullable = false)
     private String content;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "post_category", length = 30, nullable = false)
     private Category category;
 
@@ -43,18 +43,15 @@ public class Post {
     @LastModifiedDate
     private LocalDateTime updateDate;
 
-
     @ColumnDefault("0")
     @Column(name = "view_count", nullable = false)
     private Long viewCount;
-
 
     @ColumnDefault("0")
     @Column(name = "like_count", nullable = false)
     private Long likeCount;
 
-
-    @ColumnDefault("N")
+    @ColumnDefault("'N'")
     @Column(name = "update_yn", length = 2, nullable = false)
     private String updateYn;
 
@@ -68,4 +65,11 @@ public class Post {
     @OneToMany(mappedBy = "post", orphanRemoval = true)
     private List<View> views;
 
+    public void update(String title, Category category, String content) {
+        if (title != null) this.title = title;
+        if (category != null) this.category = category;
+        if (content != null) this.content = content;
+        this.updateYn = "Y";
+        this.updateDate = LocalDateTime.now();
+    }
 }
