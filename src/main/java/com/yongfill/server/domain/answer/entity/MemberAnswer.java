@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @Getter
 @ToString
 @Builder
+@Table(name="member_answer")
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 public class MemberAnswer {

@@ -2,6 +2,7 @@ package com.yongfill.server.domain.question.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
 import com.yongfill.server.domain.question.entity.InterviewQuestion;
+import com.yongfill.server.domain.answer.dto.MemberAnswerDTO;
 import com.yongfill.server.domain.stack.entity.QuestionStack;
 import com.yongfill.server.global.common.dto.PageResponseNoEntityDto;
 import lombok.AllArgsConstructor;
@@ -56,6 +57,24 @@ public class InterviewQuestionDto {
         }
     }
 
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    public static class QuestionMemberAnswerResponseDTO {
+        private Long id;
+        private String question;
+        private List<MemberAnswerDTO.MemberAnswerPageResponseDTO> memberAnswers;
+
+        public QuestionMemberAnswerResponseDTO(Long id, String question , List<MemberAnswerDTO.MemberAnswerPageResponseDTO> memberAnswers) {
+            this.id = id;
+            this.question = question;
+            this.memberAnswers = memberAnswers;
+        }
+    }
+
+
+
     @Data
     @Builder
     public static class QuestionVoteResponseDto {
@@ -95,6 +114,8 @@ public class InterviewQuestionDto {
                 this.myVoteStackId = myVoteStackId;
                 this.stackDtos = stackDtos;
             }
+
+
 
             @Data
             @Builder
