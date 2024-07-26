@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class ReadPostDto {
 
@@ -39,5 +40,11 @@ public class ReadPostDto {
 
     }
 
+    @Data
+    @Builder
+    public static class MainPageResponseDto{
+        private String category;
+        private List<SimpleResponseDto> postList;
+    }
 
 }

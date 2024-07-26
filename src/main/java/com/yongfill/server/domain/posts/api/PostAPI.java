@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RequiredArgsConstructor
 @RestController
@@ -45,6 +47,13 @@ public class PostAPI {
         } else {
             return postService.findAllByCategoryAndTitle(categoryName,title,pageRequest);
         }
+    }
+
+    @GetMapping("/api/categories/post")
+    public ResponseEntity<List<ReadPostDto.MainPageResponseDto>> findAllCategoryAndPost(){
+        HttpStatus status = HttpStatus.OK;
+        List<ReadPostDto.MainPageResponseDto> mainPageResponseDto = postService.findAllCategoryAndPost();
+        return new ResponseEntity<>(mainPageResponseDto,status);
     }
 
 
