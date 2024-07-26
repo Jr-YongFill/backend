@@ -1,10 +1,12 @@
 package com.yongfill.server.domain.posts.api;
 
-import com.yongfill.server.domain.posts.dto.CreatePostDto;
-import com.yongfill.server.domain.posts.dto.DeletePostDto;
-import com.yongfill.server.domain.posts.dto.ReadPostDto;
-import com.yongfill.server.domain.posts.dto.UpdatePostDto;
+import com.yongfill.server.domain.posts.dto.like.LikeDto;
+import com.yongfill.server.domain.posts.dto.post.CreatePostDto;
+import com.yongfill.server.domain.posts.dto.post.DeletePostDto;
+import com.yongfill.server.domain.posts.dto.post.ReadPostDto;
+import com.yongfill.server.domain.posts.dto.post.UpdatePostDto;
 import com.yongfill.server.domain.posts.entity.Post;
+import com.yongfill.server.domain.posts.service.LikeService;
 import com.yongfill.server.domain.posts.service.PostServiceImpl;
 import com.yongfill.server.global.common.dto.PageRequestDTO;
 import com.yongfill.server.global.common.dto.PageResponseDTO;
@@ -21,6 +23,7 @@ import java.util.List;
 public class PostAPI {
 
     private final PostServiceImpl postService;
+    private final LikeService likeService;
 
     @PostMapping("/api/posts")
     public ResponseEntity<CreatePostDto.ResponseDto> savePost(@RequestBody CreatePostDto.RequestDto createRequestDto){
@@ -30,6 +33,8 @@ public class PostAPI {
 
         return new ResponseEntity<>(createResponseDto, status);
     }
+
+
 
     @GetMapping("/api/posts/{post_id}")
     public ResponseEntity<ReadPostDto.DetailResponseDto> updatePost(@PathVariable("post_id") Long postId){
@@ -73,6 +78,30 @@ public class PostAPI {
     public ResponseEntity<UpdatePostDto.ResponseDto> updatePost(@PathVariable("post_id") Long postId, @RequestBody UpdatePostDto.RequestDto requestDto){
         UpdatePostDto.ResponseDto responseDto = postService.updatePost(postId,requestDto);
         return new ResponseEntity<>(responseDto,HttpStatus.ACCEPTED);
+    }
+
+    //////////////////////// 좋아요 기능 ////////////////////////
+
+    @PostMapping("/api/posts/{post_id}/likes")
+    public ResponseEntity<LikeDto.PostResponseDto> saveLike(@PathVariable("post_id")Long postId){
+        HttpStatus status = HttpStatus.CREATED;
+        //TODO: 멤버 넣기
+        Long memberId=1L;
+        LikeDto.PostResponseDto postResponseDto = likeService.createLike(memberId,postId);
+
+        return new ResponseEntity<>(postResponseDto,status);
+
+    }
+
+    @DeleteMapping("/api/posts/{post_id}/likes")
+    public ResponseEntity<LikeDto.PostResponseDto> deleteLike(@PathVariable("post_id")Long postId){
+        HttpStatus status = HttpStatus.CREATED;
+        //TODO: 멤버 넣기
+        Long memberId=1L;
+        LikeDto.PostResponseDto postResponseDto = likeService.deleteLike(memberId,postId);
+
+        return new ResponseEntity<>(postResponseDto,status);
+
     }
 
 }

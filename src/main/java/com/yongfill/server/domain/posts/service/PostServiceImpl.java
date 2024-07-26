@@ -2,15 +2,17 @@ package com.yongfill.server.domain.posts.service;
 
 import com.yongfill.server.domain.member.entity.Member;
 import com.yongfill.server.domain.member.repository.MemberJpaRepository;
-import com.yongfill.server.domain.posts.dto.CreatePostDto;
-import com.yongfill.server.domain.posts.dto.DeletePostDto;
-import com.yongfill.server.domain.posts.dto.ReadPostDto;
-import com.yongfill.server.domain.posts.dto.UpdatePostDto;
+import com.yongfill.server.domain.posts.dto.post.CreatePostDto;
+import com.yongfill.server.domain.posts.dto.post.DeletePostDto;
+import com.yongfill.server.domain.posts.dto.post.ReadPostDto;
+import com.yongfill.server.domain.posts.dto.post.UpdatePostDto;
 import com.yongfill.server.domain.posts.entity.Category;
 import com.yongfill.server.domain.posts.entity.Post;
+import com.yongfill.server.domain.posts.entity.View;
 import com.yongfill.server.domain.posts.repository.LikeJpaRepository;
 import com.yongfill.server.domain.posts.repository.PostJpaRepository;
 import com.yongfill.server.domain.posts.repository.PostQueryDSLRepository;
+import com.yongfill.server.domain.posts.repository.ViewJpaRepository;
 import com.yongfill.server.global.common.dto.PageRequestDTO;
 import com.yongfill.server.global.common.dto.PageResponseDTO;
 import com.yongfill.server.global.common.response.error.ErrorCode;
@@ -39,7 +41,7 @@ public class PostServiceImpl implements PostService{
     private final PostQueryDSLRepository postQueryDSLRepository;
     private final MemberJpaRepository memberJpaRepository;
     private final LikeJpaRepository likeJpaRepository;
-
+    private final ViewJpaRepository viewJpaRepository;
 
     //C
     @Override
@@ -60,16 +62,26 @@ public class PostServiceImpl implements PostService{
 
     //R
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public ReadPostDto.DetailResponseDto readPost(Long postId){
         //TODO: 로그인한 멤버 인자로 넣기
 
-        Long memberId = 1L;
+        Long memberId = 2L;
+
+        Member member = memberJpaRepository.findById(memberId)
+                .orElseThrow(()-> new CustomException(ErrorCode.INVALID_MEMBER));
+
         Post post = postJpaRepository.findById(postId)
                 .orElseThrow(()-> new CustomException(ErrorCode.INVALID_POST));
 
+        //view 테이블에 없다면 조회수 1 추가
+        if(!viewJpaRepository.existsByMemberIdAndPostId(memberId,postId)){
+            View view = View.builder().member(member).post(post).build();
+            post.view();
+            postJpaRepository.save(post);
+            viewJpaRepository.save(view);
+        }
         return entityToDetailResponseDto(memberId,post);
-
 
     }
 

@@ -1,14 +1,12 @@
 package com.yongfill.server.domain.posts.service;
 
-import com.yongfill.server.domain.posts.dto.CreatePostDto;
-import com.yongfill.server.domain.posts.dto.DeletePostDto;
-import com.yongfill.server.domain.posts.dto.ReadPostDto;
-import com.yongfill.server.domain.posts.dto.UpdatePostDto;
+import com.yongfill.server.domain.posts.dto.post.CreatePostDto;
+import com.yongfill.server.domain.posts.dto.post.DeletePostDto;
+import com.yongfill.server.domain.posts.dto.post.ReadPostDto;
+import com.yongfill.server.domain.posts.dto.post.UpdatePostDto;
 import com.yongfill.server.domain.posts.entity.Post;
 import com.yongfill.server.global.common.dto.PageRequestDTO;
 import com.yongfill.server.global.common.dto.PageResponseDTO;
-
-import java.util.List;
 
 public interface PostService {
     //게시글 작성
