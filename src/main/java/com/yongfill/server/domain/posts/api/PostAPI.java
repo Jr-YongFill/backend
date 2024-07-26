@@ -56,6 +56,11 @@ public class PostAPI {
         return new ResponseEntity<>(mainPageResponseDto,status);
     }
 
+    @GetMapping("/api/members/{member_id}/posts")
+    public PageResponseDTO<ReadPostDto.SimpleResponseDto, Post> findAllByMemberId(@PathVariable("member_id") Long memberId,PageRequestDTO pageRequest){
+        return postService.findAllByMemberId(memberId, pageRequest);
+    }
+
 
     @DeleteMapping("/api/posts/{post_id}")
     public ResponseEntity<DeletePostDto.ResponseDto> deletePost(@PathVariable("post_id")Long postId){

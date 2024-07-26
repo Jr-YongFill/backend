@@ -41,7 +41,6 @@ public class PostServiceImpl implements PostService{
     private final LikeJpaRepository likeJpaRepository;
 
 
-
     //C
     @Override
     @Transactional
@@ -125,7 +124,16 @@ public class PostServiceImpl implements PostService{
                 .build();
     }
 
+    @Transactional(readOnly = true)
+    public PageResponseDTO<ReadPostDto.SimpleResponseDto, Post> findAllByMemberId(Long memberId, PageRequestDTO pageRequest) {
 
+        Pageable pageable = PageRequest.of(pageRequest.getPage(), pageRequest.getSize(), Sort.by(Sort.Direction.DESC, "createDate"));
+        Page<Post> result = postQueryDSLRepository.findAllByMemberId(memberId, pageable);
+
+        Function<Post, ReadPostDto.SimpleResponseDto> fn = (entity -> entityToSimpleResponseDto(entity));
+
+        return new PageResponseDTO<>(result, fn);
+    }
 
 
 
