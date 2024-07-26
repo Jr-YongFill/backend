@@ -12,6 +12,7 @@ import com.yongfill.server.global.exception.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class LikeService {
@@ -24,6 +25,7 @@ public class LikeService {
     @Autowired
     private PostJpaRepository postJpaRepository;
 
+    @Transactional
     public LikeDto.PostResponseDto createLike(Long memberId, Long postId) {
         Member member = memberJpaRepository.findById(memberId)
                 .orElseThrow(()->new CustomException(ErrorCode.INVALID_MEMBER));
@@ -43,6 +45,7 @@ public class LikeService {
         return LikeDto.PostResponseDto.builder().message(message).status(status).build();
     }
 
+    @Transactional
     public LikeDto.PostResponseDto deleteLike(Long memberId, Long postId) {
         if(!memberJpaRepository.existsById(memberId))
                 throw new CustomException(ErrorCode.INVALID_MEMBER);
