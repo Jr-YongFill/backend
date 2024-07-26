@@ -28,7 +28,7 @@ public class Member {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "email", length = 200, nullable = false)
+    @Column(name = "email", length = 200, unique = true, nullable = false)
     private String email;
 
     @Column(name = "password", length = 300, nullable = false)
@@ -89,7 +89,7 @@ public class Member {
     }
 
     @Builder
-    public Member(Long id, String email, String password, Long credit, String nickname, LocalDateTime createDate, Role role, String auth) {
+    public Member(Long id, String email, String password, Long credit, String nickname, LocalDateTime createDate, Role role, String refreshToken) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -97,6 +97,7 @@ public class Member {
         this.nickname = nickname;
         this.createDate = createDate;
         this.role = role;
+        this.refreshToken = refreshToken;
     }
 
 }

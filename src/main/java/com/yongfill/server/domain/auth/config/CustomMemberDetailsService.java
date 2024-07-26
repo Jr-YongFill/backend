@@ -21,15 +21,6 @@ public class CustomMemberDetailsService implements UserDetailsService {
         return new CustomMemberDetails(member);
     }
 
-    // 필요시 추가
-    public UserDetails loadUserByMemberId(Long id) throws IllegalArgumentException {
-        Member member = memberRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException(""));
-
-        return new CustomMemberDetails(member);
-    }
-
-    // 필요시 추가
     public UserDetails loadUserByEmail(String email) throws IllegalArgumentException {
         // 이메일을 기반으로 회원 정보를 데이터베이스에서 가져옵니다.
         Member member = memberRepository.findMemberByEmail(email).orElseThrow(
