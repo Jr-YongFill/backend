@@ -72,4 +72,12 @@ public class Post {
         this.updateYn = "Y";
         this.updateDate = LocalDateTime.now();
     }
+
+    public void like(){
+        this.likeCount+=1;
+    }
+
+    public void view(){
+        this.viewCount+=1;
+    }
 }

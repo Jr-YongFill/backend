@@ -33,7 +33,8 @@ public class LikeService {
         if(likeJpaRepository.existsByMemberIdAndPostId(memberId,postId)){
             throw new CustomException(ErrorCode.LIKE_CONFLICT);
         }
-
+        post.like();
+        postJpaRepository.save(post);
         likeJpaRepository.save(Like.builder().member(member).post(post).build());
 
         HttpStatus status= HttpStatus.OK;
