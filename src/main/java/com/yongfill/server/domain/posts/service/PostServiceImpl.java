@@ -122,7 +122,7 @@ public class PostServiceImpl implements PostService{
     public UpdatePostDto.ResponseDto updatePost(Long postId, UpdatePostDto.RequestDto requestDto){
 
         String title = requestDto.getTitle();
-        Category category= Category.fromKr(requestDto.getCategoryName());
+        Category category= Category.fromKr(requestDto.getCategory());
         String content = requestDto.getContent();
 
         Post post = postJpaRepository.findById(postId).orElseThrow(
@@ -175,7 +175,7 @@ public class PostServiceImpl implements PostService{
 
     public ReadPostDto.DetailResponseDto entityToDetailResponseDto(Post post){
         return ReadPostDto.DetailResponseDto.builder()
-                .categoryName(post.getCategory().getKr())
+                .category(post.getCategory().getKr())
                 .content(post.getContent())
                 .title(post.getTitle())
                 .createTime(post.getCreateDate())

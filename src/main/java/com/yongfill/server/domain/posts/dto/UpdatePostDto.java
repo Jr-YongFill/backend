@@ -11,7 +11,7 @@ public class UpdatePostDto {
     public static class RequestDto{
         private String content;
         private String title;
-        private String categoryName;
+        private String category;
     }
 
     @Builder

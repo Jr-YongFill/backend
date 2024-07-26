@@ -15,7 +15,7 @@ public class ReadPostDto {
     public static class DetailResponseDto {
 
         private String title;
-        private String categoryName;
+        private String category;
         private String content;
         private String writerName;
         private LocalDateTime createTime;
