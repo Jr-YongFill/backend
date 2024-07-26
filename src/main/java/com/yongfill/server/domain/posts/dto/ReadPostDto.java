@@ -24,6 +24,7 @@ public class ReadPostDto {
         private Long likeCount;
         private Long viewCount;
         private String updateYn;
+        private boolean isLiked;//좋아요 여부
 
     }
 

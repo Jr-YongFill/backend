@@ -85,6 +85,8 @@ public class PostQueryDSLRepository extends QuerydslRepositorySupport {
 
     }
 
+    //// 좋아요 ////
+
 }
 
 
