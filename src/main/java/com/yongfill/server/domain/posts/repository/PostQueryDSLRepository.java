@@ -2,6 +2,8 @@ package com.yongfill.server.domain.posts.repository;
 
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.yongfill.server.domain.member.entity.Member;
+import com.yongfill.server.domain.member.repository.MemberJpaRepository;
 import com.yongfill.server.domain.posts.entity.Category;
 import com.yongfill.server.domain.posts.entity.Post;
 import com.yongfill.server.domain.posts.entity.QPost;
@@ -24,6 +26,8 @@ public class PostQueryDSLRepository extends QuerydslRepositorySupport {
 
     @Autowired
     private JPAQueryFactory jpaQueryFactory;
+    @Autowired
+    private MemberJpaRepository memberJpaRepository;
 
 
     private QPost qPost;
@@ -85,8 +89,23 @@ public class PostQueryDSLRepository extends QuerydslRepositorySupport {
 
     }
 
-    //// 좋아요 ////
+    public Page<Post> findAllByMemberId(Long memberId, Pageable pageable) {
 
+            Member member = memberJpaRepository.findById(memberId)
+                    .orElseThrow(()->new CustomException(ErrorCode.INVALID_POST));
+            List<Post> posts = jpaQueryFactory.selectFrom(qPost)
+                    .where(qPost.member.eq(member))
+                    .orderBy(qPost.createDate.desc())
+                    .offset(pageable.getOffset())
+                    .limit(pageable.getPageSize())
+                    .fetch();
+
+            JPAQuery<Long> total = jpaQueryFactory.select(qPost.count())
+                    .from(qPost)
+                    .where(qPost.member.eq(member));
+
+            return PageableExecutionUtils.getPage(posts, pageable, total::fetchOne);
+    }
 }
 
 
