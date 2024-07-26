@@ -271,6 +271,70 @@ class InterviewQuestionServiceTest {
         return member;
     }
 
+    @Test
+    @DisplayName("질문 정식 등록")
+    void 질문_정식_등록() {
+        Member member = createMember("멤버1", Role.USER);
+        InterviewQuestionDto.QuestionInsertRequestDto requestDto = InterviewQuestionDto.QuestionInsertRequestDto
+                .builder()
+                .question("test 질문입니당~")
+                .build();
+        QuestionStack stack = createStack("질문1");
+        Long questionId = interviewQuestionService.insertInterviewQuestion(requestDto, member.getId()).getQuestionId();
+        InterviewQuestion question = interviewQuestionJpaRepository.findById(questionId)
+                .orElseThrow();
+        Long stackId = stack.getId();
+
+        interviewQuestionService.addQuestionStack(questionId, stackId);
+
+
+        assertEquals(10L, member.getCredit());
+        assertEquals("Y", question.getInterviewShow());
+        assertEquals(stackId, question.getQuestionStack().getId());
+    }
+
+    @Test
+    @DisplayName("질문 정식 등록 예외 없는 질문")
+    void 질문_정식_등록_없는_질문() {
+        Member member = createMember("멤버1", Role.USER);
+        InterviewQuestionDto.QuestionInsertRequestDto requestDto = InterviewQuestionDto.QuestionInsertRequestDto
+                .builder()
+                .question("test 질문입니당~")
+                .build();
+        QuestionStack stack = createStack("질문1");
+        Long questionId = interviewQuestionService.insertInterviewQuestion(requestDto, member.getId()).getQuestionId();
+        InterviewQuestion question = interviewQuestionJpaRepository.findById(questionId)
+                .orElseThrow();
+        Long stackId = stack.getId();
+        Throwable exception = assertThrowsExactly(
+                CustomException.class,
+                () -> interviewQuestionService.addQuestionStack(questionId+1, stackId)
+        );
+
+        assertEquals(INVALID_QUESTION.getMessage(), exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("질문 정식 등록 예외 없는 스택")
+    void 질문_정식_등록_없는_스택() {
+        Member member = createMember("멤버1", Role.USER);
+        InterviewQuestionDto.QuestionInsertRequestDto requestDto = InterviewQuestionDto.QuestionInsertRequestDto
+                .builder()
+                .question("test 질문입니당~")
+                .build();
+        QuestionStack stack = createStack("질문1");
+        Long questionId = interviewQuestionService.insertInterviewQuestion(requestDto, member.getId()).getQuestionId();
+        InterviewQuestion question = interviewQuestionJpaRepository.findById(questionId)
+                .orElseThrow();
+        Long stackId = stack.getId();
+        Throwable exception = assertThrowsExactly(
+                CustomException.class,
+                () -> interviewQuestionService.addQuestionStack(questionId, stackId+1)
+        );
+
+        assertEquals(INVALID_STACK.getMessage(), exception.getMessage());
+    }
+
     private InterviewQuestion createInterviewQuestion(Member member, String state, String content, QuestionStack stack) {
         InterviewQuestion interviewQuestion = InterviewQuestion.builder()
                 .interviewShow(state)

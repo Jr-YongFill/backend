@@ -23,7 +23,7 @@ public class InterviewQuestionController {
         return new ResponseEntity<>(responseDto, status);
     }
 
-    @PatchMapping("/api/questions/{question_id}")
+    @PatchMapping("/api/questions/{question_id}/state")
     public ResponseEntity<Void> updateQuestionState(@PathVariable("question_id") Long questionId) {
         HttpStatus status = HttpStatus.OK;
         interviewQuestionService.updateQuestionState(questionId);
@@ -53,5 +53,13 @@ public class InterviewQuestionController {
         List<InterviewQuestionDto.QuestionRandomResponseDto> responseDtos = interviewQuestionService.findQuestionRandomByStacks(stackIds, size);
 
         return new ResponseEntity<>(responseDtos, status);
+    }
+
+    @PatchMapping("/api/admin/questions/{question_id}")
+    public ResponseEntity<Void> addQuestionStack(@PathVariable("question_id") Long questionId, @RequestBody InterviewQuestionDto.QuestionPatchStackRequestDto requestDto) {
+        HttpStatus status = HttpStatus.OK;
+        interviewQuestionService.addQuestionStack(questionId, requestDto.getStackId());
+
+        return new ResponseEntity<>(status);
     }
 }
