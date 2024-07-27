@@ -75,7 +75,12 @@ public class CommentService {
         return toUpdateDto(comment);
     }
 
+    public CommentDTO.CommentDeleteResponseDTO deleteComment(Long commentId) {
 
+        commentJpaRepository.deleteById(commentId);
+        return new CommentDTO.CommentDeleteResponseDTO(commentId);
+
+    }
 
 
     private CommentDTO.CommentMemberPageResponseDTO toPageDto(Comment entity) {
@@ -126,6 +131,8 @@ public class CommentService {
                 .build();
     }
 
+
+
     public Comment toEntity (CommentDTO.CommentCreateRequestDTO dto) {
 
         Member member = memberJpaRepository.findById(dto.getMemberId())
@@ -143,6 +150,7 @@ public class CommentService {
                 .build();
 
     }
+
 
 
 }

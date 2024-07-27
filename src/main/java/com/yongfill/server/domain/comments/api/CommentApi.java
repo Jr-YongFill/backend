@@ -54,7 +54,7 @@ public class CommentApi {
         HttpStatus status = HttpStatus.CREATED;
 
         requestDTO.setPostId(postId);
-        requestDTO.setMemberId(1L);
+        requestDTO.setMemberId(1L); // 추후 UserId 입력
 
 
         CommentDTO.CommentCreateResponseDTO result = commentService.createComment(requestDTO);
@@ -72,6 +72,17 @@ public class CommentApi {
 
         CommentDTO.CommentUpdateResponseDTO result = commentService.updateComment(requestDTO);
 
+        return new ResponseEntity<>(result, status);
+    }
+
+
+    @DeleteMapping("/api/comments/{comment_id}")
+    public ResponseEntity<CommentDTO.CommentDeleteResponseDTO> deleteComment(@PathVariable("comment_id") Long commentId) {
+
+        HttpStatus status = HttpStatus.NO_CONTENT;
+        CommentDTO.CommentDeleteResponseDTO result = commentService.deleteComment(commentId);
+
+        System.out.println(result);
         return new ResponseEntity<>(result, status);
     }
 

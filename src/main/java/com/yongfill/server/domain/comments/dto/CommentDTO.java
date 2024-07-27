@@ -82,4 +82,13 @@ public class CommentDTO {
         private String content;
         private LocalDateTime updateDate;
     }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class CommentDeleteResponseDTO {
+        private Long id;
+
+    }
 }
