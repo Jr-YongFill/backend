@@ -9,7 +9,6 @@ import lombok.*;
 @ToString
 @Entity
 @Builder
-@Table(name = "post_view")
 public class View {
 
 
