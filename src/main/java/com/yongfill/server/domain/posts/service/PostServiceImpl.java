@@ -81,7 +81,7 @@ public class PostServiceImpl implements PostService{
             postJpaRepository.save(post);
             viewJpaRepository.save(view);
         }
-        return entityToDetailResponseDto(memberId,post);
+        return entityToDetailResponseDto(member,post);
 
     }
 
@@ -204,8 +204,8 @@ public class PostServiceImpl implements PostService{
                 .build();
     };
 
-    public ReadPostDto.DetailResponseDto entityToDetailResponseDto(Long memberId,Post post){
-        boolean isLiked = likeJpaRepository.existsByMemberIdAndPostId(memberId, post.getId());
+    public ReadPostDto.DetailResponseDto entityToDetailResponseDto(Member member,Post post){
+        boolean isLiked = likeJpaRepository.existsByMemberIdAndPostId(member.getId(), post.getId());
 
         return ReadPostDto.DetailResponseDto.builder()
                 .category(post.getCategory().getKr())
@@ -218,6 +218,7 @@ public class PostServiceImpl implements PostService{
                 .isLiked(isLiked)
                 .viewCount(post.getViewCount())
                 .likeCount(post.getLikeCount())
+                .filePath(member.getFilePath())
                 .build();
     }
 
