@@ -29,4 +29,38 @@ public class CommentDTO {
         private Long attachmentFileSize;
 
     }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class CommentCreateRequestDTO {
+        private String content;
+        private Long memberId;
+        private Long postId;
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class CommentCreateResponseDTO {
+        private Long id;
+        private String content;
+        private Long postId;
+        private LocalDateTime createDate;
+    }
+
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class CommentMemberPageResponseDTO {
+        private Long id;
+        private String content;
+        private LocalDateTime createDate;
+        private String updateYn;
+
+    }
 }

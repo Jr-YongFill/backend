@@ -9,10 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -33,6 +30,36 @@ public class CommentApi {
 
         return new ResponseEntity<>(result, status);
 
+    }
+
+    @GetMapping("/api/members/{member_id}/comments")
+    public ResponseEntity<PageResponseDTO<CommentDTO.CommentMemberPageResponseDTO, Comment>> getCommentsByMember(@PathVariable("member_id") Long memberId,
+                                                                       @RequestParam int page,
+                                                                       @RequestParam int size) {
+
+        HttpStatus status = HttpStatus.OK;
+
+        PageRequestDTO pageDTO = new PageRequestDTO(page, size);
+
+        PageResponseDTO<CommentDTO.CommentMemberPageResponseDTO, Comment> result = commentService.findCommentsByMember(pageDTO, memberId);
+
+        return new ResponseEntity<>(result, status);
+
+    }
+
+    @PostMapping("/api/posts/{post_id}/comments")
+    public ResponseEntity<CommentDTO.CommentCreateResponseDTO> createComment(@PathVariable("post_id") Long postId,
+                                                                           @RequestBody CommentDTO.CommentCreateRequestDTO requestDTO) {
+
+        HttpStatus status = HttpStatus.CREATED;
+
+        requestDTO.setPostId(postId);
+        requestDTO.setMemberId(1L);
+
+
+        CommentDTO.CommentCreateResponseDTO result = commentService.createComment(requestDTO);
+
+        return new ResponseEntity<>(result, status);
     }
 
 
