@@ -64,6 +64,20 @@ public class CommentService {
     }
 
 
+    public CommentDTO.CommentUpdateResponseDTO updateComment(CommentDTO.CommentUpdateRequestDTO requestDTO) {
+
+        Comment comment = commentJpaRepository.findById(requestDTO.getId())
+                .orElseThrow(() -> new CommentCustomException(ErrorCode.INVALID_COMMENT));
+
+        comment.update(requestDTO.getContent());
+        commentJpaRepository.save(comment);
+
+        return toUpdateDto(comment);
+    }
+
+
+
+
     private CommentDTO.CommentMemberPageResponseDTO toPageDto(Comment entity) {
 
         return CommentDTO.CommentMemberPageResponseDTO.builder()
@@ -100,6 +114,15 @@ public class CommentService {
                 .content(comment.getContent())
                 .postId(comment.getPost().getId())
                 .createDate(comment.getCreateDate())
+                .build();
+    }
+
+    private CommentDTO.CommentUpdateResponseDTO toUpdateDto(Comment comment) {
+
+        return CommentDTO.CommentUpdateResponseDTO.builder()
+                .id(comment.getId())
+                .content(comment.getContent())
+                .updateDate(comment.getUpdateDate())
                 .build();
     }
 

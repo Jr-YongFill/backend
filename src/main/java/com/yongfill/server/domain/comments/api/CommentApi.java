@@ -63,5 +63,17 @@ public class CommentApi {
     }
 
 
+    @PatchMapping("/api/comments/{comment_id}")
+    public ResponseEntity<CommentDTO.CommentUpdateResponseDTO> updateComment(@PathVariable("comment_id") Long commentId,
+                                                                             @RequestBody CommentDTO.CommentUpdateRequestDTO requestDTO) {
+
+        HttpStatus status = HttpStatus.ACCEPTED;
+        requestDTO.setId(commentId);
+
+        CommentDTO.CommentUpdateResponseDTO result = commentService.updateComment(requestDTO);
+
+        return new ResponseEntity<>(result, status);
+    }
+
 
 }

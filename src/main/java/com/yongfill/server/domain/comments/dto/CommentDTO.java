@@ -63,4 +63,23 @@ public class CommentDTO {
         private String updateYn;
 
     }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class CommentUpdateRequestDTO {
+        private Long id;
+        private String content;
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class CommentUpdateResponseDTO {
+        private Long id;
+        private String content;
+        private LocalDateTime updateDate;
+    }
 }

@@ -46,6 +46,7 @@ public enum ErrorCode {
     INVALID_QUESTION(NOT_FOUND,"존재하지 않는 질문입니다."),
     INVALID_STACK(NOT_FOUND,"존재하지 않는 스택입니다."),
     INVALID_POST(NOT_FOUND,"존재하지 않는 포스트입니다"),
+    INVALID_COMMENT(NOT_FOUND,"존재하지 않는 댓글입니다"),
 
     //CODE 429: TOO MANY REQUEST
     LACK_OF_CREDIT(TOO_MANY_REQUESTS,"OPENAI API 키 크레딧을 모두 소진하였습니다."),
