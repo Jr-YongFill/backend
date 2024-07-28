@@ -31,7 +31,6 @@ public class SecurityConfig {
         http
                 .csrf().disable()
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/**").permitAll()
                         .requestMatchers("/api/auth/sign-up").permitAll() // 회원가입 모든 사용자에게 허용
                         .requestMatchers("/api/auth/sign-in").permitAll() // 로그인 모든 사용자에게 허용
                         .requestMatchers("/api/admin/**").hasRole("ADMIN") // ADMIN 권한이 필요한 요청
