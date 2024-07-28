@@ -28,7 +28,9 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String accessToken = getTokenFromRequest(request);
+//        String refreshToken = getRefreshTokenFromRequest(request);
 
+        // 토큰 유효성 검사
         if (accessToken != null && jwtTokenProvider.validateToken(accessToken)) {
             UsernamePasswordAuthenticationToken authentication = getAuthenticationFromToken(accessToken);
             authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
@@ -38,6 +40,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
+    // JWT 토큰 추출
     private String getTokenFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
@@ -45,10 +48,15 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         }
         return null;
     }
+
+    // JWT 토큰으로부터 인증 객체를 생성합니다.
     private UsernamePasswordAuthenticationToken getAuthenticationFromToken(String accessToken) {
-        String loginId = jwtTokenProvider.getUserEmailFromToken(accessToken);
-        UserDetails userDetails = customMemberDetailsService.loadUserByUsername(loginId);
+        String email = jwtTokenProvider.getUserEmailFromToken(accessToken);
+        UserDetails userDetails = customMemberDetailsService.loadUserByUsername(email);
+        System.out.println("getAuthenticationFromToken: " + userDetails);
 
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
+
 }
+

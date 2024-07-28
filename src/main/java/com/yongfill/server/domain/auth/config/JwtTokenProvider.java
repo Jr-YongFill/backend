@@ -53,6 +53,8 @@ public class JwtTokenProvider {
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
+
+
     public String getUserEmailFromToken(String token) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())
@@ -63,9 +65,9 @@ public class JwtTokenProvider {
         return claims.getSubject();
     }
 
-
     // JWT 유효성 검사
     public boolean validateToken(String token) {
+        System.out.println("validate token: " + token);
         try {
             Jwts
                     .parserBuilder()
@@ -77,7 +79,7 @@ public class JwtTokenProvider {
         } catch (MalformedJwtException ex) {
             System.out.println("Invalid JWT token");
         } catch (ExpiredJwtException ex) {
-            System.out.println("Expired JWT token");
+            System.out.println("Expired JWT token" + ex.getMessage());
         } catch (UnsupportedJwtException ex) {
             System.out.println("Unsupported JWT token");
         } catch (IllegalArgumentException ex) {
@@ -85,7 +87,6 @@ public class JwtTokenProvider {
         }
         return false;
     }
-
     public String getUserIdFromToken(String token) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())

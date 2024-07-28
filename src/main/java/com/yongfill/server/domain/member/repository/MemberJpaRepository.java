@@ -12,4 +12,6 @@
         Optional<Member> findMemberById(Long id);
         Optional<Member> findMemberByEmail(String Email);
         Optional<Member> findMemberByNickname(String NickName);
+        Optional<Member> findMemberByFilePath(String filePath);
+        Optional<Member> findMemberByAttachmentFileName(String attachmentFileName);
     }
