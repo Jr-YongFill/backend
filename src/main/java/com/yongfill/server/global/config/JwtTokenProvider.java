@@ -1,9 +1,10 @@
-package com.yongfill.server.domain.auth.config;
+package com.yongfill.server.global.config;
 
 import java.security.Key;
 import java.util.Date;
-import java.util.Map;
 
+import com.yongfill.server.domain.auth.service.CustomMemberDetails;
+import com.yongfill.server.global.exception.CustomException;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+
+import static com.yongfill.server.global.common.response.error.ErrorCode.*;
 
 @Component
 public class JwtTokenProvider {
@@ -38,36 +41,47 @@ public class JwtTokenProvider {
 
         return Jwts.builder()
                 .setSubject(customUserDetails.getUsername())
-                .claim("user-id", customUserDetails.getMember().getId())
-                .claim("user-email", customUserDetails.getMember().getEmail())
+                .claim("member-id", customUserDetails.getMember().getId())
+                .claim("member-email", customUserDetails.getMember().getEmail())
+                .claim("member-nickname", customUserDetails.getMember().getEmail())
+                .claim("auth", customUserDetails.getMember().getRole().name())
                 .setIssuedAt(new Date())
                 .setExpiration(expiryDate)
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    public String generateRefreshToken() {
+    public String generateRefreshToken(Authentication authentication) {
+        CustomMemberDetails customUserDetails = (CustomMemberDetails) authentication.getPrincipal();
         return Jwts.builder()
+                .setSubject(customUserDetails.getUsername())
+                .claim("member-id", customUserDetails.getMember().getId())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + refreshTokenValidityMs))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
-
-    public String getUserEmailFromToken(String token) {
-        Claims claims = Jwts.parserBuilder()
+    public Long getUserIdFromToken(String token) {
+        return Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())
                 .build()
                 .parseClaimsJws(token)
-                .getBody();
+                .getBody()
+                .get("member-id", Long.class);
+    }
 
-        return claims.getSubject();
+    public String getUserEmailFromToken(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("member-email", String.class);
     }
 
     // JWT 유효성 검사
     public boolean validateToken(String token) {
-        System.out.println("validate token: " + token);
         try {
             Jwts
                     .parserBuilder()
@@ -76,24 +90,14 @@ public class JwtTokenProvider {
                     .parseClaimsJws(token);
 
             return true;
-        } catch (MalformedJwtException ex) {
-            System.out.println("Invalid JWT token");
+        } catch (SecurityException | MalformedJwtException ex) {
+            throw new CustomException(INVALID_JWT_TOKEN);
         } catch (ExpiredJwtException ex) {
-            System.out.println("Expired JWT token" + ex.getMessage());
+            throw new CustomException(EXPIRED_JWT_TOKEN);
         } catch (UnsupportedJwtException ex) {
-            System.out.println("Unsupported JWT token");
+            throw new CustomException(UNSUPPORTED_JWT_TOKEN);
         } catch (IllegalArgumentException ex) {
-            System.out.println("JWT claims string is empty.");
+            throw new CustomException(NON_LOGIN);
         }
-        return false;
-    }
-    public String getUserIdFromToken(String token) {
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(getSigningKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-
-        return claims.getSubject();
     }
 }

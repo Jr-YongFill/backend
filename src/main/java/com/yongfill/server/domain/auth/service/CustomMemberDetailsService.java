@@ -1,12 +1,16 @@
-package com.yongfill.server.domain.auth.config;
+package com.yongfill.server.domain.auth.service;
 
 import com.yongfill.server.domain.member.entity.Member;
 import com.yongfill.server.domain.member.repository.MemberJpaRepository;
+import com.yongfill.server.global.common.response.error.ErrorCode;
+import com.yongfill.server.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import static com.yongfill.server.global.common.response.error.ErrorCode.INVALID_MEMBER;
 
 @Service
 @RequiredArgsConstructor
@@ -21,11 +25,17 @@ public class CustomMemberDetailsService implements UserDetailsService {
         return new CustomMemberDetails(member);
     }
 
+
+    public UserDetails loadUserByMemberId(Long memberId) throws IllegalArgumentException {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new CustomException(INVALID_MEMBER));
+
+        return new CustomMemberDetails(member);
+    }
+
     public UserDetails loadUserByEmail(String email) throws IllegalArgumentException {
-        // 이메일을 기반으로 회원 정보를 데이터베이스에서 가져옵니다.
         Member member = memberRepository.findMemberByEmail(email).orElseThrow(
-                () -> new IllegalArgumentException("해당 이메일을 가진 사용자를 찾을 수 없습니다.")
-        );
+                () -> new CustomException(INVALID_MEMBER));
 
         return new CustomMemberDetails(member);
     }

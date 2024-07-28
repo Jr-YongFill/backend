@@ -1,7 +1,6 @@
 package com.yongfill.server.global.config;
 
-import com.yongfill.server.domain.member.service.MemberService;
-import com.yongfill.server.domain.auth.filter.JwtTokenFilter;
+import com.yongfill.server.global.filter.JwtTokenFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,9 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -33,8 +30,7 @@ public class SecurityConfig {
         HttpSecurity httpSecurity = http
                 .csrf().disable()
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/sign-up").permitAll()
-                        .requestMatchers("/api/sign-in").permitAll()
+                        .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/members/**").hasRole("USER")
                         .requestMatchers("/api/auth/**").hasRole("USER")
                         .requestMatchers("/api/questions/**").hasRole("USER")

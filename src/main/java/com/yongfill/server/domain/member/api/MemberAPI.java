@@ -1,12 +1,8 @@
 package com.yongfill.server.domain.member.api;
 
-import com.yongfill.server.domain.auth.config.JwtTokenProvider;
 import com.yongfill.server.domain.member.dto.MemberRequestDTO;
 import com.yongfill.server.domain.member.dto.MemberResponseDTO;
 import com.yongfill.server.domain.member.service.MemberService;
-import com.yongfill.server.domain.posts.dto.DeletePostDto;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,11 +17,11 @@ public class MemberAPI {
     private final MemberService memberService;
 
     // 회원가입
-    @PostMapping("/sign-up")
+    @PostMapping("/auth/sign-up")
     public ResponseEntity<?> createMember(@RequestBody MemberRequestDTO requestDTO) {
-        HttpStatus status = HttpStatus.OK;
+        HttpStatus status = HttpStatus.CREATED;
         memberService.createMember(requestDTO);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(status);
     }
 
     // member 조회

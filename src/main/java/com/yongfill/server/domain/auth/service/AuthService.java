@@ -1,42 +1,44 @@
 package com.yongfill.server.domain.auth.service;
 
-import com.yongfill.server.domain.auth.config.CustomMemberDetails;
-import com.yongfill.server.domain.auth.config.CustomMemberDetailsService;
-import com.yongfill.server.domain.auth.config.JwtTokenProvider;
+import com.yongfill.server.global.config.JwtTokenProvider;
 import com.yongfill.server.domain.auth.dto.AuthRequestDto;
 import com.yongfill.server.domain.auth.dto.AccessTokenDto;
-import com.yongfill.server.domain.auth.repository.AuthRepository;
 import com.yongfill.server.domain.member.entity.Member;
 import com.yongfill.server.domain.member.repository.MemberJpaRepository;
-import jakarta.servlet.http.HttpServletResponse;
+import com.yongfill.server.global.common.response.error.ErrorCode;
+import com.yongfill.server.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static com.yongfill.server.global.common.response.error.ErrorCode.*;
 
 @RequiredArgsConstructor
 @Service
 public class AuthService {
     private final JwtTokenProvider jwtTokenProvider;
-    private final AuthenticationManager authenticationManager;
     private final MemberJpaRepository memberJpaRepository;
-    private final CustomMemberDetailsService customMemberDetailsService;
-
-    String tokenType = "Bearer";
+    private final PasswordEncoder passwordEncoder;
+    private final String tokenType = "Bearer";
 
     @Transactional
     public AccessTokenDto login(AuthRequestDto requestDto) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(requestDto.getEmail(),requestDto.getPassword()));
+        Member member = memberJpaRepository.findMemberByEmail(requestDto.getEmail()).orElseThrow(
+                () -> new CustomException(INVALID_MEMBER));
 
-        System.out.println("AccessTokenDTO");
-        Member member = ((CustomMemberDetails) authentication.getPrincipal()).getMember();
-        String accessToken = jwtTokenProvider.generateAccessToken(authentication);
-        String refreshToken = jwtTokenProvider.generateRefreshToken();
+        if (!passwordEncoder.matches(requestDto.getPassword(), member.getPassword())) {
+            throw new CustomException(NOT_MATCH_PASSWORD);
+        }
+
+        String accessToken = jwtTokenProvider.generateAccessToken(
+                new UsernamePasswordAuthenticationToken(new CustomMemberDetails(member), member.getPassword())
+        );
+        String refreshToken = jwtTokenProvider.generateRefreshToken(
+                new UsernamePasswordAuthenticationToken(new CustomMemberDetails(member), member.getPassword())
+        );
 
         member.setRefreshToken(refreshToken);
         memberJpaRepository.save(member);
@@ -46,20 +48,17 @@ public class AuthService {
 
     @Transactional
     public AccessTokenDto refreshToken(String refreshToken) {
-        // 리프레시 토큰 검증
         if (!jwtTokenProvider.validateToken(refreshToken)) {
-            throw new IllegalArgumentException("Invalid refresh token");
+            throw new CustomException(EXPIRED_JWT_TOKEN);
         }
 
-        // 리프레시 토큰으로부터 사용자 정보 추출
-        String email = jwtTokenProvider.getUserEmailFromToken(refreshToken);
-        UserDetails userDetails = customMemberDetailsService.loadUserByUsername(email);
+        Member member = memberJpaRepository.findMemberByRefreshToken(refreshToken)
+                .orElseThrow(() -> new CustomException(INVALID_MEMBER));
 
-        // 새로운 액세스 토큰 생성
-        String newAccessToken = jwtTokenProvider.generateAccessToken(
-                new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities())
+        String accessToken = jwtTokenProvider.generateAccessToken(
+                new UsernamePasswordAuthenticationToken(new CustomMemberDetails(member), member.getPassword())
         );
-        // 새로운 액세스 토큰을 클라이언트에 반환
-        return new AccessTokenDto(newAccessToken, refreshToken, tokenType);
+
+        return new AccessTokenDto(accessToken, refreshToken, tokenType);
     }
 }

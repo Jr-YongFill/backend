@@ -1,7 +1,6 @@
-package com.yongfill.server.domain.auth.config;
+package com.yongfill.server.domain.auth.service;
 
 import com.yongfill.server.domain.member.entity.Member;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
