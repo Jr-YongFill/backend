@@ -98,9 +98,15 @@ public class PostServiceImpl implements PostService{
 
     }
 
-    public Post toEntity(CreatePostDto.RequestDto dto){
-        //TODO: 인증인가 업데이트ㅠㅠ (매개변수에 뭘 더 받아야함)
-        Member member = memberJpaRepository.findById(1L).get();
+    @Override
+    public Post toEntity(CreatePostDto.RequestDto dto) {
+        return null;
+    }
+
+    public Post toEntity(CreatePostDto.RequestDto dto,Long memberId){
+
+        Member member = memberJpaRepository.findById(memberId)
+                .orElseThrow(()->new CustomException(ErrorCode.INVALID_MEMBER));
 
         return Post.builder()
                 .title(dto.getTitle())
