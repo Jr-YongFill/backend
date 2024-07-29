@@ -18,7 +18,7 @@ public class MemberAPI {
     private final MemberService memberService;
 
     // 회원가입
-    @PostMapping("/sign-up")
+    @PostMapping("/auth/sign-up")
     public ResponseEntity<?> createMember(@RequestBody MemberRequestDTO requestDTO){
         memberService.createMember(requestDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);

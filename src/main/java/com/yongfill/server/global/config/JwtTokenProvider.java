@@ -4,7 +4,6 @@ import java.security.Key;
 import java.util.Date;
 
 import com.yongfill.server.domain.auth.service.CustomMemberDetails;
-import com.yongfill.server.global.exception.CustomException;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -90,14 +89,9 @@ public class JwtTokenProvider {
                     .parseClaimsJws(token);
 
             return true;
-        } catch (SecurityException | MalformedJwtException ex) {
-            throw new CustomException(INVALID_JWT_TOKEN);
-        } catch (ExpiredJwtException ex) {
-            throw new CustomException(EXPIRED_JWT_TOKEN);
-        } catch (UnsupportedJwtException ex) {
-            throw new CustomException(UNSUPPORTED_JWT_TOKEN);
-        } catch (IllegalArgumentException ex) {
-            throw new CustomException(NON_LOGIN);
+        } catch (SecurityException | MalformedJwtException | ExpiredJwtException | UnsupportedJwtException |
+                 IllegalArgumentException ex) {
+            throw ex;
         }
     }
 }
