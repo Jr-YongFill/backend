@@ -11,15 +11,13 @@ import com.yongfill.server.domain.question.dto.InterviewQuestionDto;
 import com.yongfill.server.domain.question.entity.InterviewQuestion;
 import com.yongfill.server.domain.question.repository.InterviewQuestionJpaRepository;
 import com.yongfill.server.domain.question.repository.InterviewQuestionQueryDSLRepository;
-import com.yongfill.server.domain.stack.entity.QuestionStack;
-import com.yongfill.server.domain.stack.repository.QuestionStackJpaRepository;
-import com.yongfill.server.global.common.dto.PageRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 import static com.yongfill.server.global.common.response.error.ErrorCode.*;
@@ -33,7 +31,6 @@ public class MemberAnswerService {
     private final MemberJpaRepository memberJpaRepository;
     private final InterviewQuestionJpaRepository interviewQuestionJpaRepository;
     private final InterviewQuestionQueryDSLRepository interviewQuestionQueryDSLRepository;
-    private final QuestionStackJpaRepository questionStackJpaRepository;
 
 
     public MemberAnswer addMemberAnswer(MemberAnswerDTO.MemberAnswerRequestDTO memberAnswerRequestDTO) {
@@ -64,6 +61,19 @@ public class MemberAnswerService {
 
     }
 
+    public MemberAnswerDTO.MemberAnswerCountDto countTodayAnswer(Long memberId) {
+
+
+        LocalDateTime startOfDay = LocalDateTime.now().with(LocalTime.MIN);
+        LocalDateTime endOfDay = LocalDateTime.now().with(LocalTime.MAX);
+        Long count = memberAnswerJpaRepository.countByMemberIdAndCreateDateBetween(memberId,startOfDay,endOfDay);
+        return MemberAnswerDTO.MemberAnswerCountDto.builder()
+                .memberId(memberId)
+                .count(count)
+                .build();
+
+    }
+
     public MemberAnswer toEntity(MemberAnswerDTO.MemberAnswerRequestDTO dto, Member member, InterviewQuestion interviewQuestion) {
 
         return MemberAnswer.builder()
@@ -87,5 +97,6 @@ public class MemberAnswerService {
                 .build();
 
     }
+
 
 }

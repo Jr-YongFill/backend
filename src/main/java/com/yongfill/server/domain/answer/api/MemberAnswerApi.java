@@ -4,7 +4,6 @@ import com.yongfill.server.domain.answer.dto.MemberAnswerDTO;
 import com.yongfill.server.domain.answer.entity.MemberAnswer;
 import com.yongfill.server.domain.answer.service.MemberAnswerService;
 import com.yongfill.server.domain.question.dto.InterviewQuestionDto;
-import com.yongfill.server.domain.question.entity.InterviewQuestion;
 import com.yongfill.server.global.common.dto.PageRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -33,9 +32,9 @@ public class MemberAnswerApi {
 
     @GetMapping("/api/members/{member_id}/stacks/{stack_id}/answers")
     public ResponseEntity<Page<InterviewQuestionDto.QuestionMemberAnswerResponseDTO>> findAnswers(@PathVariable("member_id") Long memberId,
-                                                                                     @PathVariable("stack_id") Long stackId,
-                                                                                     @RequestParam int page,
-                                                                                     @RequestParam int size){
+                                                                                                  @PathVariable("stack_id") Long stackId,
+                                                                                                  @RequestParam int page,
+                                                                                                  @RequestParam int size){
 
         HttpStatus status = HttpStatus.OK;
 
@@ -52,4 +51,11 @@ public class MemberAnswerApi {
         return new ResponseEntity<>(result, status);
     }
 
+    @GetMapping("/api/members/{member_id}/answers")
+    public ResponseEntity<MemberAnswerDTO.MemberAnswerCountDto> findCountTodayAnswer(@PathVariable("member_id")Long memberId){
+        HttpStatus status = HttpStatus.OK;
+        MemberAnswerDTO.MemberAnswerCountDto result = memberAnswerService.countTodayAnswer(memberId);
+
+        return new ResponseEntity<>(result,status);
+    }
 }
