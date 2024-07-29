@@ -17,6 +17,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
+@Table(name="member_")
 @Setter
 @ToString(exclude = {"posts", "comments", "stacks", "votes", "questions", "answers"})
 @Entity
@@ -100,4 +101,7 @@ public class Member {
         this.refreshToken = refreshToken;
     }
 
+    public void urgentCredit(int credit) {
+        this.credit += credit;
+    }
 }

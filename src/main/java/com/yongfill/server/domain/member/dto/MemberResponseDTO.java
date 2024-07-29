@@ -3,6 +3,7 @@ package com.yongfill.server.domain.member.dto;
 import com.yongfill.server.domain.member.entity.Member;
 import com.yongfill.server.domain.member.entity.Role;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 
