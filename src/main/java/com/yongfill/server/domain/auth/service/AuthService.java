@@ -61,4 +61,8 @@ public class AuthService {
 
         return new AccessTokenDto(accessToken, refreshToken, tokenType);
     }
+
+    public Boolean checkEmil(String email) {
+        return memberJpaRepository.existsMemberByEmail(email);
+    }
 }

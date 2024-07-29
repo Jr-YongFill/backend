@@ -14,6 +14,14 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
     private final AuthService authService;
 
+    @GetMapping("/auth/check-email/{email}")
+    public ResponseEntity<Boolean> checkEmil(@PathVariable String email) {
+        HttpStatus status = HttpStatus.OK;
+        Boolean responseDto = authService.checkEmil(email);
+
+        return new ResponseEntity<>(responseDto, status);
+    }
+
     @PostMapping("/auth/sign-in")
     public ResponseEntity<AccessTokenDto> login(@RequestBody AuthRequestDto requestDto) {
         HttpStatus status = HttpStatus.OK;
