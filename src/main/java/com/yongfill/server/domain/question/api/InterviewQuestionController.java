@@ -2,6 +2,7 @@ package com.yongfill.server.domain.question.api;
 
 import com.yongfill.server.domain.question.dto.InterviewQuestionDto;
 import com.yongfill.server.domain.question.service.InterviewQuestionService;
+import com.yongfill.server.global.config.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,10 +14,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class InterviewQuestionController {
     private final InterviewQuestionService interviewQuestionService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @PostMapping("/api/questions")
-    public ResponseEntity<InterviewQuestionDto.QuestionInsertResponseDto> insertQuestion(@RequestBody InterviewQuestionDto.QuestionInsertRequestDto requestDto) {
-        Long memberId = 1L;
+    public ResponseEntity<InterviewQuestionDto.QuestionInsertResponseDto> insertQuestion(@RequestBody InterviewQuestionDto.QuestionInsertRequestDto requestDto,
+                                                                                         @RequestHeader("Authorization") String accessToken) {
+        Long memberId = jwtTokenProvider.getUserIdFromToken(accessToken.substring(7));
         HttpStatus status = HttpStatus.CREATED;
         InterviewQuestionDto.QuestionInsertResponseDto responseDto = interviewQuestionService.insertInterviewQuestion(requestDto, memberId);
 

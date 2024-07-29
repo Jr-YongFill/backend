@@ -5,6 +5,7 @@ import com.yongfill.server.domain.comments.entity.Comment;
 import com.yongfill.server.domain.comments.service.CommentService;
 import com.yongfill.server.global.common.dto.PageRequestDTO;
 import com.yongfill.server.global.common.dto.PageResponseDTO;
+import com.yongfill.server.global.config.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 public class CommentApi {
 
     private final CommentService commentService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @GetMapping("/api/posts/{post_id}/comments")
     public ResponseEntity<PageResponseDTO<CommentDTO.CommentPageResponseDTO, Comment>> getCommentsByPost(@PathVariable("post_id") Long postId,
@@ -49,13 +51,13 @@ public class CommentApi {
 
     @PostMapping("/api/posts/{post_id}/comments")
     public ResponseEntity<CommentDTO.CommentCreateResponseDTO> createComment(@PathVariable("post_id") Long postId,
-                                                                           @RequestBody CommentDTO.CommentCreateRequestDTO requestDTO) {
-
+                                                                             @RequestBody CommentDTO.CommentCreateRequestDTO requestDTO,
+                                                                             @RequestHeader("Authorization") String accessToken) {
+        Long memberId = jwtTokenProvider.getUserIdFromToken(accessToken.substring(7));
         HttpStatus status = HttpStatus.CREATED;
 
         requestDTO.setPostId(postId);
-        requestDTO.setMemberId(1L); // 추후 UserId 입력
-
+        requestDTO.setMemberId(memberId); // 추후 UserId 입력
 
         CommentDTO.CommentCreateResponseDTO result = commentService.createComment(requestDTO);
 
@@ -65,24 +67,25 @@ public class CommentApi {
 
     @PatchMapping("/api/comments/{comment_id}")
     public ResponseEntity<CommentDTO.CommentUpdateResponseDTO> updateComment(@PathVariable("comment_id") Long commentId,
-                                                                             @RequestBody CommentDTO.CommentUpdateRequestDTO requestDTO) {
-
+                                                                             @RequestBody CommentDTO.CommentUpdateRequestDTO requestDTO,
+                                                                             @RequestHeader("Authorization") String accessToken) {
+        Long memberId = jwtTokenProvider.getUserIdFromToken(accessToken.substring(7));
         HttpStatus status = HttpStatus.ACCEPTED;
         requestDTO.setId(commentId);
 
-        CommentDTO.CommentUpdateResponseDTO result = commentService.updateComment(requestDTO);
+        CommentDTO.CommentUpdateResponseDTO result = commentService.updateComment(requestDTO, memberId);
 
         return new ResponseEntity<>(result, status);
     }
 
 
     @DeleteMapping("/api/comments/{comment_id}")
-    public ResponseEntity<CommentDTO.CommentDeleteResponseDTO> deleteComment(@PathVariable("comment_id") Long commentId) {
-
+    public ResponseEntity<CommentDTO.CommentDeleteResponseDTO> deleteComment(@PathVariable("comment_id") Long commentId,
+                                                                             @RequestHeader("Authorization") String accessToken) {
+        Long memberId = jwtTokenProvider.getUserIdFromToken(accessToken.substring(7));
         HttpStatus status = HttpStatus.NO_CONTENT;
-        CommentDTO.CommentDeleteResponseDTO result = commentService.deleteComment(commentId);
+        CommentDTO.CommentDeleteResponseDTO result = commentService.deleteComment(commentId, memberId);
 
-        System.out.println(result);
         return new ResponseEntity<>(result, status);
     }
 

@@ -20,6 +20,7 @@ public enum ErrorCode {
     DUPLICATE_MEMBER_NICKNAME(BAD_REQUEST,"nickname이 중복됩니다."),
     NOT_MATCH_PASSWORD(BAD_REQUEST, "비밀번호가 일치하지 않습니다."),
     MEMBER_ALREADY_VOTE(BAD_REQUEST, "이미 투표를 하셨습니다."),
+    INVALID_AUTH(BAD_REQUEST, "권한이 없습니다."),
 
     //아이디가 비어있다면 INVALID_EMAIL_FORMAT 호출
     INVALID_EMAIL_FORMAT(BAD_REQUEST,"올바르지 않은 이메일 형식입니다."),

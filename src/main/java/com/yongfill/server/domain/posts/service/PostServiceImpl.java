@@ -1,6 +1,7 @@
 package com.yongfill.server.domain.posts.service;
 
 import com.yongfill.server.domain.member.entity.Member;
+import com.yongfill.server.domain.member.entity.Role;
 import com.yongfill.server.domain.member.repository.MemberJpaRepository;
 import com.yongfill.server.domain.posts.dto.post.CreatePostDto;
 import com.yongfill.server.domain.posts.dto.post.DeletePostDto;
@@ -152,7 +153,7 @@ public class PostServiceImpl implements PostService{
 
     //U
 
-    public UpdatePostDto.ResponseDto updatePost(Long postId, UpdatePostDto.RequestDto requestDto){
+    public UpdatePostDto.ResponseDto updatePost(Long postId, UpdatePostDto.RequestDto requestDto, Long memberId){
 
         String title = requestDto.getTitle();
         Category category= Category.fromKr(requestDto.getCategory());
@@ -161,6 +162,13 @@ public class PostServiceImpl implements PostService{
         Post post = postJpaRepository.findById(postId).orElseThrow(
                 ()->new CustomException(ErrorCode.INVALID_POST)
         );
+
+        Member member = memberJpaRepository.findById(memberId)
+                .orElseThrow(() -> new CustomException(ErrorCode.INVALID_MEMBER));
+
+        if (member.getRole().equals(Role.USER) && (!post.getMember().getId().equals(memberId))) {
+            throw new CustomException(ErrorCode.INVALID_AUTH);
+        }
 
         post.update(title,category,content);
         postJpaRepository.save(post);
@@ -172,13 +180,18 @@ public class PostServiceImpl implements PostService{
 
     }
     //D
-    public DeletePostDto.ResponseDto deletePost(Long postId){
-        //TODO: 인증인가 업데이트 ㅠㅠ
+    public DeletePostDto.ResponseDto deletePost(Long postId, Long memberId){
+        Member member = memberJpaRepository.findById(memberId)
+                .orElseThrow(() -> new CustomException(ErrorCode.INVALID_MEMBER));
 
-        if (!postJpaRepository.existsById(postId)) {
-            throw new CustomException(ErrorCode.INVALID_POST);
+        Post post = postJpaRepository.findById(postId).orElseThrow(
+                ()->new CustomException(ErrorCode.INVALID_POST));
+
+        if (member.getRole().equals(Role.USER) && (!post.getMember().getId().equals(memberId))) {
+            throw new CustomException(ErrorCode.INVALID_AUTH);
         }
-        postJpaRepository.deleteById(postId);
+
+        postJpaRepository.delete(post);
 
         return DeletePostDto.ResponseDto
                 .builder()

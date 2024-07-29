@@ -22,10 +22,10 @@ public interface PostService {
     PageResponseDTO<ReadPostDto.SimpleResponseDto, Post> findAllByCategoryAndTitle(String categoryName, String title, PageRequestDTO pageRequest);
 
     //게시글 수정
-    UpdatePostDto.ResponseDto updatePost(Long postId, UpdatePostDto.RequestDto requestDto);
+    UpdatePostDto.ResponseDto updatePost(Long postId, UpdatePostDto.RequestDto requestDto, Long memberId);
 
     //게시글 삭제
-    DeletePostDto.ResponseDto deletePost(Long postId);
+    DeletePostDto.ResponseDto deletePost(Long postId, Long memberId);
 
 
     

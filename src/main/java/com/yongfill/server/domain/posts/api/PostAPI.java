@@ -10,6 +10,7 @@ import com.yongfill.server.domain.posts.service.LikeService;
 import com.yongfill.server.domain.posts.service.PostServiceImpl;
 import com.yongfill.server.global.common.dto.PageRequestDTO;
 import com.yongfill.server.global.common.dto.PageResponseDTO;
+import com.yongfill.server.global.config.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,7 @@ public class PostAPI {
 
     private final PostServiceImpl postService;
     private final LikeService likeService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @PostMapping("/api/posts")
     public ResponseEntity<CreatePostDto.ResponseDto> savePost(@RequestBody CreatePostDto.RequestDto createRequestDto){
@@ -67,26 +69,32 @@ public class PostAPI {
     }
 
 
-    @RequestMapping(value = {"/api/posts/{post_id}", "/api/admin/posts/{post_id}"}, method = RequestMethod.DELETE)
-    public ResponseEntity<DeletePostDto.ResponseDto> deletePost(@PathVariable("post_id")Long postId){
+    @DeleteMapping("/api/posts/{post_id}")
+    public ResponseEntity<DeletePostDto.ResponseDto> deletePost(@PathVariable("post_id")Long postId,
+                                                                @RequestHeader("Authorization") String accessToken) {
+        Long memberId = jwtTokenProvider.getUserIdFromToken(accessToken.substring(7));
         HttpStatus status = HttpStatus.OK;
-        DeletePostDto.ResponseDto deleteResponseDto= postService.deletePost(postId);
+        DeletePostDto.ResponseDto deleteResponseDto= postService.deletePost(postId, memberId);
         return new ResponseEntity<>(deleteResponseDto,status);
     }
 
     @PatchMapping("/api/posts/{post_id}")
-    public ResponseEntity<UpdatePostDto.ResponseDto> updatePost(@PathVariable("post_id") Long postId, @RequestBody UpdatePostDto.RequestDto requestDto){
-        UpdatePostDto.ResponseDto responseDto = postService.updatePost(postId,requestDto);
+    public ResponseEntity<UpdatePostDto.ResponseDto> updatePost(@PathVariable("post_id") Long postId,
+                                                                @RequestBody UpdatePostDto.RequestDto requestDto,
+                                                                @RequestHeader("Authorization") String accessToken) {
+        Long memberId = jwtTokenProvider.getUserIdFromToken(accessToken.substring(7));
+
+        UpdatePostDto.ResponseDto responseDto = postService.updatePost(postId,requestDto, memberId);
         return new ResponseEntity<>(responseDto,HttpStatus.ACCEPTED);
     }
 
     //////////////////////// 좋아요 기능 ////////////////////////
 
     @PostMapping("/api/posts/{post_id}/likes")
-    public ResponseEntity<LikeDto.PostResponseDto> saveLike(@PathVariable("post_id")Long postId){
+    public ResponseEntity<LikeDto.PostResponseDto> saveLike(@PathVariable("post_id")Long postId,
+                                                            @RequestHeader("Authorization") String accessToken) {
+        Long memberId = jwtTokenProvider.getUserIdFromToken(accessToken.substring(7));
         HttpStatus status = HttpStatus.CREATED;
-        //TODO: 멤버 넣기
-        Long memberId=1L;
         LikeDto.PostResponseDto postResponseDto = likeService.createLike(memberId,postId);
 
         return new ResponseEntity<>(postResponseDto,status);
@@ -94,10 +102,11 @@ public class PostAPI {
     }
 
     @DeleteMapping("/api/posts/{post_id}/likes")
-    public ResponseEntity<LikeDto.PostResponseDto> deleteLike(@PathVariable("post_id")Long postId){
+    public ResponseEntity<LikeDto.PostResponseDto> deleteLike(@PathVariable("post_id")Long postId,
+                                                              @RequestHeader("Authorization") String accessToken) {
+        Long memberId = jwtTokenProvider.getUserIdFromToken(accessToken.substring(7));
         HttpStatus status = HttpStatus.CREATED;
-        //TODO: 멤버 넣기
-        Long memberId=1L;
+
         LikeDto.PostResponseDto postResponseDto = likeService.deleteLike(memberId,postId);
 
         return new ResponseEntity<>(postResponseDto,status);
