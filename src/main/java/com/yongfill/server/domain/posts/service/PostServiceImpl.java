@@ -133,6 +133,7 @@ public class PostServiceImpl implements PostService{
                 .lastUpdateTime(post.getUpdateDate())
                 .title(post.getTitle())
                 .writerName(post.getMember().getNickname())
+                .postId(post.getId())
                 .build();
     }
 

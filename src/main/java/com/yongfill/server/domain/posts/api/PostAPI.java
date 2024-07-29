@@ -54,7 +54,7 @@ public class PostAPI {
         }
     }
 
-    @GetMapping("/api/categories/post")
+    @GetMapping("/api/categories/posts")
     public ResponseEntity<List<ReadPostDto.MainPageResponseDto>> findAllCategoryAndPost(){
         HttpStatus status = HttpStatus.OK;
         List<ReadPostDto.MainPageResponseDto> mainPageResponseDto = postService.findAllCategoryAndPost();
