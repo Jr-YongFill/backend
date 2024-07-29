@@ -69,16 +69,6 @@ public class MemberAnswerDTO {
             this.gptAnswer = gptAnswer;
             this.interviewMode = interviewMode;
         }
-
-    }
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Builder
-    public static class MemberAnswerCountDto {
-        private Long memberId;
-        private Long count;
-
     }
 
 

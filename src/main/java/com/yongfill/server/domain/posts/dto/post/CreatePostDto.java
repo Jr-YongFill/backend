@@ -1,4 +1,4 @@
-package com.yongfill.server.domain.posts.dto;
+package com.yongfill.server.domain.posts.dto.post;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,7 +10,21 @@ import org.springframework.http.HttpStatus;
 import java.util.List;
 
 @Builder
-public class DeletePostDto {
+public class CreatePostDto {
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    public static class RequestDto {
+        @NotBlank
+        private String title;
+        @NotBlank
+        private String category;
+        @NotBlank
+        private String content;
+
+    }
+
 
     @Builder
     @Getter
