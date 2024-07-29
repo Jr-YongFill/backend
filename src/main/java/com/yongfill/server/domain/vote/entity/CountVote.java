@@ -10,6 +10,7 @@ import lombok.*;
 @Getter
 @ToString
 @Entity
+@Table(name="count_vote")
 @Builder
 public class CountVote {
 
@@ -18,7 +19,7 @@ public class CountVote {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "count", nullable = false)
+    @Column(name = "count_", nullable = false)
     private Long count;
 
     @JoinColumn(name = "interview_question_id", nullable = false)
@@ -28,4 +29,8 @@ public class CountVote {
     @JoinColumn(name = "question_stack_id", nullable = false)
     @ManyToOne
     private QuestionStack questionStack;
+
+    public void plusCount() {
+        this.count++;
+    }
 }

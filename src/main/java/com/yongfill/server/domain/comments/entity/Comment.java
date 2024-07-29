@@ -6,15 +6,17 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@ToString
+@ToString (exclude = {"member", "post"})
 @Entity
 @Builder
+@EntityListeners(AuditingEntityListener.class)
 public class Comment {
 
 
@@ -34,8 +36,9 @@ public class Comment {
     @LastModifiedDate
     private LocalDateTime updateDate;
 
+
     @Column(name = "update_yn", length = 2, nullable = false)
-    private boolean updateYn;
+    private String updateYn;
 
     @JoinColumn(name = "member_id", nullable = false)
     @ManyToOne
@@ -44,5 +47,13 @@ public class Comment {
     @JoinColumn(name = "post_id", nullable = false)
     @ManyToOne
     private Post post;
+
+    public void update(String content) {
+
+        if (content != null) this.content = content;
+        this.updateYn = "Y";
+        this.updateDate = LocalDateTime.now();
+
+    }
 
 }

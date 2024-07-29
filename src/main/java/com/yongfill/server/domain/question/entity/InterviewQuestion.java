@@ -15,8 +15,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@ToString
+@ToString(exclude = {"member", "countVotes", "memberQuestionStackVotes", "memberAnswers"})
 @Entity
+@Table(name="interview_question")
 @Builder
 public class InterviewQuestion {
 
