@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 
 @RequiredArgsConstructor
@@ -17,11 +18,10 @@ public class MemberAPI {
     private final MemberService memberService;
 
     // 회원가입
-    @PostMapping("/auth/sign-up")
-    public ResponseEntity<?> createMember(@RequestBody MemberRequestDTO requestDTO) {
-        HttpStatus status = HttpStatus.CREATED;
+    @PostMapping("/sign-up")
+    public ResponseEntity<?> createMember(@RequestBody MemberRequestDTO requestDTO){
         memberService.createMember(requestDTO);
-        return new ResponseEntity<>(status);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     // member 조회
@@ -33,7 +33,14 @@ public class MemberAPI {
 
     // member 수정
     @PatchMapping("/members/{member_id}")
-    public ResponseEntity<?> updateMember(@PathVariable("member_id") Long memberId, @RequestBody MemberRequestDTO requestDTO){
+    public ResponseEntity<?> updateMember(@PathVariable("member_id") Long memberId,
+                                          @RequestParam(value = "nickname", required = false) String nickname,
+                                          @RequestParam(value = "password", required = false) String password,
+                                          @RequestPart(value = "file", required = false) MultipartFile file) {
+        MemberRequestDTO requestDTO = new MemberRequestDTO();
+        requestDTO.setNickname(nickname);
+        requestDTO.setPassword(password);
+        requestDTO.setFile(file);
         MemberResponseDTO updatedMember = memberService.updateMember(memberId, requestDTO);
         return new ResponseEntity<>(updatedMember, HttpStatus.OK);
     }

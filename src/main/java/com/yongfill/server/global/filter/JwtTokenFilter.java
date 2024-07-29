@@ -1,7 +1,7 @@
 package com.yongfill.server.global.filter;
 
 import com.yongfill.server.domain.auth.service.CustomMemberDetailsService;
-import com.yongfill.server.global.config.JwtTokenProvider;
+import com.yongfill.server.domain.auth.config.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,6 +22,7 @@ import java.io.IOException;
 public class JwtTokenFilter extends OncePerRequestFilter {
     private final JwtTokenProvider jwtTokenProvider;
     private final CustomMemberDetailsService customMemberDetailsService;
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -48,6 +49,14 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     }
 
     // JWT 토큰으로부터 인증 객체를 생성합니다.
+//    private UsernamePasswordAuthenticationToken getAuthenticationFromToken(String accessToken) {
+//        String email = jwtTokenProvider.getUserEmailFromToken(accessToken);
+//        UserDetails userDetails = customMemberDetailsService.loadUserByUsername(email);
+//        System.out.println("getAuthenticationFromToken: " + userDetails);
+//
+//        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+//    }
+
     private UsernamePasswordAuthenticationToken getAuthenticationFromToken(String accessToken) {
         Long memberId = jwtTokenProvider.getUserIdFromToken(accessToken);
         UserDetails userDetails = customMemberDetailsService.loadUserByMemberId(memberId);
@@ -56,4 +65,3 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     }
 
 }
-

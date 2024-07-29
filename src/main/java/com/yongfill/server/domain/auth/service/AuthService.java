@@ -1,15 +1,13 @@
 package com.yongfill.server.domain.auth.service;
 
-import com.yongfill.server.global.config.JwtTokenProvider;
-import com.yongfill.server.domain.auth.dto.AuthRequestDto;
-import com.yongfill.server.domain.auth.dto.AccessTokenDto;
+import com.yongfill.server.domain.auth.config.JwtTokenProvider;
+import com.yongfill.server.domain.auth.dto.AuthRequestDTO;
+import com.yongfill.server.domain.auth.dto.AccessTokenDTO;
 import com.yongfill.server.domain.member.entity.Member;
 import com.yongfill.server.domain.member.repository.MemberJpaRepository;
-import com.yongfill.server.global.common.response.error.ErrorCode;
 import com.yongfill.server.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +23,7 @@ public class AuthService {
     private final String tokenType = "Bearer";
 
     @Transactional
-    public AccessTokenDto login(AuthRequestDto requestDto) {
+    public AccessTokenDTO login(AuthRequestDTO requestDto) {
         Member member = memberJpaRepository.findMemberByEmail(requestDto.getEmail()).orElseThrow(
                 () -> new CustomException(INVALID_MEMBER));
 
@@ -43,11 +41,11 @@ public class AuthService {
         member.setRefreshToken(refreshToken);
         memberJpaRepository.save(member);
 
-        return new AccessTokenDto(accessToken, refreshToken, tokenType);
+        return new AccessTokenDTO(accessToken, refreshToken, tokenType);
     }
 
     @Transactional
-    public AccessTokenDto refreshToken(String refreshToken) {
+    public AccessTokenDTO refreshToken(String refreshToken) {
         if (!jwtTokenProvider.validateToken(refreshToken)) {
             throw new CustomException(EXPIRED_JWT_TOKEN);
         }
@@ -59,6 +57,6 @@ public class AuthService {
                 new UsernamePasswordAuthenticationToken(new CustomMemberDetails(member), member.getPassword())
         );
 
-        return new AccessTokenDto(accessToken, refreshToken, tokenType);
+        return new AccessTokenDTO(accessToken, refreshToken, tokenType);
     }
 }

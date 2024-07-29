@@ -1,10 +1,9 @@
-package com.yongfill.server.global.config;
+package com.yongfill.server.domain.auth.config;
 
 import java.security.Key;
 import java.util.Date;
 
 import com.yongfill.server.domain.auth.service.CustomMemberDetails;
-import com.yongfill.server.global.exception.CustomException;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -14,13 +13,11 @@ import org.springframework.stereotype.Component;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
-import static com.yongfill.server.global.common.response.error.ErrorCode.*;
-
 @Component
 public class JwtTokenProvider {
 
     @Value("${jwt.secret}")
-    private String secretKey; // JWT 서명에 사용할 비밀 키
+    private String secretKey; // 비밀 키
 
     @Value("${jwt.expiration.access}")
     private long accessTokenValidityMs; // 액세스 토큰 유효 기간
@@ -31,7 +28,7 @@ public class JwtTokenProvider {
 
     private Key getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
-        return Keys.hmacShaKeyFor(keyBytes); //JWT 토큰 서명을 위한 키
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 
     // 액세스 토큰 생성
@@ -53,14 +50,18 @@ public class JwtTokenProvider {
 
     public String generateRefreshToken(Authentication authentication) {
         CustomMemberDetails customUserDetails = (CustomMemberDetails) authentication.getPrincipal();
+        Date expiryDate = new Date(new Date().getTime() + refreshTokenValidityMs);
+
         return Jwts.builder()
                 .setSubject(customUserDetails.getUsername())
-                .claim("member-id", customUserDetails.getMember().getId())
+                .claim("member-id", customUserDetails.getId())
+                .claim("member-email", customUserDetails.getEmail())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + refreshTokenValidityMs))
-                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .setExpiration(expiryDate)
+                .signWith(getSigningKey())
                 .compact();
     }
+
 
     public Long getUserIdFromToken(String token) {
         return Jwts.parserBuilder()
@@ -72,12 +73,14 @@ public class JwtTokenProvider {
     }
 
     public String getUserEmailFromToken(String token) {
-        return Jwts.parserBuilder()
+        Claims claims = Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())
                 .build()
                 .parseClaimsJws(token)
-                .getBody()
-                .get("member-email", String.class);
+                .getBody();
+        System.out.println("getUserEmailFromToken: " + claims.getSubject());
+
+        return claims.getSubject();
     }
 
     // JWT 유효성 검사
@@ -90,14 +93,15 @@ public class JwtTokenProvider {
                     .parseClaimsJws(token);
 
             return true;
-        } catch (SecurityException | MalformedJwtException ex) {
-            throw new CustomException(INVALID_JWT_TOKEN);
+        } catch (MalformedJwtException ex) {
+            System.out.println("Invalid JWT token");
         } catch (ExpiredJwtException ex) {
-            throw new CustomException(EXPIRED_JWT_TOKEN);
+            System.out.println("Expired JWT token" + ex.getMessage());
         } catch (UnsupportedJwtException ex) {
-            throw new CustomException(UNSUPPORTED_JWT_TOKEN);
+            System.out.println("Unsupported JWT token");
         } catch (IllegalArgumentException ex) {
-            throw new CustomException(NON_LOGIN);
+            System.out.println("JWT claims string is empty.");
         }
+        return false;
     }
 }

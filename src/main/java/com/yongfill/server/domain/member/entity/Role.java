@@ -2,7 +2,6 @@ package com.yongfill.server.domain.member.entity;
 
 import com.yongfill.server.global.common.util.converter.AbstractEnumNameConverter;
 import com.yongfill.server.global.common.util.converter.EnumName;
-import jakarta.persistence.Converter;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

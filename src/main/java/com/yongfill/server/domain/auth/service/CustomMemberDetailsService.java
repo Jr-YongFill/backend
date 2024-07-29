@@ -10,8 +10,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import static com.yongfill.server.global.common.response.error.ErrorCode.INVALID_MEMBER;
-
 @Service
 @RequiredArgsConstructor
 public class CustomMemberDetailsService implements UserDetailsService {
@@ -21,21 +19,20 @@ public class CustomMemberDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String nickname) throws UsernameNotFoundException {
         Member member = memberRepository.findMemberByNickname(nickname).orElseThrow(
                 () -> new UsernameNotFoundException("nickname " + nickname + "을 찾을 수 없다"));
-
         return new CustomMemberDetails(member);
     }
 
-
     public UserDetails loadUserByMemberId(Long memberId) throws IllegalArgumentException {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new CustomException(INVALID_MEMBER));
+                .orElseThrow(() -> new IllegalArgumentException("id를 찾을 수 없습니다"));
 
         return new CustomMemberDetails(member);
     }
 
     public UserDetails loadUserByEmail(String email) throws IllegalArgumentException {
         Member member = memberRepository.findMemberByEmail(email).orElseThrow(
-                () -> new CustomException(INVALID_MEMBER));
+                () -> new IllegalArgumentException("Email를 찾을 수 없습니다")
+        );
 
         return new CustomMemberDetails(member);
     }
