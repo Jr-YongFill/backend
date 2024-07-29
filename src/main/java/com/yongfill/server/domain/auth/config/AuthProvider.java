@@ -1,5 +1,6 @@
 package com.yongfill.server.domain.auth.config;
 
+import com.yongfill.server.domain.auth.service.CustomMemberDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,7 +28,7 @@ public class AuthProvider implements AuthenticationProvider {
         // 가져온 사용자 정보와 입력된 비밀번호를 비교하여 인증을 수행합니다.
         if(userDetails != null && passwordEncoder.matches(password, userDetails.getPassword())) {
             // 인증 성공 시 UsernamePasswordAuthenticationToken을 반환합니다.
-            return new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());
+            return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         } else {
             return null;
         }

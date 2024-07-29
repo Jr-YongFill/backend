@@ -1,7 +1,9 @@
-package com.yongfill.server.domain.auth.config;
+package com.yongfill.server.domain.auth.service;
 
 import com.yongfill.server.domain.member.entity.Member;
 import com.yongfill.server.domain.member.repository.MemberJpaRepository;
+import com.yongfill.server.global.common.response.error.ErrorCode;
+import com.yongfill.server.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -14,26 +16,22 @@ public class CustomMemberDetailsService implements UserDetailsService {
     private final MemberJpaRepository memberRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String nickName) throws UsernameNotFoundException {
-        Member member = memberRepository.findMemberByNickname(nickName).orElseThrow(
-                () -> new UsernameNotFoundException(""));
+    public UserDetails loadUserByUsername(String nickname) throws UsernameNotFoundException {
+        Member member = memberRepository.findMemberByNickname(nickname).orElseThrow(
+                () -> new UsernameNotFoundException("nickname " + nickname + "을 찾을 수 없다"));
+        return new CustomMemberDetails(member);
+    }
+
+    public UserDetails loadUserByMemberId(Long memberId) throws IllegalArgumentException {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("id를 찾을 수 없습니다"));
 
         return new CustomMemberDetails(member);
     }
 
-    // 필요시 추가
-    public UserDetails loadUserByMemberId(Long id) throws IllegalArgumentException {
-        Member member = memberRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException(""));
-
-        return new CustomMemberDetails(member);
-    }
-
-    // 필요시 추가
     public UserDetails loadUserByEmail(String email) throws IllegalArgumentException {
-        // 이메일을 기반으로 회원 정보를 데이터베이스에서 가져옵니다.
         Member member = memberRepository.findMemberByEmail(email).orElseThrow(
-                () -> new IllegalArgumentException("해당 이메일을 가진 사용자를 찾을 수 없습니다.")
+                () -> new IllegalArgumentException("Email를 찾을 수 없습니다")
         );
 
         return new CustomMemberDetails(member);

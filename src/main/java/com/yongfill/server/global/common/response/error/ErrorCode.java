@@ -17,11 +17,20 @@ public enum ErrorCode {
     STACK_NAME_NOT_FOUND(BAD_REQUEST,"해당 스택이 존재하지 않습니다."),
     MEMBER_CREDIT_NOT_ENOUGH(BAD_REQUEST,"크래딧이 부족합니다."),
     DUPLICATE_MEMBER_EMAIL(BAD_REQUEST, "email이 중복 됩니다."),
+    DUPLICATE_MEMBER_NICKNAME(BAD_REQUEST,"nickname이 중복됩니다."),
+    NOT_MATCH_PASSWORD(BAD_REQUEST, "비밀번호가 일치하지 않습니다."),
     MEMBER_ALREADY_VOTE(BAD_REQUEST, "이미 투표를 하셨습니다."),
 
     //아이디가 비어있다면 INVALID_EMAIL_FORMAT 호출
     INVALID_EMAIL_FORMAT(BAD_REQUEST,"올바르지 않은 이메일 형식입니다."),
     LOGIN_FAIL(BAD_REQUEST,"로그인 정보가 일치하지 않습니다."),
+    PASSWORD_FAIL(BAD_REQUEST,"패스워드가 일치하지 않습니다."),
+
+    /* 401 UNAUTHORIZED */
+    INVALID_JWT_TOKEN(UNAUTHORIZED, "손상된 토큰"),
+    EXPIRED_JWT_TOKEN(UNAUTHORIZED,"만료된 토큰"),
+    UNSUPPORTED_JWT_TOKEN(UNAUTHORIZED, "지원하지 않는 토큰"),
+    NON_LOGIN(UNAUTHORIZED, "JWT claims가 비어있음"),
 
 //    LOGIN_EMPTY(BAD_REQUEST,"비밀번호가 비어있습니다."), => 프론트에서 구현해주세요!
 //    API_KEY_EMPTY(BAD_REQUEST,"API 키 입력이 비어있습니다."),
