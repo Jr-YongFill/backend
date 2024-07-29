@@ -67,7 +67,7 @@ public class PostAPI {
     }
 
 
-    @DeleteMapping("/api/posts/{post_id}")
+    @RequestMapping(value = {"/api/posts/{post_id}", "/api/admin/posts/{post_id}"}, method = RequestMethod.DELETE)
     public ResponseEntity<DeletePostDto.ResponseDto> deletePost(@PathVariable("post_id")Long postId){
         HttpStatus status = HttpStatus.OK;
         DeletePostDto.ResponseDto deleteResponseDto= postService.deletePost(postId);

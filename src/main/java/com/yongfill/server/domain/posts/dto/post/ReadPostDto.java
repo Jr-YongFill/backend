@@ -25,6 +25,7 @@ public class ReadPostDto {
         private Long viewCount;
         private String updateYn;
         private boolean isLiked;//좋아요 여부
+        private String filePath;//프로필 이미지 경로
 
     }
 
