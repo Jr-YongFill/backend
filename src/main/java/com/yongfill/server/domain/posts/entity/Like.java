@@ -1,6 +1,5 @@
 package com.yongfill.server.domain.posts.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.yongfill.server.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.*;
@@ -19,12 +18,10 @@ public class Like {
     @Column(name = "id")
     private Long id;
 
-    @JsonBackReference
     @JoinColumn(name = "post_id", nullable = false)
     @ManyToOne
     private Post post;
 
-    @JsonBackReference
     @JoinColumn(name = "member_id", nullable = false)
     @ManyToOne
     private Member member;
