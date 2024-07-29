@@ -35,6 +35,7 @@ public class ReadPostDto {
     @AllArgsConstructor
     public static class SimpleResponseDto {
 
+        private Long postId;
         private String title;
         private String writerName;
         private LocalDateTime createTime;
