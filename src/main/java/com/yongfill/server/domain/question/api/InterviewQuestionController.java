@@ -23,7 +23,7 @@ public class InterviewQuestionController {
         return new ResponseEntity<>(responseDto, status);
     }
 
-    @PatchMapping("/api/questions/{question_id}/state")
+    @PatchMapping("/api/admin/questions/{question_id}/state")
     public ResponseEntity<Void> updateQuestionState(@PathVariable("question_id") Long questionId) {
         HttpStatus status = HttpStatus.OK;
         interviewQuestionService.updateQuestionState(questionId);
@@ -31,7 +31,7 @@ public class InterviewQuestionController {
         return new ResponseEntity<>(status);
     }
 
-    @DeleteMapping("/api/questions/{question_id}")
+    @DeleteMapping("/api/admin/questions/{question_id}")
     public ResponseEntity<Void> deleteQuestion(@PathVariable("question_id") Long questionId) {
         HttpStatus status = HttpStatus.NO_CONTENT;
         interviewQuestionService.deleteQuestion(questionId);
@@ -39,7 +39,7 @@ public class InterviewQuestionController {
         return new ResponseEntity<>(status);
     }
 
-    @PatchMapping("/api/questions/{question_id}/stacks")
+    @PatchMapping("/api/admin/questions/{question_id}/stacks")
     public ResponseEntity<Void> updateQuestionStack(@PathVariable("question_id") Long questionId, @RequestBody InterviewQuestionDto.QuestionPatchStackRequestDto requestDto) {
         HttpStatus status = HttpStatus.OK;
         interviewQuestionService.updateQuestionStack(questionId, requestDto.getStackId());

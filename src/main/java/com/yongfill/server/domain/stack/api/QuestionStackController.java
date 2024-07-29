@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 public class QuestionStackController {
     private final QuestionStackService questionStackService;
 
-    @PostMapping("/api/stacks")
+    @PostMapping("/api/admin/stacks")
     public ResponseEntity<QuestionStackDto.StackInsertResponseDto> insertStack(@RequestBody QuestionStackDto.StackInsertRequestDto requestDto) {
         HttpStatus status = HttpStatus.CREATED;
         QuestionStackDto.StackInsertResponseDto responseDto = questionStackService.insertStack(requestDto);
@@ -21,7 +21,7 @@ public class QuestionStackController {
         return new ResponseEntity<>(responseDto, status);
     }
 
-    @PatchMapping("api/stacks/{stack_id}")
+    @PatchMapping("/api/admin/stacks/{stack_id}")
     public ResponseEntity<Void> updateStack(@RequestBody QuestionStackDto.StackUpdateRequestDto requestDto, @PathVariable("stack_id") Long stackId) {
         HttpStatus status = HttpStatus.OK;
         questionStackService.updateStack(requestDto, stackId);
