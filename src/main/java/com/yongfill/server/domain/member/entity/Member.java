@@ -105,4 +105,7 @@ public class Member {
         this.credit += credit;
     }
 
+    public void urgentCredit(int credit) {
+        this.credit += credit;
+    }
 }

@@ -19,6 +19,7 @@ public enum ErrorCode {
     DUPLICATE_MEMBER_EMAIL(BAD_REQUEST, "email이 중복 됩니다."),
     DUPLICATE_MEMBER_NICKNAME(BAD_REQUEST,"nickname이 중복됩니다."),
     NOT_MATCH_PASSWORD(BAD_REQUEST, "비밀번호가 일치하지 않습니다."),
+    MEMBER_ALREADY_VOTE(BAD_REQUEST, "이미 투표를 하셨습니다."),
 
     //아이디가 비어있다면 INVALID_EMAIL_FORMAT 호출
     INVALID_EMAIL_FORMAT(BAD_REQUEST,"올바르지 않은 이메일 형식입니다."),
@@ -54,7 +55,10 @@ public enum ErrorCode {
     INVALID_QUESTION(NOT_FOUND,"존재하지 않는 질문입니다."),
     INVALID_STACK(NOT_FOUND,"존재하지 않는 스택입니다."),
     INVALID_POST(NOT_FOUND,"존재하지 않는 포스트입니다"),
+    INVALID_COMMENT(NOT_FOUND,"존재하지 않는 댓글입니다"),
 
+    //CODE 409:
+    LIKE_CONFLICT(CONFLICT,"중복된 좋아요 요청입니다"),
     //CODE 429: TOO MANY REQUEST
     LACK_OF_CREDIT(TOO_MANY_REQUESTS,"OPENAI API 키 크레딧을 모두 소진하였습니다."),
 
