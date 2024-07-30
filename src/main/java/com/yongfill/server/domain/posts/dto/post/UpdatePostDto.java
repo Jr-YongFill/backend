@@ -17,7 +17,7 @@ public class UpdatePostDto {
     @Builder
     @Data
     public static class ResponseDto{
-
+        private Long postId;
         private HttpStatus status;
         private String message;
     }

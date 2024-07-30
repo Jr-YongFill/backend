@@ -29,6 +29,7 @@ public class CreatePostDto {
     @Builder
     @Getter
     public static class ResponseDto{
+        private Long postId;
         private HttpStatus status;
         private String message;
     }

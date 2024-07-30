@@ -56,6 +56,7 @@ public class PostServiceImpl implements PostService{
 
         return CreatePostDto.ResponseDto.builder()
                 .status(HttpStatus.OK)
+                .postId(post.getId())
                 .message("작성이 완료되었습니다.")
                 .build();
     }
@@ -170,10 +171,13 @@ public class PostServiceImpl implements PostService{
             throw new CustomException(ErrorCode.INVALID_AUTH);
         }
 
+
         post.update(title,category,content);
         postJpaRepository.save(post);
 
+
         return UpdatePostDto.ResponseDto.builder()
+                .postId(post.getId())
                 .message("수정이 완료되었습니다.")
                 .status(HttpStatus.ACCEPTED)
                 .build();
@@ -222,6 +226,7 @@ public class PostServiceImpl implements PostService{
         boolean isLiked = likeJpaRepository.existsByMemberIdAndPostId(member.getId(), post.getId());
 
         return ReadPostDto.DetailResponseDto.builder()
+                .postId(post.getId())
                 .category(post.getCategory().getKr())
                 .content(post.getContent())
                 .title(post.getTitle())

@@ -50,13 +50,15 @@ public class LikeService {
         if(!memberJpaRepository.existsById(memberId))
                 throw new CustomException(ErrorCode.INVALID_MEMBER);
 
-        if(!postJpaRepository.existsById(postId))
-                throw new CustomException(ErrorCode.INVALID_POST);
+        Post post = postJpaRepository.findById(postId)
+                .orElseThrow(()->new CustomException(ErrorCode.INVALID_POST));
 
         Like like = likeJpaRepository.findByMemberIdAndPostId(memberId,postId)
                         .orElseThrow(()->new CustomException(ErrorCode.LIKE_CONFLICT));
 
+
         likeJpaRepository.delete(like);
+        post.unlike();
         HttpStatus status = HttpStatus.OK;
         String message = "좋아요를 삭제했습니다.";
 
