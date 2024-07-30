@@ -5,24 +5,21 @@ import com.yongfill.server.domain.comments.entity.Comment;
 import com.yongfill.server.domain.comments.exception.CommentCustomException;
 import com.yongfill.server.domain.comments.repository.CommentJpaRepository;
 import com.yongfill.server.domain.member.entity.Member;
+import com.yongfill.server.domain.member.entity.Role;
 import com.yongfill.server.domain.member.repository.MemberJpaRepository;
 import com.yongfill.server.domain.posts.entity.Post;
 import com.yongfill.server.domain.posts.repository.PostJpaRepository;
 import com.yongfill.server.global.common.dto.PageRequestDTO;
 import com.yongfill.server.global.common.dto.PageResponseDTO;
 import com.yongfill.server.global.common.response.error.ErrorCode;
+import com.yongfill.server.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Function;
-
-import static com.yongfill.server.global.common.response.error.ErrorCode.INVALID_POST;
 
 @RequiredArgsConstructor
 @Service
@@ -40,7 +37,6 @@ public class CommentService {
 
         Function<Comment, CommentDTO.CommentPageResponseDTO> fn = (entity -> toDto(entity));
         return new PageResponseDTO<>(comments, fn);
-
     }
 
     public PageResponseDTO<CommentDTO.CommentMemberPageResponseDTO, Comment> findCommentsByMember(PageRequestDTO pageDTO, Long memberId) {
@@ -64,10 +60,17 @@ public class CommentService {
     }
 
 
-    public CommentDTO.CommentUpdateResponseDTO updateComment(CommentDTO.CommentUpdateRequestDTO requestDTO) {
+    public CommentDTO.CommentUpdateResponseDTO updateComment(CommentDTO.CommentUpdateRequestDTO requestDTO, Long memberId) {
 
         Comment comment = commentJpaRepository.findById(requestDTO.getId())
                 .orElseThrow(() -> new CommentCustomException(ErrorCode.INVALID_COMMENT));
+
+        Member member = memberJpaRepository.findById(memberId)
+                .orElseThrow(() -> new CustomException(ErrorCode.INVALID_MEMBER));
+
+        if (member.getRole().equals(Role.USER) && (!comment.getMember().getId().equals(memberId))) {
+            throw new CommentCustomException(ErrorCode.INVALID_AUTH);
+        }
 
         comment.update(requestDTO.getContent());
         commentJpaRepository.save(comment);
@@ -75,9 +78,19 @@ public class CommentService {
         return toUpdateDto(comment);
     }
 
-    public CommentDTO.CommentDeleteResponseDTO deleteComment(Long commentId) {
+    public CommentDTO.CommentDeleteResponseDTO deleteComment(Long commentId, Long memberId) {
 
-        commentJpaRepository.deleteById(commentId);
+        Comment comment = commentJpaRepository.findById(commentId)
+                .orElseThrow(() -> new CommentCustomException(ErrorCode.INVALID_COMMENT));
+
+        Member member = memberJpaRepository.findById(memberId)
+                .orElseThrow(() -> new CustomException(ErrorCode.INVALID_MEMBER));
+
+        if (member.getRole().equals(Role.USER) && (!comment.getMember().getId().equals(memberId))) {
+            throw new CommentCustomException(ErrorCode.INVALID_AUTH);
+        }
+
+        commentJpaRepository.delete(comment);
         return new CommentDTO.CommentDeleteResponseDTO(commentId);
 
     }

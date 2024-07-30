@@ -2,6 +2,7 @@ package com.yongfill.server.domain.question.api;
 
 import com.yongfill.server.domain.question.dto.InterviewQuestionDto;
 import com.yongfill.server.domain.question.service.InterviewQuestionService;
+import com.yongfill.server.global.config.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,17 +14,19 @@ import java.util.List;
 @RequiredArgsConstructor
 public class InterviewQuestionController {
     private final InterviewQuestionService interviewQuestionService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @PostMapping("/api/questions")
-    public ResponseEntity<InterviewQuestionDto.QuestionInsertResponseDto> insertQuestion(@RequestBody InterviewQuestionDto.QuestionInsertRequestDto requestDto) {
-        Long memberId = 1L;
+    public ResponseEntity<InterviewQuestionDto.QuestionInsertResponseDto> insertQuestion(@RequestBody InterviewQuestionDto.QuestionInsertRequestDto requestDto,
+                                                                                         @RequestHeader("Authorization") String accessToken) {
+        Long memberId = jwtTokenProvider.getUserIdFromToken(accessToken.substring(7));
         HttpStatus status = HttpStatus.CREATED;
         InterviewQuestionDto.QuestionInsertResponseDto responseDto = interviewQuestionService.insertInterviewQuestion(requestDto, memberId);
 
         return new ResponseEntity<>(responseDto, status);
     }
 
-    @PatchMapping("/api/questions/{question_id}/state")
+    @PatchMapping("/api/admin/questions/{question_id}/state")
     public ResponseEntity<Void> updateQuestionState(@PathVariable("question_id") Long questionId) {
         HttpStatus status = HttpStatus.OK;
         interviewQuestionService.updateQuestionState(questionId);
@@ -31,7 +34,7 @@ public class InterviewQuestionController {
         return new ResponseEntity<>(status);
     }
 
-    @DeleteMapping("/api/questions/{question_id}")
+    @DeleteMapping("/api/admin/questions/{question_id}")
     public ResponseEntity<Void> deleteQuestion(@PathVariable("question_id") Long questionId) {
         HttpStatus status = HttpStatus.NO_CONTENT;
         interviewQuestionService.deleteQuestion(questionId);
@@ -39,7 +42,7 @@ public class InterviewQuestionController {
         return new ResponseEntity<>(status);
     }
 
-    @PatchMapping("/api/questions/{question_id}/stacks")
+    @PatchMapping("/api/admin/questions/{question_id}/stacks")
     public ResponseEntity<Void> updateQuestionStack(@PathVariable("question_id") Long questionId, @RequestBody InterviewQuestionDto.QuestionPatchStackRequestDto requestDto) {
         HttpStatus status = HttpStatus.OK;
         interviewQuestionService.updateQuestionStack(questionId, requestDto.getStackId());

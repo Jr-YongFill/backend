@@ -1,4 +1,4 @@
-package com.yongfill.server.domain.auth.config;
+package com.yongfill.server.global.config;
 
 import java.security.Key;
 import java.util.Date;
@@ -13,11 +13,13 @@ import org.springframework.stereotype.Component;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
+import static com.yongfill.server.global.common.response.error.ErrorCode.*;
+
 @Component
 public class JwtTokenProvider {
 
     @Value("${jwt.secret}")
-    private String secretKey; // 비밀 키
+    private String secretKey; // JWT 서명에 사용할 비밀 키
 
     @Value("${jwt.expiration.access}")
     private long accessTokenValidityMs; // 액세스 토큰 유효 기간
@@ -28,7 +30,7 @@ public class JwtTokenProvider {
 
     private Key getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
-        return Keys.hmacShaKeyFor(keyBytes);
+        return Keys.hmacShaKeyFor(keyBytes); //JWT 토큰 서명을 위한 키
     }
 
     // 액세스 토큰 생성
@@ -50,18 +52,14 @@ public class JwtTokenProvider {
 
     public String generateRefreshToken(Authentication authentication) {
         CustomMemberDetails customUserDetails = (CustomMemberDetails) authentication.getPrincipal();
-        Date expiryDate = new Date(new Date().getTime() + refreshTokenValidityMs);
-
         return Jwts.builder()
                 .setSubject(customUserDetails.getUsername())
-                .claim("member-id", customUserDetails.getId())
-                .claim("member-email", customUserDetails.getEmail())
+                .claim("member-id", customUserDetails.getMember().getId())
                 .setIssuedAt(new Date())
-                .setExpiration(expiryDate)
-                .signWith(getSigningKey())
+                .setExpiration(new Date(System.currentTimeMillis() + refreshTokenValidityMs))
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
-
 
     public Long getUserIdFromToken(String token) {
         return Jwts.parserBuilder()
@@ -73,14 +71,12 @@ public class JwtTokenProvider {
     }
 
     public String getUserEmailFromToken(String token) {
-        Claims claims = Jwts.parserBuilder()
+        return Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())
                 .build()
                 .parseClaimsJws(token)
-                .getBody();
-        System.out.println("getUserEmailFromToken: " + claims.getSubject());
-
-        return claims.getSubject();
+                .getBody()
+                .get("member-email", String.class);
     }
 
     // JWT 유효성 검사
@@ -93,15 +89,9 @@ public class JwtTokenProvider {
                     .parseClaimsJws(token);
 
             return true;
-        } catch (MalformedJwtException ex) {
-            System.out.println("Invalid JWT token");
-        } catch (ExpiredJwtException ex) {
-            System.out.println("Expired JWT token" + ex.getMessage());
-        } catch (UnsupportedJwtException ex) {
-            System.out.println("Unsupported JWT token");
-        } catch (IllegalArgumentException ex) {
-            System.out.println("JWT claims string is empty.");
+        } catch (SecurityException | MalformedJwtException | ExpiredJwtException | UnsupportedJwtException |
+                 IllegalArgumentException ex) {
+            throw ex;
         }
-        return false;
     }
 }

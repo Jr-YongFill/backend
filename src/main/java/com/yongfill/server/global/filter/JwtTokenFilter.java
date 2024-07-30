@@ -1,7 +1,8 @@
 package com.yongfill.server.global.filter;
 
 import com.yongfill.server.domain.auth.service.CustomMemberDetailsService;
-import com.yongfill.server.domain.auth.config.JwtTokenProvider;
+import com.yongfill.server.global.config.JwtTokenProvider;
+import com.yongfill.server.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,23 +18,30 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
+import static com.yongfill.server.global.common.response.error.ErrorCode.NOT_TOKEN;
+
 @Component
 @RequiredArgsConstructor
 public class JwtTokenFilter extends OncePerRequestFilter {
     private final JwtTokenProvider jwtTokenProvider;
     private final CustomMemberDetailsService customMemberDetailsService;
 
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String accessToken = getTokenFromRequest(request);
-//        String refreshToken = getRefreshTokenFromRequest(request);
+        try {
+            String accessToken = getTokenFromRequest(request);
 
-        // 토큰 유효성 검사
-        if (accessToken != null && jwtTokenProvider.validateToken(accessToken)) {
-            UsernamePasswordAuthenticationToken authentication = getAuthenticationFromToken(accessToken);
-            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            if (accessToken == null) {
+                throw new CustomException(NOT_TOKEN);
+            }
+
+            if (jwtTokenProvider.validateToken(accessToken)) {
+                UsernamePasswordAuthenticationToken authentication = getAuthenticationFromToken(accessToken);
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+        } catch (Exception e) {
+            request.setAttribute("exception", e);
         }
 
         filterChain.doFilter(request, response);
@@ -49,14 +57,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     }
 
     // JWT 토큰으로부터 인증 객체를 생성합니다.
-//    private UsernamePasswordAuthenticationToken getAuthenticationFromToken(String accessToken) {
-//        String email = jwtTokenProvider.getUserEmailFromToken(accessToken);
-//        UserDetails userDetails = customMemberDetailsService.loadUserByUsername(email);
-//        System.out.println("getAuthenticationFromToken: " + userDetails);
-//
-//        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-//    }
-
     private UsernamePasswordAuthenticationToken getAuthenticationFromToken(String accessToken) {
         Long memberId = jwtTokenProvider.getUserIdFromToken(accessToken);
         UserDetails userDetails = customMemberDetailsService.loadUserByMemberId(memberId);
