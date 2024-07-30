@@ -1,5 +1,6 @@
 package com.yongfill.server.global.exception;
 
+import com.yongfill.server.domain.comments.exception.CommentCustomException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
@@ -19,6 +20,13 @@ public class CustomExceptionHandler {
 
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<ErrorResponse> handleCustomException(CustomException ex) {
+        ErrorCode errorCode = ex.getErrorCode();
+        ErrorResponse errorResponse = new ErrorResponse(errorCode.getStatus(), errorCode.getMessage());
+        return new ResponseEntity<>(errorResponse, errorCode.getStatus());
+    }
+
+    @ExceptionHandler(CommentCustomException.class)
+    public ResponseEntity<ErrorResponse> handleCommentCustomException(CommentCustomException ex) {
         ErrorCode errorCode = ex.getErrorCode();
         ErrorResponse errorResponse = new ErrorResponse(errorCode.getStatus(), errorCode.getMessage());
         return new ResponseEntity<>(errorResponse, errorCode.getStatus());
