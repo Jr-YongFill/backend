@@ -80,6 +80,10 @@ public class Post {
         this.likeCount+=1;
     }
 
+    public void unlike(){
+        this.likeCount-=1;
+    }
+
     public void view(){
         this.viewCount+=1;
     }
