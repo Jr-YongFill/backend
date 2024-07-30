@@ -17,13 +17,9 @@ public class FileUploadController {
     private final FileUploadService s3Service;
 
     @PostMapping
-    public ResponseEntity<String> uploadFile(@RequestPart("file") MultipartFile file) throws IOException {
-        String url = s3Service.uploadFile(file);
+    public ResponseEntity<String> uploadFile(@RequestPart("file") MultipartFile file, @RequestParam("mode")String mode) throws IOException {
+        String url = s3Service.uploadFile(file,mode);
         return ResponseEntity.ok(url);
     }
 
-    @GetMapping(value = "/api/s3/files/{fileNo}")
-    public ResponseEntity<Resource> downloadS3File(@PathVariable long fileNo) throws Exception {
-        return s3Service.downloadS3File(fileNo);
-    }
 }

@@ -6,8 +6,10 @@ import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.yongfill.server.global.aspect.LogAOP;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,20 +24,27 @@ import java.util.UUID;
 public class FileUploadService {
 
     private final AmazonS3 s3Client;
+    private final LogAOP logAOP;
 
-    @Value("${cloud.aws.s3.bucket}")
-    private String bucketName;
+//    @Value("${cloud.aws.s3.bucket}")
+    private String bucketName= "yongfill-bucket";
 
-    private String defaultUrl = "https://s3.amazonaws.com/";
+//    @Value("${cloud.aws.region.static}")
+    private String region = "ap-northeast-2";
+
+    private String defaultUrl = "https://"+bucketName+".s3."+region+".amazonaws.com/";
+
+
+
 
 
     @Transactional
-    public String uploadFile(MultipartFile file) throws IOException {
+    public String uploadFile(MultipartFile file, String mode) throws IOException {
         if (file.isEmpty()) {
             throw new FileNotFoundException("업로드된 파일이 비어 있습니다.");
         }
 
-        String fileName = generateFileName(file);
+        String fileName = generateFileName(file, mode);
         try {
             s3Client.putObject(bucketName, fileName, file.getInputStream(), getObjectMetadata(file));
             return defaultUrl + fileName;
@@ -52,8 +61,8 @@ public class FileUploadService {
         return objectMetadata;
     }
 
-    private String generateFileName(MultipartFile file) {
-        return UUID.randomUUID().toString() + "-" + file.getOriginalFilename();
+    private String generateFileName(MultipartFile file, String mode) {
+        return mode+"/"+UUID.randomUUID().toString()+ file.getOriginalFilename();
     }
 
     private String putS3(File uploadFile, String fileName) {
