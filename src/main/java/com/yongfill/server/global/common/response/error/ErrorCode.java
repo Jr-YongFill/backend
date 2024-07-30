@@ -32,6 +32,7 @@ public enum ErrorCode {
     EXPIRED_JWT_TOKEN(UNAUTHORIZED,"만료된 토큰"),
     UNSUPPORTED_JWT_TOKEN(UNAUTHORIZED, "지원하지 않는 토큰"),
     NON_LOGIN(UNAUTHORIZED, "JWT claims가 비어있음"),
+    NOT_TOKEN(UNAUTHORIZED, "토큰이 비어있음"),
 
 //    LOGIN_EMPTY(BAD_REQUEST,"비밀번호가 비어있습니다."), => 프론트에서 구현해주세요!
 //    API_KEY_EMPTY(BAD_REQUEST,"API 키 입력이 비어있습니다."),

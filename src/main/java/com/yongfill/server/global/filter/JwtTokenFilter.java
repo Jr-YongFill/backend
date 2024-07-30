@@ -2,6 +2,7 @@ package com.yongfill.server.global.filter;
 
 import com.yongfill.server.domain.auth.service.CustomMemberDetailsService;
 import com.yongfill.server.global.config.JwtTokenProvider;
+import com.yongfill.server.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,6 +18,8 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
+import static com.yongfill.server.global.common.response.error.ErrorCode.NOT_TOKEN;
+
 @Component
 @RequiredArgsConstructor
 public class JwtTokenFilter extends OncePerRequestFilter {
@@ -28,8 +31,11 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         try {
             String accessToken = getTokenFromRequest(request);
 
-            // 토큰 유효성 검사
-            if (accessToken != null && jwtTokenProvider.validateToken(accessToken)) {
+            if (accessToken == null) {
+                throw new CustomException(NOT_TOKEN);
+            }
+
+            if (jwtTokenProvider.validateToken(accessToken)) {
                 UsernamePasswordAuthenticationToken authentication = getAuthenticationFromToken(accessToken);
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
