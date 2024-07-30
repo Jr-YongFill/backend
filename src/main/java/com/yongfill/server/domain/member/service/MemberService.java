@@ -7,6 +7,7 @@ import com.yongfill.server.domain.member.entity.Role;
 import com.yongfill.server.domain.member.repository.MemberJpaRepository;
 import com.yongfill.server.global.common.response.error.ErrorCode;
 import com.yongfill.server.global.exception.CustomException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +33,9 @@ public class MemberService {
         return Pattern.compile(regexPattern).matcher(emailAddress).matches();
     }
 
+    @Value("${image.default}")
+    String defaultPath;
+
     @Transactional
     public Member createMember(MemberRequestDTO memberRequestDTO) {
         String emailPattern = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$";
@@ -52,7 +56,7 @@ public class MemberService {
 
         // 기본 파일 설정
         String defaultFileName = "default_profile_image.jpg";
-        String defaultFilePath = "https://cdn.pixabay.com/photo/2016/09/21/18/16/companions-1685303_1280.jpg"; // 예시 URL
+        String defaultFilePath = defaultPath; // 환경변수에서 설정
         member.setAttachmentFileName(defaultFileName);
         member.setAttachmentOriginalFileName("default_profile_image.jpg");
         member.setAttachmentFileSize(0L); // 기본 파일 크기
