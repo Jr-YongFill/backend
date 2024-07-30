@@ -22,8 +22,5 @@ public class FileUploadController {
         return ResponseEntity.ok(url);
     }
 
-    @GetMapping(value = "/api/s3/files/{fileNo}")
-    public ResponseEntity<Resource> downloadS3File(@PathVariable long fileNo) throws Exception {
-        return s3Service.downloadS3File(fileNo);
-    }
+
 }
