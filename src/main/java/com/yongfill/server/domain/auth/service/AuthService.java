@@ -48,10 +48,7 @@ public class AuthService {
         member.setRefreshToken(refreshToken);
         memberJpaRepository.save(member);
 
-        Role role = member.getRole();
-        Long memberId = member.getId();
-
-        return new LoginAccessTokenDto(memberId, accessToken, refreshToken, tokenType, role);
+        return new LoginAccessTokenDto(member.getId(), accessToken, refreshToken, tokenType, member.getRole(), member.getNickname());
     }
 
     @Transactional
