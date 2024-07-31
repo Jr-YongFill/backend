@@ -2,6 +2,7 @@ package com.yongfill.server.domain.auth.api;
 
 import com.yongfill.server.domain.auth.dto.AuthRequestDto;
 import com.yongfill.server.domain.auth.dto.AccessTokenDto;
+import com.yongfill.server.domain.auth.dto.LoginAccessTokenDto;
 import com.yongfill.server.domain.auth.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,9 +24,9 @@ public class AuthController {
     }
 
     @PostMapping("/auth/sign-in")
-    public ResponseEntity<AccessTokenDto> login(@RequestBody AuthRequestDto requestDto) {
+    public ResponseEntity<LoginAccessTokenDto> login(@RequestBody AuthRequestDto requestDto) {
         HttpStatus status = HttpStatus.OK;
-        AccessTokenDto responseDto = authService.login(requestDto);
+        LoginAccessTokenDto responseDto = authService.login(requestDto);
 
         return new ResponseEntity<>(responseDto, status);
     }
@@ -37,4 +38,5 @@ public class AuthController {
 
         return new ResponseEntity<>(responseDto, status);
     }
+
 }
