@@ -6,10 +6,13 @@ import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.yongfill.server.domain.file.entity.FileEntity;
+import com.yongfill.server.domain.file.repository.FileJPARepository;
 import com.yongfill.server.global.aspect.LogAOP;
 import com.yongfill.server.global.common.response.error.ErrorCode;
 import com.yongfill.server.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
@@ -23,33 +26,63 @@ import java.util.UUID;
 
 @Service
 public class FileUploadService {
-
+    private final FileJPARepository fileJPARepository;
     private final AmazonS3 s3Client;
     private final String bucketName;
     private final String defaultUrl;
 
     public FileUploadService(
+            FileJPARepository fileJPARepository,
             AmazonS3 s3Client,
             @Value("${cloud.aws.s3.bucket}") String bucketName,
             @Value("${cloud.aws.region.static}") String region) {
+        this.fileJPARepository = fileJPARepository;
         this.s3Client = s3Client;
         this.bucketName = bucketName;
         this.defaultUrl = "https://"+bucketName+".s3."+region+".amazonaws.com/";
     }
 
     @Transactional
-    public String uploadFile(MultipartFile file, String mode) throws IOException {
+    public String uploadFile(MultipartFile file, Long postId) throws IOException {
         if (file.isEmpty()) {
-            throw new FileNotFoundException("업로드된 파일이 비어 있습니다.");
+            throw new CustomException(ErrorCode.EMPTY_FILE);
         }
 
-        String fileName = generateFileName(file, mode);
+        String fileName = generateFileName(file,"post");
         try {
             s3Client.putObject(bucketName, fileName, file.getInputStream(), getObjectMetadata(file));
-            return defaultUrl + fileName;
+            String imagePath = defaultUrl + fileName;
+
+            //실제 발행할 때에만 DB에 저장하도록 한다.
+
+            FileEntity fileEntity =
+                             FileEntity
+                            .builder()
+                            .postId(postId)
+                            .imageName(fileName)
+                            .imagePath(imagePath)
+                            .build();
+
+            fileJPARepository.save(fileEntity);
+            return imagePath;
         }
-        catch (SdkClientException e) {
-            throw new IOException("Error uploading file to S3", e);
+        catch (Exception e) {
+            throw new CustomException(ErrorCode.S3_CLIENT_ERROR);
+        }
+    }
+
+    @Transactional
+    public String uploadTempFile(MultipartFile file) throws IOException {
+        if (file.isEmpty()) {
+            throw new CustomException(ErrorCode.EMPTY_FILE);
+        }
+
+        String fileName = generateFileName(file,"temp");
+        try {
+            s3Client.putObject(bucketName, fileName, file.getInputStream(), getObjectMetadata(file));
+            return defaultUrl + fileName;}
+        catch (Exception e) {
+            throw new CustomException(ErrorCode.S3_CLIENT_ERROR);
         }
     }
 
@@ -82,6 +115,7 @@ public class FileUploadService {
             throw new CustomException(ErrorCode.PROFILE_DELETE_FAIL);
         }
     }
+
 
 
 }
