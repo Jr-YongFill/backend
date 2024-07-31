@@ -16,6 +16,7 @@ public class CreatePostDto {
     @Builder
     @AllArgsConstructor
     public static class RequestDto {
+        private Long memberId;
         @NotBlank
         private String title;
         @NotBlank
