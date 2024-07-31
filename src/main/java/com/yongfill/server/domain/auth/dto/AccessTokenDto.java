@@ -8,7 +8,7 @@ import lombok.*;
 @ToString
 public class AccessTokenDto {
     private String tokenType;
-    private String accessToken; // 액세스 토큰
+    private String accessToken;
     private String refreshToken;
 
 
