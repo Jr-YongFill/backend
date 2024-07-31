@@ -31,5 +31,4 @@ public class FileEntity {
     private Long postId;
 
 
-
 }

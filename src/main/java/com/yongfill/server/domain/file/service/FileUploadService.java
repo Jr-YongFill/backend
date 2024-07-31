@@ -7,6 +7,8 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.yongfill.server.global.aspect.LogAOP;
+import com.yongfill.server.global.common.response.error.ErrorCode;
+import com.yongfill.server.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -19,24 +21,21 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.UUID;
 
-@RequiredArgsConstructor
 @Service
 public class FileUploadService {
 
     private final AmazonS3 s3Client;
-    private final LogAOP logAOP;
+    private final String bucketName;
+    private final String defaultUrl;
 
-//    @Value("${cloud.aws.s3.bucket}")
-    private String bucketName= "yongfill-bucket";
-
-//    @Value("${cloud.aws.region.static}")
-    private String region = "ap-northeast-2";
-
-    private String defaultUrl = "https://"+bucketName+".s3."+region+".amazonaws.com/";
-
-
-
-
+    public FileUploadService(
+            AmazonS3 s3Client,
+            @Value("${cloud.aws.s3.bucket}") String bucketName,
+            @Value("${cloud.aws.region.static}") String region) {
+        this.s3Client = s3Client;
+        this.bucketName = bucketName;
+        this.defaultUrl = "https://"+bucketName+".s3."+region+".amazonaws.com/";
+    }
 
     @Transactional
     public String uploadFile(MultipartFile file, String mode) throws IOException {
@@ -75,10 +74,14 @@ public class FileUploadService {
         return s3Client.getUrl(bucket, fileName).toString();
     }
 
-    private void removeFile(File file) {
-        file.delete();
+    @Transactional
+    public void deleteFile(String fileName) {
+        try {
+            s3Client.deleteObject(bucketName, fileName);
+        } catch (SdkClientException e) {
+            throw new CustomException(ErrorCode.PROFILE_DELETE_FAIL);
+        }
     }
-
 
 
 }
