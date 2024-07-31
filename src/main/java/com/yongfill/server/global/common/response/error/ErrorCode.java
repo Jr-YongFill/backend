@@ -21,6 +21,8 @@ public enum ErrorCode {
     NOT_MATCH_PASSWORD(BAD_REQUEST, "비밀번호가 일치하지 않습니다."),
     MEMBER_ALREADY_VOTE(BAD_REQUEST, "이미 투표를 하셨습니다."),
     INVALID_AUTH(BAD_REQUEST, "권한이 없습니다."),
+    EMPTY_FILE(BAD_REQUEST,"이미지가 비어있습니다."),
+
 
     //아이디가 비어있다면 INVALID_EMAIL_FORMAT 호출
     INVALID_EMAIL_FORMAT(BAD_REQUEST,"올바르지 않은 이메일 형식입니다."),
@@ -68,7 +70,8 @@ public enum ErrorCode {
     PROFILE_SAVE_FAIL(INTERNAL_SERVER_ERROR, "프로필 사진 저장에 실패하였습니다."),
     PROFILE_DELETE_FAIL(INTERNAL_SERVER_ERROR, "프로필 사진 삭제에 실패했습니다."),
 
-    JSON_TO_STRING_ERROR(INTERNAL_SERVER_ERROR, "서버 에러");
+    JSON_TO_STRING_ERROR(INTERNAL_SERVER_ERROR, "서버 에러"),
+    S3_CLIENT_ERROR(INTERNAL_SERVER_ERROR,"S3 설정에 문제가 있습니다.");
 
 
 

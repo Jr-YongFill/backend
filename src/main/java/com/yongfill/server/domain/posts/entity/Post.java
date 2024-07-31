@@ -69,6 +69,10 @@ public class Post {
     @OneToMany(mappedBy = "post", orphanRemoval = true)
     private List<View> views;
 
+    @JsonBackReference
+    @OneToMany(mappedBy = "post", orphanRemoval = true)
+    private List<FileEntity> images;
+
     public void update(String title, Category category, String content) {
         if (title != null) this.title = title;
         if (category != null) this.category = category;
