@@ -11,7 +11,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Getter
 @ToString
 @Builder
-@Table(name="file")
+@Table(name="image_file")
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 public class FileEntity {
@@ -24,9 +24,8 @@ public class FileEntity {
     @Column(name = "image_path", columnDefinition="Text", nullable = false)
     private String imagePath;
 
-    @JoinColumn(name = "post_id", nullable = false)
-    @ManyToOne
-    private Post post;
+    @Column(name = "post_id")
+    private Long postId;
 
 
 }

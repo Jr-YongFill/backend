@@ -69,9 +69,6 @@ public class Post {
     @OneToMany(mappedBy = "post", orphanRemoval = true)
     private List<View> views;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<FileEntity> files;
-
     public void update(String title, Category category, String content) {
         if (title != null) this.title = title;
         if (category != null) this.category = category;
