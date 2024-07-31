@@ -5,6 +5,8 @@ import com.yongfill.server.domain.auth.dto.AccessTokenDto;
 import com.yongfill.server.domain.auth.dto.LoginAccessTokenDto;
 import com.yongfill.server.domain.auth.service.AuthService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class AuthController {
+    private static final Logger log = LoggerFactory.getLogger(AuthController.class);
     private final AuthService authService;
 
     @GetMapping("/auth/check-email/{email}")
@@ -27,7 +30,6 @@ public class AuthController {
     public ResponseEntity<LoginAccessTokenDto> login(@RequestBody AuthRequestDto requestDto) {
         HttpStatus status = HttpStatus.OK;
         LoginAccessTokenDto responseDto = authService.login(requestDto);
-        System.out.println(responseDto);
 
         return new ResponseEntity<>(responseDto, status);
     }
