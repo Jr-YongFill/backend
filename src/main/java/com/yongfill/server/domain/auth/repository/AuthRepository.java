@@ -11,4 +11,5 @@ public interface AuthRepository extends JpaRepository<Member, Long> {
 
     // 이메일로 회원 존재 여부 확인
     boolean existsByEmail(String email);
+
 }

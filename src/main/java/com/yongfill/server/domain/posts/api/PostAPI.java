@@ -39,7 +39,7 @@ public class PostAPI {
 
 
     @GetMapping("/api/posts/{post_id}")
-    public ResponseEntity<ReadPostDto.DetailResponseDto> updatePost(@PathVariable("post_id") Long postId){
+    public ResponseEntity<ReadPostDto.DetailResponseDto> readPost(@PathVariable("post_id") Long postId){
         HttpStatus status = HttpStatus.OK;
         ReadPostDto.DetailResponseDto postDetailResponseDto = postService.readPost(postId);
         return new ResponseEntity<>(postDetailResponseDto,status);
