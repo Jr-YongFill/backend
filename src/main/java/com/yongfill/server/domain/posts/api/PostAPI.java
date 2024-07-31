@@ -7,7 +7,7 @@ import com.yongfill.server.domain.posts.dto.post.ReadPostDto;
 import com.yongfill.server.domain.posts.dto.post.UpdatePostDto;
 import com.yongfill.server.domain.posts.entity.Post;
 import com.yongfill.server.domain.posts.service.LikeService;
-import com.yongfill.server.domain.posts.service.PostServiceImpl;
+import com.yongfill.server.domain.posts.service.PostService;
 import com.yongfill.server.global.common.dto.PageRequestDTO;
 import com.yongfill.server.global.common.dto.PageResponseDTO;
 import com.yongfill.server.global.config.JwtTokenProvider;
@@ -23,7 +23,7 @@ import java.util.List;
 @RestController
 public class PostAPI {
 
-    private final PostServiceImpl postService;
+    private final PostService postService;
     private final LikeService likeService;
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -39,7 +39,7 @@ public class PostAPI {
 
 
     @GetMapping("/api/posts/{post_id}")
-    public ResponseEntity<ReadPostDto.DetailResponseDto> updatePost(@PathVariable("post_id") Long postId){
+    public ResponseEntity<ReadPostDto.DetailResponseDto> readPost(@PathVariable("post_id") Long postId){
         HttpStatus status = HttpStatus.OK;
         ReadPostDto.DetailResponseDto postDetailResponseDto = postService.readPost(postId);
         return new ResponseEntity<>(postDetailResponseDto,status);
