@@ -7,7 +7,7 @@ import com.yongfill.server.domain.posts.dto.post.ReadPostDto;
 import com.yongfill.server.domain.posts.dto.post.UpdatePostDto;
 import com.yongfill.server.domain.posts.entity.Post;
 import com.yongfill.server.domain.posts.service.LikeService;
-import com.yongfill.server.domain.posts.service.PostServiceImpl;
+import com.yongfill.server.domain.posts.service.PostService;
 import com.yongfill.server.global.common.dto.PageRequestDTO;
 import com.yongfill.server.global.common.dto.PageResponseDTO;
 import com.yongfill.server.global.config.JwtTokenProvider;
@@ -23,7 +23,7 @@ import java.util.List;
 @RestController
 public class PostAPI {
 
-    private final PostServiceImpl postService;
+    private final PostService postService;
     private final LikeService likeService;
     private final JwtTokenProvider jwtTokenProvider;
 

@@ -12,4 +12,5 @@ public interface PostJpaRepository extends JpaRepository<Post, Long> {
 
     List<Post> findAllByCategory(Category category);
 
+    List<Post> findTop5ByCategoryOrderByCreateDateDesc(Category category);
 }
