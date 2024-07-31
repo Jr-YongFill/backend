@@ -13,13 +13,15 @@ public class LoginAccessTokenDto {
     private String accessToken;
     private String refreshToken;
     private Role role;
+    private String nickName;
 
     @Builder
-    public LoginAccessTokenDto(Long memberId, String accessToken, String refreshToken, String tokenType, Role role) {
+    public LoginAccessTokenDto(Long memberId, String accessToken, String refreshToken, String tokenType, Role role, String nickName) {
         this.id = memberId;
         this.tokenType = tokenType;
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
         this.role = role;
+        this.nickName = nickName;
     }
 }
