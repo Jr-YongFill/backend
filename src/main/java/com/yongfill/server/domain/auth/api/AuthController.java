@@ -27,6 +27,7 @@ public class AuthController {
     public ResponseEntity<LoginAccessTokenDto> login(@RequestBody AuthRequestDto requestDto) {
         HttpStatus status = HttpStatus.OK;
         LoginAccessTokenDto responseDto = authService.login(requestDto);
+        System.out.println(responseDto);
 
         return new ResponseEntity<>(responseDto, status);
     }
