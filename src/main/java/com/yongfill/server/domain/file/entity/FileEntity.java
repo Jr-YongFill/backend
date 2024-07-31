@@ -24,8 +24,12 @@ public class FileEntity {
     @Column(name = "image_path", columnDefinition="Text", nullable = false)
     private String imagePath;
 
+    @Column(name = "image_name", columnDefinition="Text", nullable = false)
+    private String imageName;
+
     @Column(name = "post_id")
     private Long postId;
+
 
 
 }
