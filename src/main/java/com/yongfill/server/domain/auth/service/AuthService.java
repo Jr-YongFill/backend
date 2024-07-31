@@ -1,5 +1,8 @@
 package com.yongfill.server.domain.auth.service;
 
+import com.yongfill.server.domain.auth.dto.LoginAccessTokenDto;
+import com.yongfill.server.domain.auth.repository.AuthRepository;
+import com.yongfill.server.domain.member.entity.Role;
 import com.yongfill.server.global.config.JwtTokenProvider;
 import com.yongfill.server.domain.auth.dto.AuthRequestDto;
 import com.yongfill.server.domain.auth.dto.AccessTokenDto;
@@ -8,6 +11,7 @@ import com.yongfill.server.domain.member.repository.MemberJpaRepository;
 import com.yongfill.server.global.common.response.error.ErrorCode;
 import com.yongfill.server.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,9 +27,10 @@ public class AuthService {
     private final MemberJpaRepository memberJpaRepository;
     private final PasswordEncoder passwordEncoder;
     private final String tokenType = "Bearer";
+    private final AuthRepository authRepository;
 
     @Transactional
-    public AccessTokenDto login(AuthRequestDto requestDto) {
+    public LoginAccessTokenDto login(AuthRequestDto requestDto) {
         Member member = memberJpaRepository.findMemberByEmail(requestDto.getEmail()).orElseThrow(
                 () -> new CustomException(INVALID_MEMBER));
 
@@ -43,7 +48,10 @@ public class AuthService {
         member.setRefreshToken(refreshToken);
         memberJpaRepository.save(member);
 
-        return new AccessTokenDto(accessToken, refreshToken, tokenType);
+        Role role = member.getRole();
+        Long memberId = member.getId();
+
+        return new LoginAccessTokenDto(memberId, accessToken, refreshToken, tokenType, role);
     }
 
     @Transactional
@@ -65,4 +73,5 @@ public class AuthService {
     public Boolean checkEmil(String email) {
         return memberJpaRepository.existsMemberByEmail(email);
     }
+
 }
