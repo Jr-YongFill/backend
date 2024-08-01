@@ -42,16 +42,19 @@ public class FileUploadService {
     }
 
     @Transactional
-    public String uploadFile(MultipartFile file, Long postId) throws IOException {
+    public String uploadFile(MultipartFile file, Long postId, String fileName) throws IOException {
         if (file.isEmpty()) {
             throw new CustomException(ErrorCode.EMPTY_FILE);
         }
 
-        String fileName = generateFileName(file, "post");
         try {
-            String imagePath = uploadToS3(file, fileName);
+            String imagePath = defaultUrl+"post/"+fileName;
+            ObjectMetadata metadata = getObjectMetadata(file);
+            s3Client.putObject(new PutObjectRequest(bucketName, "post/"+fileName, file.getInputStream(), metadata)
+                    .withCannedAcl(CannedAccessControlList.PublicRead));
             Post post = postJpaRepository.findById(postId)
                     .orElseThrow(()-> new CustomException(ErrorCode.INVALID_POST));
+
 
             //실제 발행할 때에만 DB에 저장하도록 한다.
             FileEntity fileEntity = FileEntity.builder()
@@ -73,31 +76,22 @@ public class FileUploadService {
             throw new CustomException(ErrorCode.EMPTY_FILE);
         }
 
-        String fileName = generateFileName(file, "temp");
+        String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
         try {
-            return uploadToS3(file, fileName);
+            ObjectMetadata metadata = getObjectMetadata(file);
+            s3Client.putObject(new PutObjectRequest(bucketName, "temp/"+ fileName, file.getInputStream(), metadata)
+                    .withCannedAcl(CannedAccessControlList.PublicRead));
+            return fileName;
+
         }catch (Exception e) {
             throw new CustomException(ErrorCode.S3_CLIENT_ERROR);
         }
     }
-
-    private String uploadToS3(MultipartFile file, String fileName) throws IOException {
-        ObjectMetadata metadata = getObjectMetadata(file);
-        s3Client.putObject(new PutObjectRequest(bucketName, fileName, file.getInputStream(), metadata)
-                .withCannedAcl(CannedAccessControlList.PublicRead));
-        return defaultUrl + fileName;
-    }
-
     private ObjectMetadata getObjectMetadata(MultipartFile file) {
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentType(file.getContentType());
         objectMetadata.setContentLength(file.getSize());
-        // 필요한 경우 추가 메타데이터 설정
         return objectMetadata;
-    }
-
-    private String generateFileName(MultipartFile file, String mode) {
-        return mode + "/" + UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
     }
 
     @Transactional
