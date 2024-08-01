@@ -24,8 +24,9 @@ public class FileUploadController {
 
     @PostMapping("post")
     public ResponseEntity<String> uploadFile(@RequestPart("file") MultipartFile file,
-                                             Long postId) throws IOException {
-        String url = s3Service.uploadFile(file, postId);
+                                             Long postId,
+                                             String fileName) throws IOException {
+        String url = s3Service.uploadFile(file, postId, fileName);
         return ResponseEntity.ok(url);
     }
 
