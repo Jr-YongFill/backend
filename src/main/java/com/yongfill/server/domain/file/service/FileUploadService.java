@@ -62,9 +62,7 @@ public class FileUploadService {
 
             fileJPARepository.save(fileEntity);
             return imagePath;
-        } catch (AmazonS3Exception e) {
-            throw new CustomException(ErrorCode.S3_CLIENT_ERROR);
-        } catch (SdkClientException e) {
+        } catch (Exception e) {
             throw new CustomException(ErrorCode.S3_CLIENT_ERROR);
         }
     }
@@ -78,9 +76,7 @@ public class FileUploadService {
         String fileName = generateFileName(file, "temp");
         try {
             return uploadToS3(file, fileName);
-        } catch (AmazonS3Exception e) {
-            throw new CustomException(ErrorCode.S3_CLIENT_ERROR);
-        } catch (SdkClientException e) {
+        }catch (Exception e) {
             throw new CustomException(ErrorCode.S3_CLIENT_ERROR);
         }
     }
