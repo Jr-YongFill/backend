@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @RestController
 public class MemberAnswerApi {
@@ -19,14 +21,14 @@ public class MemberAnswerApi {
 
     @PostMapping("/api/members/{member_id}/answers")
     public ResponseEntity<MemberAnswerDTO.MemberAnswerResponseDTO> addAnswer(@PathVariable("member_id") Long member_id,
-                                                                             @RequestBody MemberAnswerDTO.MemberAnswerRequestDTO memberAnswerRequestDTO) {
+                                                                             @RequestBody List<MemberAnswerDTO.MemberAnswerRequestDTO> memberAnswerRequestDTOs) {
 
-        memberAnswerRequestDTO.setMemberId(member_id);
+        memberAnswerRequestDTOs.forEach(dto -> dto.setMemberId(member_id));
         HttpStatus status = HttpStatus.CREATED;
 
-        MemberAnswer newAnswer = memberAnswerService.addMemberAnswer(memberAnswerRequestDTO);
+        memberAnswerService.addMemberAnswer(memberAnswerRequestDTOs, member_id);
 
-        return new ResponseEntity<>(memberAnswerService.toDto(newAnswer), status);
+        return new ResponseEntity<>(status);
 
     }
 
