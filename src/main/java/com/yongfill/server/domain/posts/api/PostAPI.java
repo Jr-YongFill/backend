@@ -39,9 +39,11 @@ public class PostAPI {
 
 
     @GetMapping("/api/posts/{post_id}")
-    public ResponseEntity<ReadPostDto.DetailResponseDto> readPost(@PathVariable("post_id") Long postId){
+    public ResponseEntity<ReadPostDto.DetailResponseDto> readPost(@PathVariable("post_id") Long postId,
+                                                                  @RequestHeader("Authorization") String accessToken) {
+        Long memberId = jwtTokenProvider.getUserIdFromToken(accessToken.substring(7));
         HttpStatus status = HttpStatus.OK;
-        ReadPostDto.DetailResponseDto postDetailResponseDto = postService.readPost(postId);
+        ReadPostDto.DetailResponseDto postDetailResponseDto = postService.readPost(postId, memberId);
         return new ResponseEntity<>(postDetailResponseDto,status);
     }
 
