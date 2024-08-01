@@ -1,5 +1,6 @@
 package com.yongfill.server.domain.file.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.yongfill.server.domain.posts.entity.Post;
 import jakarta.persistence.*;
 import lombok.*;
@@ -27,8 +28,10 @@ public class FileEntity {
     @Column(name = "image_name", columnDefinition="Text", nullable = false)
     private String imageName;
 
-    @Column(name = "post_id")
-    private Long postId;
+    @JsonBackReference
+    @JoinColumn(name = "post_id", nullable = false)
+    @ManyToOne
+    private Post post;
 
 
 }

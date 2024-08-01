@@ -1,5 +1,8 @@
 package com.yongfill.server.domain.member.service;
 
+import com.amazonaws.SdkClientException;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.yongfill.server.domain.member.dto.MemberRequestDTO;
 import com.yongfill.server.domain.member.dto.MemberResponseDTO;
 import com.yongfill.server.domain.member.entity.Member;
@@ -15,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
 
+import javax.imageio.IIOException;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -22,19 +26,33 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
-@RequiredArgsConstructor
 @Service
 public class MemberService {
 
     private final MemberJpaRepository memberJpaRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final AmazonS3 s3Client;
+    private final String bucketName;
+    private final String profileBucketUrl;
+    private final String profileDirectoryName;
+
+    public MemberService(MemberJpaRepository memberJpaRepository,
+                         BCryptPasswordEncoder bCryptPasswordEncoder,
+                         AmazonS3 s3Client,
+                         @Value("${cloud.aws.s3.bucket}") String bucketName,
+                         @Value("${cloud.aws.region.static}") String region,
+                         @Value("${cloud.aws.directory.profile}") String profileDirectoryName) {
+        this.memberJpaRepository = memberJpaRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.s3Client = s3Client;
+        this.bucketName = bucketName;
+        this.profileDirectoryName = profileDirectoryName;
+        this.profileBucketUrl = "https://"+bucketName+".s3."+region+".amazonaws.com";
+    }
 
     private static boolean patternMatches(String emailAddress, String regexPattern) {
         return Pattern.compile(regexPattern).matcher(emailAddress).matches();
     }
-
-    @Value("${image.default}")
-    String defaultPath;
 
     @Transactional
     public Member createMember(MemberRequestDTO memberRequestDTO) {
@@ -55,10 +73,10 @@ public class MemberService {
         member.setPassword(encryptedPassword);
 
         // 기본 파일 설정
-        String defaultFileName = "default_profile_image.jpg";
-        String defaultFilePath = defaultPath; // 환경변수에서 설정
+        String defaultFileName = "default.jpg";
+        String defaultFilePath = profileBucketUrl + "/" + profileDirectoryName + "/" + defaultFileName; // 환경변수에서 설정
         member.setAttachmentFileName(defaultFileName);
-        member.setAttachmentOriginalFileName("default_profile_image.jpg");
+        member.setAttachmentOriginalFileName(defaultFileName);
         member.setAttachmentFileSize(0L); // 기본 파일 크기
         member.setFilePath(defaultFilePath);
 
@@ -94,14 +112,19 @@ public class MemberService {
         // 파일 업데이트
         if (requestDTO.getFile() != null && !requestDTO.getFile().isEmpty()) {
             try {
-                String fileName = UUID.randomUUID() + "_" + requestDTO.getFile().getOriginalFilename();
-                String filePath = saveFile(requestDTO.getFile(), fileName);
+                MultipartFile file = requestDTO.getFile();
+                if (!"default.jpg".equals(member.getAttachmentOriginalFileName())) {
+                    s3Client.deleteObject(bucketName, member.getAttachmentFileName());
+                }
+
+                String fileName = generateFileName(file, profileDirectoryName);
+                s3Client.putObject(bucketName, fileName, file.getInputStream(), getObjectMetadata(file));
 
                 member.setAttachmentFileName(fileName);
-                member.setAttachmentOriginalFileName(requestDTO.getFile().getOriginalFilename());
-                member.setAttachmentFileSize(requestDTO.getFile().getSize());
-                member.setFilePath(filePath);
-            } catch (IOException e) {
+                member.setAttachmentFileSize(file.getSize());
+                member.setAttachmentOriginalFileName(file.getOriginalFilename());
+                member.setFilePath(profileBucketUrl + "/" + fileName);
+            } catch (SdkClientException | IOException e) {
                 throw new CustomException(ErrorCode.PROFILE_SAVE_FAIL);
             }
         }
@@ -150,5 +173,17 @@ public class MemberService {
                 .attachmentFileName(requestDTO.getAttachmentFileName())
                 .filePath(requestDTO.getFilePath())
                 .build();
+    }
+
+    private String generateFileName(MultipartFile file, String mode) {
+        return mode+"/"+UUID.randomUUID().toString()+ file.getOriginalFilename();
+    }
+
+
+    private ObjectMetadata getObjectMetadata(MultipartFile file) {
+        ObjectMetadata objectMetadata = new ObjectMetadata();
+        objectMetadata.setContentType(file.getContentType());
+        objectMetadata.setContentLength(file.getSize());
+        return objectMetadata;
     }
 }

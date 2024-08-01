@@ -33,6 +33,8 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static com.yongfill.server.domain.member.entity.QMember.member;
+
 
 @Service
 @RequiredArgsConstructor
@@ -61,26 +63,26 @@ public class PostService{
 
     //R
     @Transactional
-    public ReadPostDto.DetailResponseDto readPost(Long postId){
-        //TODO: 로그인한 멤버 인자로 넣기
+    public ReadPostDto.DetailResponseDto readPost(Long postId, Long memberId) {
+        Member member=null;
 
-        Long memberId = 2L;
-
-        Member member = memberJpaRepository.findById(memberId)
-                .orElseThrow(()-> new CustomException(ErrorCode.INVALID_MEMBER));
+        if(memberId==null){
+            member = memberJpaRepository.findById(memberId)
+                    .orElse(null);
+        }
 
         Post post = postJpaRepository.findById(postId)
                 .orElseThrow(()-> new CustomException(ErrorCode.INVALID_POST));
 
         //view 테이블에 없다면 조회수 1 추가
-        if(!viewJpaRepository.existsByMemberIdAndPostId(memberId,postId)){
+        if (member != null && !viewJpaRepository.existsByMemberIdAndPostId(memberId,postId)){
             View view = View.builder().member(member).post(post).build();
             post.view();
             postJpaRepository.save(post);
             viewJpaRepository.save(view);
         }
-        return entityToDetailResponseDto(member,post);
 
+        return entityToDetailResponseDto(post, memberId);
     }
 
     @Transactional(readOnly = true)
@@ -215,8 +217,11 @@ public class PostService{
                 .build();
     }
 
-    public ReadPostDto.DetailResponseDto entityToDetailResponseDto(Member member,Post post){
-        boolean isLiked = likeJpaRepository.existsByMemberIdAndPostId(member.getId(), post.getId());
+    public ReadPostDto.DetailResponseDto entityToDetailResponseDto(Post post, Long memberId){
+        boolean isLiked = false;
+        if (memberId != null){
+            isLiked = likeJpaRepository.existsByMemberIdAndPostId(memberId, post.getId());
+        }
 
         return ReadPostDto.DetailResponseDto.builder()
                 .postId(post.getId())
@@ -230,7 +235,8 @@ public class PostService{
                 .isLiked(isLiked)
                 .viewCount(post.getViewCount())
                 .likeCount(post.getLikeCount())
-                .filePath(member.getFilePath())
+                .filePath(post.getMember().getFilePath())
+                .memberId(post.getMember().getId())
                 .build();
     }
 

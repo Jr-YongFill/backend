@@ -6,72 +6,92 @@ import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.yongfill.server.global.aspect.LogAOP;
+import com.yongfill.server.domain.file.entity.FileEntity;
+import com.yongfill.server.domain.file.repository.FileJPARepository;
+import com.yongfill.server.domain.posts.entity.Post;
+import com.yongfill.server.domain.posts.repository.PostJpaRepository;
 import com.yongfill.server.global.common.response.error.ErrorCode;
 import com.yongfill.server.global.exception.CustomException;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.UUID;
 
 @Service
 public class FileUploadService {
 
+    private final PostJpaRepository postJpaRepository;
+    private final FileJPARepository fileJPARepository;
     private final AmazonS3 s3Client;
     private final String bucketName;
     private final String defaultUrl;
 
     public FileUploadService(
+            PostJpaRepository postJpaRepository, FileJPARepository fileJPARepository,
             AmazonS3 s3Client,
             @Value("${cloud.aws.s3.bucket}") String bucketName,
             @Value("${cloud.aws.region.static}") String region) {
+        this.postJpaRepository = postJpaRepository;
+        this.fileJPARepository = fileJPARepository;
         this.s3Client = s3Client;
         this.bucketName = bucketName;
-        this.defaultUrl = "https://"+bucketName+".s3."+region+".amazonaws.com/";
+        this.defaultUrl = "https://" + bucketName + ".s3." + region + ".amazonaws.com/";
     }
 
     @Transactional
-    public String uploadFile(MultipartFile file, String mode) throws IOException {
+    public String uploadFile(MultipartFile file, Long postId, String fileName) throws IOException {
         if (file.isEmpty()) {
-            throw new FileNotFoundException("업로드된 파일이 비어 있습니다.");
+            throw new CustomException(ErrorCode.EMPTY_FILE);
         }
 
-        String fileName = generateFileName(file, mode);
         try {
-            s3Client.putObject(bucketName, fileName, file.getInputStream(), getObjectMetadata(file));
-            return defaultUrl + fileName;
-        }
-        catch (SdkClientException e) {
-            throw new IOException("Error uploading file to S3", e);
+            String imagePath = defaultUrl+"post/"+fileName;
+            ObjectMetadata metadata = getObjectMetadata(file);
+            s3Client.putObject(new PutObjectRequest(bucketName, "post/"+fileName, file.getInputStream(), metadata)
+                    .withCannedAcl(CannedAccessControlList.PublicRead));
+            Post post = postJpaRepository.findById(postId)
+                    .orElseThrow(()-> new CustomException(ErrorCode.INVALID_POST));
+
+
+            //실제 발행할 때에만 DB에 저장하도록 한다.
+            FileEntity fileEntity = FileEntity.builder()
+                    .post(post)
+                    .imageName(fileName)
+                    .imagePath(imagePath)
+                    .build();
+
+            fileJPARepository.save(fileEntity);
+            return imagePath;
+        } catch (Exception e) {
+            throw new CustomException(ErrorCode.S3_CLIENT_ERROR);
         }
     }
 
+    @Transactional
+    public String uploadTempFile(MultipartFile file) throws IOException {
+        if (file.isEmpty()) {
+            throw new CustomException(ErrorCode.EMPTY_FILE);
+        }
+
+        String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+        try {
+            ObjectMetadata metadata = getObjectMetadata(file);
+            s3Client.putObject(new PutObjectRequest(bucketName, "temp/"+ fileName, file.getInputStream(), metadata)
+                    .withCannedAcl(CannedAccessControlList.PublicRead));
+            return fileName;
+
+        }catch (Exception e) {
+            throw new CustomException(ErrorCode.S3_CLIENT_ERROR);
+        }
+    }
     private ObjectMetadata getObjectMetadata(MultipartFile file) {
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentType(file.getContentType());
         objectMetadata.setContentLength(file.getSize());
         return objectMetadata;
-    }
-
-    private String generateFileName(MultipartFile file, String mode) {
-        return mode+"/"+UUID.randomUUID().toString()+ file.getOriginalFilename();
-    }
-
-    private String putS3(File uploadFile, String fileName) {
-        s3Client.putObject(new PutObjectRequest(bucketName, fileName, uploadFile)
-                .withCannedAcl(CannedAccessControlList.PublicRead));
-        return getS3(bucketName, fileName);
-    }
-
-    private String getS3(String bucket, String fileName) {
-        return s3Client.getUrl(bucket, fileName).toString();
     }
 
     @Transactional
@@ -82,6 +102,4 @@ public class FileUploadService {
             throw new CustomException(ErrorCode.PROFILE_DELETE_FAIL);
         }
     }
-
-
 }
