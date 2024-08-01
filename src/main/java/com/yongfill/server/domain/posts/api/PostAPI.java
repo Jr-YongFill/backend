@@ -40,8 +40,12 @@ public class PostAPI {
 
     @GetMapping("/api/posts/{post_id}")
     public ResponseEntity<ReadPostDto.DetailResponseDto> readPost(@PathVariable("post_id") Long postId,
-                                                                  @RequestHeader("Authorization") String accessToken) {
-        Long memberId = jwtTokenProvider.getUserIdFromToken(accessToken.substring(7));
+                                                                  @RequestHeader(value = "Authorization", required = false) String accessToken) {
+        //액세스 토큰이 없을 경우 memberId에 -1을 집어넣음
+        Long memberId = -1L;
+        if(accessToken != null){
+            memberId = jwtTokenProvider.getUserIdFromToken(accessToken.substring(7));
+        }
         HttpStatus status = HttpStatus.OK;
         ReadPostDto.DetailResponseDto postDetailResponseDto = postService.readPost(postId, memberId);
         return new ResponseEntity<>(postDetailResponseDto,status);

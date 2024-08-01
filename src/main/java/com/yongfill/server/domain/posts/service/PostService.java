@@ -64,8 +64,12 @@ public class PostService{
     //R
     @Transactional
     public ReadPostDto.DetailResponseDto readPost(Long postId, Long memberId) {
-        Member member = memberJpaRepository.findById(memberId)
-                .orElse(null);
+        Member member=null;
+
+        if(memberId==null){
+            member = memberJpaRepository.findById(memberId)
+                    .orElse(null);
+        }
 
         Post post = postJpaRepository.findById(postId)
                 .orElseThrow(()-> new CustomException(ErrorCode.INVALID_POST));
