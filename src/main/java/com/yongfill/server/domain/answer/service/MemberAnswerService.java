@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.yongfill.server.global.common.response.error.ErrorCode.*;
@@ -33,18 +34,23 @@ public class MemberAnswerService {
     private final InterviewQuestionQueryDSLRepository interviewQuestionQueryDSLRepository;
 
 
-    public MemberAnswer addMemberAnswer(MemberAnswerDTO.MemberAnswerRequestDTO memberAnswerRequestDTO) {
+    public void addMemberAnswer(List<MemberAnswerDTO.MemberAnswerRequestDTO> memberAnswerRequestDTOs, Long memberId) {
 
-        Member member = memberJpaRepository.findById(memberAnswerRequestDTO.getMemberId())
+        Member member = memberJpaRepository.findById(memberId)
                 .orElseThrow(() -> new InterviewModeCustomException(INVALID_MEMBER));
 
-        InterviewQuestion interviewQuestion = interviewQuestionJpaRepository.findById(memberAnswerRequestDTO.getQuestionId())
-                .orElseThrow(() -> new InterviewModeCustomException(INVALID_QUESTION));
+        List<MemberAnswer> memberAnswers = new ArrayList<>();
 
-        MemberAnswer memberAnswer = toEntity(memberAnswerRequestDTO, member, interviewQuestion);
+        for (MemberAnswerDTO.MemberAnswerRequestDTO dto: memberAnswerRequestDTOs) {
+            InterviewQuestion interviewQuestion = interviewQuestionJpaRepository.findById(dto.getQuestionId())
+                    .orElseThrow(() -> new InterviewModeCustomException(INVALID_QUESTION));
 
-        return memberAnswerJpaRepository.save(memberAnswer);
 
+            MemberAnswer memberAnswer = toEntity(dto, member, interviewQuestion);
+            memberAnswers.add(memberAnswer);
+        }
+
+        memberAnswerJpaRepository.saveAll(memberAnswers);
     }
 
     public Page<InterviewQuestionDto.QuestionMemberAnswerResponseDTO> findQuestionsMemberAnswers(MemberAnswerDTO.MemberAnswerPageRequestDTO dto) {
