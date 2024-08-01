@@ -1,6 +1,7 @@
 package com.yongfill.server.domain.posts.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.yongfill.server.domain.comments.entity.Comment;
 import com.yongfill.server.domain.file.entity.FileEntity;
 import com.yongfill.server.domain.member.entity.Member;
 import jakarta.persistence.*;
@@ -72,6 +73,10 @@ public class Post {
     @JsonBackReference
     @OneToMany(mappedBy = "post", orphanRemoval = true)
     private List<FileEntity> images;
+
+    @JsonBackReference
+    @OneToMany(mappedBy = "post", orphanRemoval = true)
+    private List<Comment> comments;
 
     public void update(String title, Category category, String content) {
         if (title != null) this.title = title;
