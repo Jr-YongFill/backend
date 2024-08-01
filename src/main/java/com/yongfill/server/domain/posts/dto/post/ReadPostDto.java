@@ -15,6 +15,7 @@ public class ReadPostDto {
     @AllArgsConstructor
     public static class DetailResponseDto {
         private Long postId;
+        private Long memberId;
         private String title;
         private String category;
         private String content;
