@@ -63,7 +63,7 @@ public class Post {
     private Member member;
 
     @JsonBackReference
-    @OneToMany(mappedBy = "post", orphanRemoval = true)
+    @OneToMany(mappedBy = "post", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Like> likes;
 
     @JsonBackReference
@@ -71,11 +71,11 @@ public class Post {
     private List<View> views;
 
     @JsonBackReference
-    @OneToMany(mappedBy = "post", orphanRemoval = true)
+    @OneToMany(mappedBy = "post", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<FileEntity> images;
 
     @JsonBackReference
-    @OneToMany(mappedBy = "post", orphanRemoval = true)
+    @OneToMany(mappedBy = "post", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Comment> comments;
 
     public void update(String title, Category category, String content) {
