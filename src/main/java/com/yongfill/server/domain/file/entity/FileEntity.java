@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -14,7 +13,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Builder
 @Table(name="image_file")
 @Entity
-@EntityListeners(AuditingEntityListener.class)
+@EntityListeners(FileEntityListener.class)
 public class FileEntity {
 
     @Id
@@ -32,6 +31,4 @@ public class FileEntity {
     @JoinColumn(name = "post_id", nullable = false)
     @ManyToOne
     private Post post;
-
-
 }
