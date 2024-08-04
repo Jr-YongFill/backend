@@ -43,7 +43,7 @@ public class CommentService {
 
         Pageable pageable = PageRequest.of(pageDTO.getPage(), pageDTO.getSize());
 
-        Page<Comment> comments = commentJpaRepository.findByMemberId(memberId, pageable);
+        Page<Comment> comments = commentJpaRepository.findByMemberIdOrderByCreateDateDesc(memberId, pageable);
 
         Function<Comment, CommentDTO.CommentMemberPageResponseDTO> fn = (entity -> toPageDto(entity));
 
@@ -102,7 +102,7 @@ public class CommentService {
         return CommentDTO.CommentMemberPageResponseDTO.builder()
                 .id(entity.getId())
                 .content(entity.getContent())
-                .createDate(entity.getCreateDate())
+                .createTime(entity.getCreateDate())
                 .updateYn(entity.getUpdateYn())
                 .postId(entity.getPost().getId())
                 .build();
@@ -113,8 +113,8 @@ public class CommentService {
         return  CommentDTO.CommentPageResponseDTO.builder()
                 .id(entity.getId())
                 .content(entity.getContent())
-                .createDate(entity.getCreateDate())
-                .updateDate(entity.getUpdateDate())
+                .createTime(entity.getCreateDate())
+                .updateTime(entity.getUpdateDate())
                 .updateYn(entity.getUpdateYn())
                 .memberId(entity.getMember().getId())
                 .memberNickname(entity.getMember().getNickname())
@@ -132,7 +132,7 @@ public class CommentService {
                 .id(comment.getId())
                 .content(comment.getContent())
                 .postId(comment.getPost().getId())
-                .createDate(comment.getCreateDate())
+                .createTime(comment.getCreateDate())
                 .build();
     }
 
@@ -141,7 +141,7 @@ public class CommentService {
         return CommentDTO.CommentUpdateResponseDTO.builder()
                 .id(comment.getId())
                 .content(comment.getContent())
-                .updateDate(comment.getUpdateDate())
+                .updateTime(comment.getUpdateDate())
                 .build();
     }
 

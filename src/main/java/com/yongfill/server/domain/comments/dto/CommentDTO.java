@@ -17,10 +17,9 @@ public class CommentDTO {
     public static class CommentPageResponseDTO {
         private Long id;
         private String content;
-        private LocalDateTime createDate;
-        private LocalDateTime updateDate;
+        private LocalDateTime createTime;
+        private LocalDateTime updateTime;
         private String updateYn;
-
         private Long memberId;
         private String memberNickname;
         private String filePath;
@@ -48,7 +47,7 @@ public class CommentDTO {
         private Long id;
         private String content;
         private Long postId;
-        private LocalDateTime createDate;
+        private LocalDateTime createTime;
     }
 
 
@@ -60,7 +59,7 @@ public class CommentDTO {
         private Long id;
         private Long postId;
         private String content;
-        private LocalDateTime createDate;
+        private LocalDateTime createTime;
         private String updateYn;
 
     }
@@ -81,7 +80,7 @@ public class CommentDTO {
     public static class CommentUpdateResponseDTO {
         private Long id;
         private String content;
-        private LocalDateTime updateDate;
+        private LocalDateTime updateTime;
     }
 
     @Data
