@@ -137,6 +137,11 @@ public class MemberService {
     public void deleteMember(Long memberId) {
         Member member = memberJpaRepository.findMemberById(memberId)
                 .orElseThrow(() -> new CustomException(ErrorCode.INVALID_MEMBER));
+
+        if(!"default.jpg".equals(member.getAttachmentOriginalFileName())) {
+            s3Client.deleteObject(bucketName, member.getAttachmentFileName());
+        }
+
         memberJpaRepository.delete(member);
     }
 

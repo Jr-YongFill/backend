@@ -2,7 +2,9 @@ package com.yongfill.server.domain.member.entity;
 
 import com.yongfill.server.domain.answer.entity.MemberAnswer;
 import com.yongfill.server.domain.comments.entity.Comment;
+import com.yongfill.server.domain.posts.entity.Like;
 import com.yongfill.server.domain.posts.entity.Post;
+import com.yongfill.server.domain.posts.entity.View;
 import com.yongfill.server.domain.question.entity.InterviewQuestion;
 import com.yongfill.server.domain.stack.entity.MemberStackAuth;
 import com.yongfill.server.domain.vote.entity.MemberQuestionStackVote;
@@ -80,6 +82,12 @@ public class Member {
 
     @OneToMany(mappedBy = "member", orphanRemoval = true)
     private List<MemberAnswer> answers;
+
+    @OneToMany(mappedBy = "member", orphanRemoval = true)
+    private List<View> views;
+
+    @OneToMany(mappedBy = "member", orphanRemoval = true)
+    private List<Like> likes;
 
     public boolean isPurchaseStack(Long price) {
         return this.credit >= price;
