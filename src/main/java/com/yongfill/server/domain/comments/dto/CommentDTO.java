@@ -58,6 +58,7 @@ public class CommentDTO {
     @Builder
     public static class CommentMemberPageResponseDTO {
         private Long id;
+        private Long postId;
         private String content;
         private LocalDateTime createDate;
         private String updateYn;
