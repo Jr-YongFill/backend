@@ -46,6 +46,7 @@ public class CommentService {
         Page<Comment> comments = commentJpaRepository.findByMemberId(memberId, pageable);
 
         Function<Comment, CommentDTO.CommentMemberPageResponseDTO> fn = (entity -> toPageDto(entity));
+
         return new PageResponseDTO<>(comments, fn);
     }
 
@@ -103,8 +104,8 @@ public class CommentService {
                 .content(entity.getContent())
                 .createDate(entity.getCreateDate())
                 .updateYn(entity.getUpdateYn())
+                .postId(entity.getPost().getId())
                 .build();
-
     }
 
     public CommentDTO.CommentPageResponseDTO toDto(Comment entity) {
