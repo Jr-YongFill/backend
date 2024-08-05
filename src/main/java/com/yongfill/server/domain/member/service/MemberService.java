@@ -191,4 +191,14 @@ public class MemberService {
         objectMetadata.setContentLength(file.getSize());
         return objectMetadata;
     }
+
+    public Long addCreditByMemberId(Long memberId, Long credit) {
+        Member member = memberJpaRepository.findMemberById(memberId)
+                .orElseThrow(() -> new CustomException(ErrorCode.INVALID_MEMBER));
+
+        member.setCredit(member.getCredit() + credit);
+        memberJpaRepository.save(member);
+
+        return member.getCredit();
+    }
 }

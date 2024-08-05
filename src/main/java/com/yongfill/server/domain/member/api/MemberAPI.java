@@ -61,4 +61,11 @@ public class MemberAPI {
     }
 
 
+    @PatchMapping("/members/{member_id}/credit")
+    public ResponseEntity<Long> addCredit (@PathVariable("member_id") Long memberId, @RequestBody MemberRequestDTO dto) {
+        Long newCredit = memberService.addCreditByMemberId(memberId, dto.getCredit());
+        return new ResponseEntity<>(newCredit, HttpStatus.OK);
+    }
+
+
 }
