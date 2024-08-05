@@ -102,8 +102,8 @@ public class MemberService {
 
         // 닉네임 수정
         if (requestDTO.getNickname() != null && !requestDTO.getNickname().trim().isEmpty()) {
-            Optional<Member> existingMemberWithNickname = memberJpaRepository.findMemberByNickname(requestDTO.getNickname());
-            if (existingMemberWithNickname.isPresent() && !existingMemberWithNickname.get().getId().equals(memberId)) {
+            Optional<Member> existingMemberID = memberJpaRepository.findMemberById(requestDTO.getId());
+            if (existingMemberID.isPresent() && !existingMemberID.get().getId().equals(memberId)) {
                 throw new CustomException(ErrorCode.DUPLICATE_MEMBER_NICKNAME);
             }
             member.setNickname(requestDTO.getNickname());
