@@ -98,10 +98,6 @@
   - 질문, 스택, 투표 API 작성
   - 예외 처리
 
-- **이동규**
-  - 엔터티, 레포지토리, 패키지 정의 구축
-  - 오답노트, 댓글 API 작성
-
 - **김지혜**
   - 게시판 API
   - 파일서버 구축
@@ -110,6 +106,11 @@
 - **배창민**
   - JWT Security
   - 멤버 관리 API
+    
+- **이동규**
+  - 엔터티, 레포지토리, 패키지 정의 구축
+  - 오답노트, 댓글 API 작성
+
 
 ### Deployment & Planning
 - **배포:** 장희권 (CI/CD, Docker 활용)
@@ -171,14 +172,14 @@ If you have a suggestion that would make this better, please fork the repo and c
 **hg_yellow**
 - GitHub: [hg_yellow](https://github.com/jang010505)
 - Mail: hgyellow0505@gmail.com
+  
+**김지혜**
+- GitHub: [wisdom](https://github.com/Wisdom-Kim)
+- Mail: cocoa389@naver.com
 
 **배창민**
 - GitHub: [Changchang](https://github.com/bbmini96)
 - Mail: changmin38@gmail.com
-
-**김지혜**
-- GitHub: [wisdom](https://github.com/Wisdom-Kim)
-- Mail: cocoa389@naver.com
 
 **이동규**
 - GitHub: [이동규](https://github.com/202011988)
