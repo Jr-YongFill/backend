@@ -1,44 +1,39 @@
 <div align="center">
-  <h1>MOSI Frontend :yellow_heart:</h1>
+  <h1>MOSI Backend :yellow_heart:</h1>
 </div>
+
 <a id="top"></a>
 
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-
-<h3 align="center"><a href="http://www.mosi.digital/">MOSI</a></h3>
-
-  <p align="center">  
-    GPT AI 기반 CS면접을 도와주는 서비스입니다.
-    <br />
-  <p align="right">
-      기획: 김지혜
+  <h3 align="center"><a href="http://www.mosi.digital/">MOSI</a></h3>
+  <p align="center">GPT AI 기반 CS 면접을 도와주는 서비스입니다.</p>
+  <p align="right">기획: 김지혜</p>
 </div>
 
 <!-- TABLE OF CONTENTS -->
 <details>
   <summary>Table of Contents</summary>
   <ol>
-    <li><a href="#about-the-project">About The Project</a></li>
-    <li><a href="#team-roles">Team Roles</a></li>
-    <li><a href="#languages-libraries-and-tools-used">Languages, Libraries, and Tools Used</a></li>
+    <li><a href="#languages-framework-libraries">Languages, Framework, Libraries</a></li>
     <li><a href="#getting-started">Getting Started</a></li>
     <li><a href="#team-roles">Team Roles</a></li>
     <li><a href="#feature">Feature</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#contact">Contact</a></li>
     <li><a href="#coming-soon">Coming Soon</a></li>
+    <li><a href="#contact">Contact</a></li>
     <li><a href="#project-link">Project Link</a></li>
   </ol>
 </details>
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-<!-- LANGUAGES, LIBRARIES, AND TOOLS USED -->
-<a id="languages-libraries-and-tools-used"></a>
-## Languages, Libraries, and Tools Used
+
+<!-- LANGUAGES, FRAMEWORK, LIBRARIES -->
+<a id="languages-framework-libraries"></a>
+## Languages, Framework, Libraries
 #### Languages
 * JAVA
     - version: JDK-17
@@ -93,12 +88,13 @@
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-<!-- Team Roles -->
+<!-- TEAM ROLES -->
+<a id="team-roles"></a>
 ## Team Roles
 - **장희권 (팀장)**
-  - Security, QueryDSL_SQL 환경구축
+  - Security, QueryDSL_SQL 환경 구축
   - Question, Stack, Vote API 작성
-  - Exception
+  - Exception 처리
 
 - **김지혜**
   - Post API
@@ -107,18 +103,16 @@
 
 - **배창민**
   - JWT Security
-  - Member(SignIn,SignOut) API
-    
+  - Member (SignIn, SignOut) API
+
 - **이동규**
   - Entity, Repository, Package 구축
-  - Anser Note, Comment API 작성
-
+  - Answer Note, Comment API 작성
 
 ### Deployment & Planning
 - **배포:** 장희권 (CI/CD, Docker 활용)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
-  
 
 <!-- FEATURE -->
 <a id="feature"></a>
@@ -192,9 +186,9 @@ If you have a suggestion that would make this better, please fork the repo and c
 <!-- PROJECT LINK -->
 <a id="project-link"></a>
 ## Project Link
-- 서비스: [MOSI 웹사이트](http://www.mosi.digital/)
-- Backend: [GitHub Repository](https://github.com/Jr-YongFill/backend)
-- Frontend: [GitHub Repository](https://github.com/Jr-YongFill/frontend)
+- Service: [MOSI 웹사이트](http://www.mosi.digital/)
+- Backend: [GitHub Backend Repository](https://github.com/Jr-YongFill/backend)
+- Frontend: [GitHub Frontend Repository](https://github.com/Jr-YongFill/frontend)
 - Project Team: [Jr.yongfill](https://github.com/Jr-YongFill)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
