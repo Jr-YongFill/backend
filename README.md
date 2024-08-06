@@ -1,4 +1,5 @@
 # MOSI Backend :yellow_heart:
+<a id="top"></a>
 
 <!-- PROJECT LOGO -->
 <br />
@@ -7,8 +8,10 @@
 <h3 align="center"><a href="http://www.mosi.digital/">MOSI</a></h3>
 
   <p align="center">  
-    GPT AI 기반 면접을 도와주는 서비스입니다.
+    GPT AI 기반 CS면접을 도와주는 서비스입니다.
     <br />
+  <p align="right">
+      기획: 김지혜
 </div>
 
 <!-- TABLE OF CONTENTS -->
@@ -16,8 +19,10 @@
   <summary>Table of Contents</summary>
   <ol>
     <li><a href="#about-the-project">About The Project</a></li>
+    <li><a href="#team-roles">Team Roles</a></li>
     <li><a href="#languages-libraries-and-tools-used">Languages, Libraries, and Tools Used</a></li>
     <li><a href="#getting-started">Getting Started</a></li>
+    <li><a href="#team-roles">Team Roles</a></li>
     <li><a href="#feature">Feature</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
@@ -27,12 +32,11 @@
   </ol>
 </details>
 
-<!-- ABOUT THE PROJECT -->
-## About The Project
-GPT AI 기반 CS 면접을 도와주는 서비스입니다.
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-### Languages, Libraries, and Tools Used
+<!-- LANGUAGES, LIBRARIES, AND TOOLS USED -->
+<a id="languages-libraries-and-tools-used"></a>
+## Languages, Libraries, and Tools Used
 #### Languages
 * JAVA
     - version: JDK-17
@@ -69,6 +73,7 @@ GPT AI 기반 CS 면접을 도와주는 서비스입니다.
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- GETTING STARTED -->
+<a id="getting-started"></a>
 ## Getting Started
 1. Clone the repo
     ```sh
@@ -86,7 +91,34 @@ GPT AI 기반 CS 면접을 도와주는 서비스입니다.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-<!-- FEATURE EXAMPLES -->
+<!-- Team Roles -->
+## Team Roles
+- **장희권 (팀장)**
+  - Security, QueryDSL_SQL 환경구축
+  - 질문, 스택, 투표 API 작성
+  - 예외 처리
+
+- **이동규**
+  - 엔터티, 레포지토리, 패키지 정의 구축
+  - 오답노트, 댓글 API 작성
+
+- **김지혜**
+  - 게시판 API
+  - 파일서버 구축
+  - 로깅
+
+- **배창민**
+  - JWT Security
+  - 멤버 관리 API
+
+### Deployment & Planning
+- **배포:** 장희권 (CI/CD, Docker 활용)
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+  
+
+<!-- FEATURE -->
+<a id="feature"></a>
 ## Feature
 1. Information sharing through the community.
 2. GPT API evaluates user responses.
@@ -94,6 +126,7 @@ GPT AI 기반 CS 면접을 도와주는 서비스입니다.
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- ROADMAP -->
+<a id="roadmap"></a>
 ## Roadmap
 - [ ] Project Setting
 - [ ] Member API
@@ -108,6 +141,7 @@ See the [project issues](https://github.com/Jr-YongFill/backend/issues) for a fu
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- CONTRIBUTING -->
+<a id="contributing"></a>
 ## Contributing
 
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
@@ -123,6 +157,7 @@ If you have a suggestion that would make this better, please fork the repo and c
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- COMING SOON -->
+<a id="coming-soon"></a>
 ## Coming Soon
 - [ ] Realtime Chatting
 - [ ] Social Login
@@ -131,6 +166,7 @@ If you have a suggestion that would make this better, please fork the repo and c
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- CONTACT -->
+<a id="contact"></a>
 ## Contact
 **hg_yellow**
 - GitHub: [hg_yellow](https://github.com/jang010505)
@@ -151,6 +187,7 @@ If you have a suggestion that would make this better, please fork the repo and c
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- PROJECT LINK -->
+<a id="project-link"></a>
 ## Project Link
 - 서비스: [MOSI 웹사이트](http://www.mosi.digital/)
 - Backend: [GitHub Repository](https://github.com/Jr-YongFill/backend)
