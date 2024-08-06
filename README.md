@@ -1,4 +1,6 @@
-# MOSI Backend :yellow_heart:
+<div align="center">
+  <h1>MOSI Frontend :yellow_heart:</h1>
+</div>
 <a id="top"></a>
 
 <!-- PROJECT LOGO -->
@@ -95,21 +97,21 @@
 ## Team Roles
 - **장희권 (팀장)**
   - Security, QueryDSL_SQL 환경구축
-  - 질문, 스택, 투표 API 작성
-  - 예외 처리
+  - Question, Stack, Vote API 작성
+  - Exception
 
 - **김지혜**
-  - 게시판 API
-  - 파일서버 구축
-  - 로깅
+  - Post API
+  - File Server 구축
+  - Logging
 
 - **배창민**
   - JWT Security
-  - 멤버 관리 API
+  - Member(SignIn,SignOut) API
     
 - **이동규**
-  - 엔터티, 레포지토리, 패키지 정의 구축
-  - 오답노트, 댓글 API 작성
+  - Entity, Repository, Package 구축
+  - Anser Note, Comment API 작성
 
 
 ### Deployment & Planning
