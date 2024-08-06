@@ -87,7 +87,6 @@ public class InterviewQuestionQueryDSLRepository extends QuerydslRepositorySuppo
                                 .from(qInterviewQuestion)
                                 .where(Expressions.numberPath(Long.class, qInterviewQuestion, "question_stack_id").eq(stackId)
                                         .and(Expressions.stringPath(qInterviewQuestion, "interview_show").eq("Y")))
-                                .orderBy(qInterviewQuestion.id.desc())
                                 .limit(pageable.getPageSize())
                                 .offset(pageable.getOffset()), iq)
                         .leftJoin(JPAExpressions
