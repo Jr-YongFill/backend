@@ -30,7 +30,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 GPT AI 기반 CS 면접을 도와주는 서비스입니다.
-<p align="right">(<a href="#MOSI-Backend-yellow-heart">back to top</a>)</p>
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 ### Languages, Libraries, and Tools Used
 #### Languages
@@ -66,7 +66,7 @@ GPT AI 기반 CS 면접을 도와주는 서비스입니다.
 * amazonaws-s3
     - version: 1.12.765
 
-<p align="right">(<a href="#MOSI-Backend-yellow-heart">back to top</a>)</p>
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- GETTING STARTED -->
 ## Getting Started
@@ -84,14 +84,14 @@ GPT AI 기반 CS 면접을 도와주는 서비스입니다.
     java -jar ./target/server-0.0.1-SNAPSHOT.jar
     ```
 
-<p align="right">(<a href="#MOSI-Backend-yellow-heart">back to top</a>)</p>
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- FEATURE EXAMPLES -->
 ## Feature
 1. Information sharing through the community.
 2. GPT API evaluates user responses.
 
-<p align="right">(<a href="#MOSI-Backend-yellow-heart">back to top</a>)</p>
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- ROADMAP -->
 ## Roadmap
@@ -105,7 +105,7 @@ GPT AI 기반 CS 면접을 도와주는 서비스입니다.
 
 See the [project issues](https://github.com/Jr-YongFill/backend/issues) for a full list of proposed features and known issues.
 
-<p align="right">(<a href="#MOSI-Backend-yellow-heart">back to top</a>)</p>
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- CONTRIBUTING -->
 ## Contributing
@@ -120,7 +120,7 @@ If you have a suggestion that would make this better, please fork the repo and c
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-<p align="right">(<a href="#MOSI-Backend-yellow-heart">back to top</a>)</p>
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- COMING SOON -->
 ## Coming Soon
@@ -128,7 +128,7 @@ If you have a suggestion that would make this better, please fork the repo and c
 - [ ] Social Login
 - [ ] UI/UX
 
-<p align="right">(<a href="#MOSI-Backend-yellow-heart">back to top</a>)</p>
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- CONTACT -->
 ## Contact
@@ -148,7 +148,7 @@ If you have a suggestion that would make this better, please fork the repo and c
 - GitHub: [이동규](https://github.com/202011988)
 - Mail: dlehdrb5509@naver.com
 
-<p align="right">(<a href="#MOSI-Backend-yellow-heart">back to top</a>)</p>
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- PROJECT LINK -->
 ## Project Link
@@ -157,4 +157,4 @@ If you have a suggestion that would make this better, please fork the repo and c
 - Frontend: [GitHub Repository](https://github.com/Jr-YongFill/frontend)
 - Project Team: [Jr.yongfill](https://github.com/Jr-YongFill)
 
-<p align="right">(<a href="#MOSI-Backend-yellow-heart">back to top</a>)</p>
+<p align="right">(<a href="#top">back to top</a>)</p>
