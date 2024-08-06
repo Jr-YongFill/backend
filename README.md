@@ -1,64 +1,55 @@
-# 용기가 필요한 아이들[가명] Backend :yellow_heart:
+# MOSI Backend :yellow_heart:
 
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
 
-<h3 align="center">용기가 필요한 아이들[가명]</h3>
+<h3 align="center"><a href="http://www.mosi.digital/">MOSI</a></h3>
 
   <p align="center">  
     GPT AI 기반 면접을 도와주는 서비스입니다.
     <br />
 </div>
 
-
 <!-- TABLE OF CONTENTS -->
 <details>
   <summary>Table of Contents</summary>
   <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#languages-libraries-and-tools-used">Languages, libraries and tools used</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-    </li>
+    <li><a href="#about-the-project">About The Project</a></li>
+    <li><a href="#languages-libraries-and-tools-used">Languages, Libraries, and Tools Used</a></li>
+    <li><a href="#getting-started">Getting Started</a></li>
     <li><a href="#feature">Feature</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#contact">Contact</a></li>
     <li><a href="#coming-soon">Coming Soon</a></li>
+    <li><a href="#project-link">Project Link</a></li>
   </ol>
 </details>
 
-
-
 <!-- ABOUT THE PROJECT -->
 ## About The Project
-GPT AI 기반 면접을 도와주는 서비스입니다.
-<p align="right">(<a href="#용기가-필요한-아이들[가명]-yellow_heart">back to top</a>)</p>
+GPT AI 기반 CS 면접을 도와주는 서비스입니다.
+<p align="right">(<a href="#MOSI-Backend-yellow-heart">back to top</a>)</p>
 
-
-### Languages, libraries and tools used
+### Languages, Libraries, and Tools Used
 #### Languages
 * JAVA
     - version: JDK-17
 
-#### framework
+#### Framework
 * Spring Boot
     - version: 3.3.0
     - project: Maven
 
-#### libraries
+#### Libraries
 * SpringBoot data-jpa
     - version: 3.3.0
 * SpringBoot starter-web
     - version: 3.3.0
 * mysql-connector-j
     - version: 8.3.0
-* lombok
+* Lombok
     - version: 1.18.32
 * SpringBoot starter-test
     - version: 3.3.0
@@ -66,62 +57,62 @@ GPT AI 기반 면접을 도와주는 서비스입니다.
     - version: 5.1.0
 * querydsl-jpa
     - version: 5.1.0
+* hibernate-core
+    - version: 6.1.0.Final
+* jjwt
+    - version: 0.12.6
+* jjwt-api
+    - version: 0.11.5
+* amazonaws-s3
+    - version: 1.12.765
 
-
-<p align="right">(<a href="#용기가-필요한-아이들[가명]-yellow_heart">back to top</a>)</p>
+<p align="right">(<a href="#MOSI-Backend-yellow-heart">back to top</a>)</p>
 
 <!-- GETTING STARTED -->
 ## Getting Started
-1.  Clone the repo
-```sh
-   git clone https://github.com/Jr-YongFill/backend
-  ```
+1. Clone the repo
+    ```sh
+    git clone https://github.com/Jr-YongFill/backend
+    ```
 2. Build Project
-  ```sh
-  cd ./backend
-  mvn -B package -DskipTests=true --file pom.xml
-  ```
+    ```sh
+    cd ./backend
+    mvn -B package -DskipTests=true --file pom.xml
+    ```
+3. Run
+    ```sh
+    java -jar ./target/server-0.0.1-SNAPSHOT.jar
+    ```
 
-4. Run
-  ```sh
-  java -jar ./target/server-0.0.1-SNAPSHOT.jar
-  ```
-<!-- USAGE EXAMPLES -->
-<!--Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources. -->
-
-<p align="right">(<a href="#용기가-필요한-아이들[가명]-yellow_heart">back to top</a>)</p>
+<p align="right">(<a href="#MOSI-Backend-yellow-heart">back to top</a>)</p>
 
 <!-- FEATURE EXAMPLES -->
 ## Feature
 1. Information sharing through the community.
-2. GPT API evaluates user responses
+2. GPT API evaluates user responses.
 
-
-<p align="right">(<a href="#용기가-필요한-아이들[가명]-yellow_heart">back to top</a>)</p>
+<p align="right">(<a href="#MOSI-Backend-yellow-heart">back to top</a>)</p>
 
 <!-- ROADMAP -->
 ## Roadmap
 - [ ] Project Setting
 - [ ] Member API
 - [ ] Auth
-- [ ] Social Login API
 - [ ] Vote API
 - [ ] Question API
 - [ ] Community API
 - [ ] Answer API
 
-See the [project issues](https://github.com/Jr-YongFill/backend/issues) for a full list of proposed features(and known issues).
+See the [project issues](https://github.com/Jr-YongFill/backend/issues) for a full list of proposed features and known issues.
 
-
-<p align="right">(<a href="#용기가-필요한-아이들[가명]-yellow_heart">back to top</a>)</p>
+<p align="right">(<a href="#MOSI-Backend-yellow-heart">back to top</a>)</p>
 
 <!-- CONTRIBUTING -->
 ## Contributing
 
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
-Don't forget to give the project a star! Thanks again!
+If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement". Don't forget to give the project a star! Thanks again!
 
 1. Fork the Project
 2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
@@ -129,38 +120,41 @@ Don't forget to give the project a star! Thanks again!
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
+<p align="right">(<a href="#MOSI-Backend-yellow-heart">back to top</a>)</p>
 
-<p align="right">(<a href="#용기가-필요한-아이들[가명]-yellow_heart">back to top</a>)</p>
-
-<!-- API DOCS -->
 <!-- COMING SOON -->
-
 ## Coming Soon
 - [ ] Realtime Chatting
+- [ ] Social Login
+- [ ] UI/UX
 
-<p align="right">(<a href="#용기가-필요한-아이들[가명]-yellow_heart">back to top</a>)</p>
+<p align="right">(<a href="#MOSI-Backend-yellow-heart">back to top</a>)</p>
 
 <!-- CONTACT -->
 ## Contact
-hg_yellow
+**hg_yellow**
 - GitHub: [hg_yellow](https://github.com/jang010505)
 - Mail: hgyellow0505@gmail.com
 
-배창민
+**배창민**
 - GitHub: [Changchang](https://github.com/bbmini96)
 - Mail: changmin38@gmail.com
 
-김지혜
+**김지혜**
 - GitHub: [wisdom](https://github.com/Wisdom-Kim)
 - Mail: cocoa389@naver.com
 
-이동규
+**이동규**
 - GitHub: [이동규](https://github.com/202011988)
-- Mail: dlehdrb1112@gmail.com
+- Mail: dlehdrb5509@naver.com
 
+<p align="right">(<a href="#MOSI-Backend-yellow-heart">back to top</a>)</p>
 
-Project Link: [backend](https://github.com/Jr-YongFill/backend)<br/>
-Project Link: [frontend](https://github.com/Jr-YongFill/frontend)<br/>
-Project Team Link: [Jr.yongfill]([https://github.com/SIAT-Python-Project](https://github.com/Jr-YongFill))
-<p align="right">(<a href="#용기가-필요한-아이들[가명]-yellow_heart">back to top</a>)</p>
+<!-- PROJECT LINK -->
+## Project Link
+- 서비스: [MOSI 웹사이트](http://www.mosi.digital/)
+- Backend: [GitHub Repository](https://github.com/Jr-YongFill/backend)
+- Frontend: [GitHub Repository](https://github.com/Jr-YongFill/frontend)
+- Project Team: [Jr.yongfill](https://github.com/Jr-YongFill)
 
+<p align="right">(<a href="#MOSI-Backend-yellow-heart">back to top</a>)</p>
