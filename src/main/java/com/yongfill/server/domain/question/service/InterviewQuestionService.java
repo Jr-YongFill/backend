@@ -1,6 +1,7 @@
 package com.yongfill.server.domain.question.service;
 
 import com.yongfill.server.domain.member.entity.Member;
+import com.yongfill.server.domain.member.entity.Role;
 import com.yongfill.server.domain.member.repository.MemberJpaRepository;
 import com.yongfill.server.domain.question.dto.InterviewQuestionDto;
 import com.yongfill.server.domain.question.entity.InterviewQuestion;
@@ -10,9 +11,12 @@ import com.yongfill.server.domain.stack.entity.QuestionStack;
 import com.yongfill.server.domain.stack.repository.QuestionStackJpaRepository;
 import com.yongfill.server.domain.stack.service.QuestionStackService;
 import com.yongfill.server.domain.vote.entity.CountVote;
+import com.yongfill.server.domain.vote.entity.MemberQuestionStackVote;
 import com.yongfill.server.domain.vote.repository.CountVoteJpaRepository;
+import com.yongfill.server.domain.vote.service.MemberQuestionStackVoteService;
 import com.yongfill.server.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +35,8 @@ public class InterviewQuestionService {
     private final MemberJpaRepository memberJpaRepository;
     private final QuestionStackJpaRepository questionStackJpaRepository;
     private final CountVoteJpaRepository countVoteJpaRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final MemberQuestionStackVoteService memberQuestionStackVoteService;
 
     @Transactional
     public InterviewQuestionDto.QuestionInsertResponseDto insertInterviewQuestion(InterviewQuestionDto.QuestionInsertRequestDto requestDto, Long memberId) {
@@ -108,5 +114,54 @@ public class InterviewQuestionService {
         question.updateInterviewShow();
 
         createMember.urgentCredit(10);
+    }
+
+    public void insert() {
+        int questionCount = 100;
+        int memberCount = 1000;
+        List<Long> questionIds = new ArrayList<>();
+        List<Member> members = new ArrayList<>();
+
+        for (int i = 0; i < memberCount; i++) {
+            members.add(
+                    Member.builder()
+                            .role(Role.USER)
+                            .createDate(LocalDateTime.now())
+                            .password(bCryptPasswordEncoder.encode("1234"))
+                            .email(String.valueOf(i))
+                            .nickname(String.valueOf(i))
+                            .attachmentFileSize(1234L)
+                            .attachmentFileName(String.valueOf(i))
+                            .filePath(String.valueOf(i))
+                            .attachmentOriginalFileName(String.valueOf(i))
+                            .credit(1234L)
+                            .build());
+        }
+
+        memberJpaRepository.saveAll(members);
+
+        for (int i = 0; i < questionCount; i++) {
+            questionIds.add(
+            insertInterviewQuestion(InterviewQuestionDto.QuestionInsertRequestDto.builder()
+                    .question(String.valueOf(i))
+                    .build(), 1L).getQuestionId());
+        }
+
+        Long stackCount = 0L;
+
+        for (int i = 0; i < questionCount; i++) {
+            Long questionId = questionIds.get(i);
+            for (int j = 0; j < memberCount; j++) {
+                Member member = members.get(j);
+
+                memberQuestionStackVoteService.vote(member.getId(), stackCount+1, questionId);
+
+                stackCount++;
+
+                if (stackCount % 6 == 0) {
+                    stackCount = 0L;
+                }
+            }
+        }
     }
 }

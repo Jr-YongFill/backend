@@ -17,17 +17,22 @@ import com.yongfill.server.global.common.dto.PageRequestDTO;
 import com.yongfill.server.global.common.dto.PageResponseNoEntityDto;
 import com.yongfill.server.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.yongfill.server.global.common.response.error.ErrorCode.*;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MemberQuestionStackVoteService {
     private final MemberQuestionStackVoteJpaRepository memberQuestionStackVoteJpaRepository;
     private final MemberJpaRepository memberJpaRepository;
@@ -65,6 +70,30 @@ public class MemberQuestionStackVoteService {
         if (!question.getMember().getId().equals(memberId)) {
             member.urgentCredit(1);
         }
+    }
+
+    @Transactional
+    public List<InterviewQuestionDto.QuestionVoteResponseDto.QuestionPageDto> getVoteInfosV2(Long memberId, PageRequestDTO pageRequestDTO) {
+        PageRequest pageRequest = PageRequest.of(pageRequestDTO.getPage(), pageRequestDTO.getSize());
+
+        List<Object[]> results = interviewQuestionJpaRepository.findVoteQuestionInfo(memberId, (long) pageRequest.getPageSize(), pageRequest.getOffset());
+
+        Map<Long, InterviewQuestionDto.QuestionVoteResponseDto.QuestionPageDto> questionsMap = new HashMap<>();
+
+        for (Object[] row : results) {
+            Long id = (Long) row[0];
+            String question = (String) row[1];
+            String nickname = (String) row[2];
+            Long myVoteStackId = (Long) row[3];
+            Long questionStackId = (Long) row[4];
+            Long countVote = (Long) row[5];
+
+            InterviewQuestionDto.QuestionVoteResponseDto.QuestionPageDto questionInfo = questionsMap.getOrDefault(id, new InterviewQuestionDto.QuestionVoteResponseDto.QuestionPageDto(id, question, nickname, myVoteStackId, new ArrayList<>()));
+            questionInfo.getStackDtos().add(new InterviewQuestionDto.QuestionVoteResponseDto.QuestionPageDto.StackDto(questionStackId, countVote));
+            questionsMap.put(id, questionInfo);
+        }
+
+        return new ArrayList<>(questionsMap.values());
     }
 
     @Transactional
